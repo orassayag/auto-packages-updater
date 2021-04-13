@@ -1,14 +1,16 @@
-const logUpdate = require('../../log-update');
-const { Color } = require('../../core/enums');
-const colorUtils = require('./color.utils');
-const textUtils = require('./text.utils');
-const validationUtils = require('./validation.utils');
-
 class LogUtils {
 
     constructor() { }
+}
 
-    log(message) {
+module.exports = new LogUtils();
+/* const logUpdate = require('../../log-update');
+const { Color } = require('../../core/enums');
+const colorUtils = require('./color.utils');
+const textUtils = require('./text.utils');
+const validationUtils = require('./validation.utils'); */
+
+/*     log(message) {
         console.log(message);
     }
 
@@ -81,7 +83,4 @@ class LogUtils {
             }
         }
         logUpdate(results);
-    }
-}
-
-module.exports = new LogUtils();
+    } */

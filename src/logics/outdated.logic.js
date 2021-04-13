@@ -1,4 +1,78 @@
 const settings = require('../settings/settings');
+const { applicationService, confirmationService, countLimitService, logService,
+    pathService, validationService } = require('../services');
+const { Status } = require('../core/enums');
+const globalUtils = require('../utils/files/global.utils');
+const { logUtils, systemUtils, validationUtils } = require('../utils');
+
+class OutdatedLogic {
+
+    constructor() { }
+
+    async run() {
+        // Validate all settings that fit the user's needs.
+        await this.confirm();
+        // Initiate all the settings, configurations, services, etc...
+        this.initiate();
+        // Validate general settings.
+        await this.validateGeneralSettings();
+        // Start the scan for outdated packages process.
+        await this.startSession();
+    }
+
+    initiate() {
+        this.updateStatus('INITIATE THE SERVICES', Status.INITIATE);
+        countLimitService.initiate(settings);
+        applicationService.initiate({
+            settings: settings,
+            status: Status.INITIATE
+        });
+        pathService.initiate(settings);
+        logService.initiate(settings);
+    }
+
+    async validateGeneralSettings() {
+        this.updateStatus('VALIDATE GENERAL SETTINGS', Status.VALIDATE);
+        // Validate that the internet connection works.
+        await validationService.validateInternetConnection();
+    }
+
+    async startSession() {
+        // Initiate.
+        applicationService.applicationData.startDateTime = new Date();
+        await this.exit(Status.FINISH);
+    }
+
+    async sleep() {
+        await globalUtils.sleep(countLimitService.countLimitData.millisecondsSendEmailDelayCount);
+    }
+
+    // Let the user confirm all the IMPORTANT settings before the process starts.
+    async confirm() {
+        /*         if (!await confirmationService.confirm(settings)) {
+                    this.exit(Status.ABORT_BY_THE_USER);
+                } */
+    }
+
+    updateStatus(text, status) {
+        logUtils.logStatus(text);
+        if (applicationService.applicationData) {
+            applicationService.applicationData.status = status;
+        }
+    }
+
+    async exit(status) {
+        if (applicationService.applicationData) {
+            applicationService.applicationData.status = status;
+            await this.sleep();
+        }
+        systemUtils.exit(status);
+    }
+}
+
+module.exports = OutdatedLogic;
+
+/* const settings = require('../settings/settings');
 const { accountService, applicationService, confirmationService, countLimitService,
     courseService, createCourseService, logService, pathService, puppeteerService,
     purchaseCourseService, updateCourseService, validationService } = require('../services');
@@ -127,4 +201,4 @@ class PurchaseLogic {
     }
 }
 
-module.exports = PurchaseLogic;
+module.exports = PurchaseLogic; */

@@ -1,14 +1,17 @@
-const colorUtils = require('./color.utils');
-const regexUtils = require('./regex.utils');
-const validationUtils = require('./validation.utils');
-
 class TextUtils {
 
     constructor() {
         this.b = '===';
     }
+}
 
-    cutText(data) {
+module.exports = new TextUtils();
+/* const colorUtils = require('./color.utils');
+const regexUtils = require('./regex.utils');
+const validationUtils = require('./validation.utils'); */
+
+
+/*     cutText(data) {
         const { text, count } = data;
         if (!text) {
             return '';
@@ -175,7 +178,4 @@ class TextUtils {
             return '';
         }
         return text.replace(regexUtils.createRegex(origin, 'g'), target);
-    }
-}
-
-module.exports = new TextUtils();
+    } */

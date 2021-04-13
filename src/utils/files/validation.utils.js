@@ -1,10 +1,10 @@
-const regexUtils = require('./regex.utils');
-
 class ValidationUtils {
 
     constructor() { }
+}
 
-    isValidArray(variable) {
+module.exports = new ValidationUtils();
+/*     isValidArray(variable) {
         return Object.prototype.toString.call(variable) === '[object Array]';
     }
 
@@ -77,7 +77,6 @@ class ValidationUtils {
 
     isPropertyExists(obj, fieldName) {
         return Object.prototype.hasOwnProperty.call(obj, fieldName);
-    }
-}
+    } */
 
-module.exports = new ValidationUtils();
+/* const regexUtils = require('./regex.utils'); */

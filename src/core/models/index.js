@@ -1,4 +1,15 @@
-const AccountData = require('./files/AccountData');
+const ApplicationData = require('./files/ApplicationData');
+const BackupData = require('./files/BackupData');
+const BackupDirectory = require('./files/BackupDirectory');
+const CountLimitData = require('./files/CountLimitData');
+const LogData = require('./files/LogData');
+const PathData = require('./files/PathData');
+
+module.exports = {
+    ApplicationData, BackupData, BackupDirectory, CountLimitData, LogData, PathData
+};
+
+/* const AccountData = require('./files/AccountData');
 const ApplicationData = require('./files/ApplicationData');
 const BackupData = require('./files/BackupData');
 const BackupDirectory = require('./files/BackupDirectory');
@@ -12,4 +23,4 @@ const PathData = require('./files/PathData');
 module.exports = {
     AccountData, ApplicationData, BackupData, BackupDirectory, CountLimitData, CourseData,
     CoursesData, CoursesDatesResult, LogData, PathData
-};
+}; */

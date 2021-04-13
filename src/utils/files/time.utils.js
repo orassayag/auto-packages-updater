@@ -1,9 +1,14 @@
-const textUtils = require('./text.utils');
-const validationUtils = require('./validation.utils');
-
 class TimeUtils {
 
-    constructor() {
+    constructor() {}
+}
+
+module.exports = new TimeUtils();
+
+/* const textUtils = require('./text.utils');
+const validationUtils = require('./validation.utils'); */
+
+/*     constructor() {
         this.shortMonths = {
             'jan': '1', 'feb': '2', 'mar': '3', 'apr': '4', 'may': '5', 'jun': '6',
             'jul': '7', 'aug': '8', 'sep': '9', 'oct': '10', 'nov': '11', 'dec': '12'
@@ -130,7 +135,4 @@ class TimeUtils {
             list.push(this.getCommasDate(new Date(dt)));
         }
         return list;
-    }
-}
-
-module.exports = new TimeUtils();
+    } */

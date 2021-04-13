@@ -15,6 +15,9 @@ ToDo tasks:
 -In the second step, it will auto-update the package.json with the new version of the outdated NPM packages,
  and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory,
  and log all the updated projects.
+-Add validation that if no projects exists in the configuration file - Throw an exception.
+-On the custom package file, validate the package name - Make sure it exists.
+-For each package name and package version, validate the name and the version (by regex - Take it from the Crawler project).
 -After the NPM update packages, will verify the update by checking the package.json file again.
 -A referance: https://github.com/chegele/AutoGitUpdate/blob/master/index.js
 -Each configuration of a project will look as the following:
@@ -48,6 +51,7 @@ jsdom: ^16.5.2 => ^16.5.3 | X Failed
 -Add README.txt file with explination for each field of the project configuration (place it in the 'misc/examples' directory).
 -The log progress will look like:
 ===Working: sender (1/13 | 65.49%)===
+-Edit the package.json description, the INSTRUCTIONS.md, and the README.md files.
 -Update packages + Recreate package-lock.json.
 -Remove code comments to a backup TXT file.
 -Convert " to ' in the relevant places.

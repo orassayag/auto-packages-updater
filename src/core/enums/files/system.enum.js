@@ -1,5 +1,22 @@
 const enumUtils = require('../enum.utils');
 
+const ScriptType = enumUtils.createEnum([
+    ['BACKUP', 'backup'],
+    ['OUTDATED', 'outdated'],
+    ['TEST', 'test']
+]);
+
+const Status = enumUtils.createEnum([
+    ['ABORT_BY_THE_USER', 'ABORT BY THE USER'],
+    ['INITIATE', 'INITIATE'],
+    ['VALIDATE', 'VALIDATE'],
+    ['FINISH', 'FINISH']
+]);
+
+module.exports = { ScriptType, Status };
+
+/* const enumUtils = require('../enum.utils');
+
 const CoursesDatesType = enumUtils.createEnum([
     ['SINGLE', 'SINGLE'],
     ['ARRAY', 'ARRAY'],
@@ -52,4 +69,4 @@ const Status = enumUtils.createEnum([
     ['FINISH', 'FINISH']
 ]);
 
-module.exports = { CoursesDatesType, Environment, Method, Mode, ScriptType, Status };
+module.exports = { CoursesDatesType, Environment, Method, Mode, ScriptType, Status }; */

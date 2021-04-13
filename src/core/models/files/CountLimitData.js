@@ -2,6 +2,19 @@ class CountLimitData {
 
 	constructor(settings) {
 		// Set the parameters from the settings file.
+		const { MILLISECONDS_TIMEOUT_EXIT_APPLICATION, MAXIMUM_URL_VALIDATION_COUNT, MILLISECONDS_TIMEOUT_URL_VALIDATION } = settings;
+		this.millisecondsTimeoutExitApplication = MILLISECONDS_TIMEOUT_EXIT_APPLICATION;
+		this.maximumURLValidationCount = MAXIMUM_URL_VALIDATION_COUNT;
+		this.millisecondsTimeoutURLValidation = MILLISECONDS_TIMEOUT_URL_VALIDATION;
+	}
+}
+
+module.exports = CountLimitData;
+
+/* class CountLimitData {
+
+	constructor(settings) {
+		// Set the parameters from the settings file.
 		const { MAXIMUM_COURSES_PURCHASE_COUNT, MILLISECONDS_TIMEOUT_SOURCE_REQUEST_COUNT, MAXIMUM_PAGES_NUMBER, MAXIMUM_SESSIONS_COUNT,
 			MILLISECONDS_INTERVAL_COUNT, MILLISECONDS_TIMEOUT_BETWEEN_COURSES_CREATE, MILLISECONDS_TIMEOUT_BETWEEN_COURSES_MAIN_PAGES,
 			MILLISECONDS_TIMEOUT_BETWEEN_COURSES_UPDATE, MAXIMUM_COURSE_NAME_CHARACTERS_DISPLAY_COUNT, MAXIMUM_URL_CHARACTERS_DISPLAY_COUNT,
@@ -29,8 +42,7 @@ class CountLimitData {
 		this.millisecondsTimeoutExitApplication = MILLISECONDS_TIMEOUT_EXIT_APPLICATION;
 		this.maximumURLValidationCount = MAXIMUM_URL_VALIDATION_COUNT;
 		this.millisecondsTimeoutURLValidation = MILLISECONDS_TIMEOUT_URL_VALIDATION;
-		this.maximumCoursesDatesDisplayCount = MAXIMUM_COURSES_DATES_DISPLAY_COUNT;
 	}
 }
 
-module.exports = CountLimitData;
+module.exports = CountLimitData; */

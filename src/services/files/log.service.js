@@ -1,4 +1,11 @@
-const { LogData } = require('../../core/models');
+class LogService {
+
+	constructor() { }
+}
+
+module.exports = new LogService();
+
+/* const { LogData } = require('../../core/models');
 const { CourseStatusLog, CourseStatus, Color, Method, Mode, Placeholder, StatusIcon } = require('../../core/enums');
 const accountService = require('./account.service');
 const applicationService = require('./application.service');
@@ -420,4 +427,4 @@ OK to run? (y = yes)`;
 	}
 }
 
-module.exports = new LogService();
+module.exports = new LogService(); */

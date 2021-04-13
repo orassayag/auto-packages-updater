@@ -1,4 +1,19 @@
-const { applicationUtils, timeUtils } = require('../../../utils');
+const { applicationUtils } = require('../../../utils');
+
+class ApplicationData {
+
+	constructor(data) {
+		// Set the parameters from the settings file.
+		const { settings, status } = data;
+		//const { } = settings;
+		this.status = status;
+		this.startDateTime = null;
+	}
+}
+
+module.exports = ApplicationData;
+
+/* const { applicationUtils, timeUtils } = require('../../../utils');
 
 class ApplicationData {
 
@@ -37,4 +52,4 @@ class ApplicationData {
 	}
 }
 
-module.exports = ApplicationData;
+module.exports = ApplicationData; */

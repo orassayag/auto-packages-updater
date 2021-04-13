@@ -1,9 +1,12 @@
-//require('../services/files/initiate.service').initiate('test');
+require('../services/files/initiate.service').initiate('test');
+
+(() => {
+})();
+
+/*
 const ncu = require('npm-check-updates');
 
-(async () => {
-
-    const json = JSON.stringify({
+const json = JSON.stringify({
         "dependencies": {
             "ansi-escapes": "^4.3.2",
             "babel-eslint": "^10.1.0",
@@ -35,5 +38,4 @@ const ncu = require('npm-check-updates');
 
     console.log(upgraded);
 
-
-})();
+ */

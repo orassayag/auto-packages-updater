@@ -2,6 +2,16 @@ class LogData {
 
 	constructor(settings) {
 		// Set the parameters from the settings file.
+		//const { } = settings;
+	}
+}
+
+module.exports = LogData;
+
+/* class LogData {
+
+	constructor(settings) {
+		// Set the parameters from the settings file.
 		const { IS_LOG_CREATE_COURSES_METHOD_VALID, IS_LOG_CREATE_COURSES_METHOD_INVALID, IS_LOG_UPDATE_COURSES_METHOD_VALID,
 			IS_LOG_UPDATE_COURSES_METHOD_INVALID, IS_LOG_PURCHASE_COURSES_METHOD_VALID, IS_LOG_PURCHASE_COURSES_METHOD_INVALID } = settings;
 		this.isLogCreateCoursesMethodValid = IS_LOG_CREATE_COURSES_METHOD_VALID;
@@ -13,4 +23,4 @@ class LogData {
 	}
 }
 
-module.exports = LogData;
+module.exports = LogData; */
