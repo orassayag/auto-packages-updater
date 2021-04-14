@@ -21,6 +21,7 @@ export default
 -Remove the duplicate empty lines: \n\s*\n\s*\n
 -Remove the last empty line: \n\s*$(?!\n)
 -Detect all comments without a dot at the end: ^// .*(?<!\.)$
+-Clear unused enums and make sure all in used really exists.
 -Do all the 'ToDo' tasks.
 -Format all documents.
 -Verify all works well.

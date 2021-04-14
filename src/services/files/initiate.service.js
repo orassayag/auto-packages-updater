@@ -59,9 +59,7 @@ class InitiateService {
 		}
 		this.validatePositiveNumbers();
 		this.validateStrings();
-		this.validateBooleans();
 		this.validateArrays();
-		this.validateEnums();
 		this.validateSpecial();
 	}
 

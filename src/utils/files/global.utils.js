@@ -1,12 +1,10 @@
+const fs = require('fs-extra');
+
 class GlobalUtils {
 
     constructor() { }
-}
 
-module.exports = new GlobalUtils();
-/* const fs = require('fs-extra'); */
-
-/*     sleep(millisecondsCount) {
+    sleep(millisecondsCount) {
         if (!millisecondsCount) {
             return;
         }
@@ -37,4 +35,7 @@ module.exports = new GlobalUtils();
         if (fs.accessSync(targetPath, fs.constants.W_OK)) {
             throw new Error(`targetPath not writable: ${targetPath} (1000032)`);
         }
-    } */
+    }
+}
+
+module.exports = new GlobalUtils();

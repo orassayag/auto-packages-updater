@@ -1,14 +1,42 @@
+const validationUtils = require('./validation.utils');
+
 class TextUtils {
 
     constructor() {
         this.b = '===';
     }
+
+    setLogStatus(status) {
+        if (!status) {
+            return '';
+        }
+        return `${this.b}${status}${this.b}`;
+    }
+
+    // This method adds leading 0 if needed.
+    addLeadingZero(number) {
+        if (!validationUtils.isValidNumber(number)) {
+            return '';
+        }
+        return number < 10 ? `0${number}` : number;
+    }
+
+    getBackupName(data) {
+        const { applicationName, date, title, index } = data;
+        return `${applicationName}_${date}-${(index + 1)}${title ? `-${title}` : ''}`;
+    }
+
+    addBackslash(text) {
+        if (!text) {
+            return '';
+        }
+        return `${text}/`;
+    }
 }
 
 module.exports = new TextUtils();
 /* const colorUtils = require('./color.utils');
-const regexUtils = require('./regex.utils');
-const validationUtils = require('./validation.utils'); */
+const regexUtils = require('./regex.utils'); */
 
 
 /*     cutText(data) {
@@ -22,13 +50,6 @@ const validationUtils = require('./validation.utils'); */
         return text;
     }
 
-    setLogStatus(status) {
-        if (!status) {
-            return '';
-        }
-        return `${this.b}${status}${this.b}`;
-    }
-
     setLogStatusColored(status, color) {
         if (!status || !color) {
             return '';
@@ -40,32 +61,12 @@ const validationUtils = require('./validation.utils'); */
         return `${delimiter}${status}${delimiter}`;
     }
 
-    getBackupName(data) {
-        const { applicationName, date, title, index } = data;
-        return `${applicationName}_${date}-${(index + 1)}${title ? `-${title}` : ''}`;
-    }
-
-    // This method adds leading 0 if needed.
-    addLeadingZero(number) {
-        if (!validationUtils.isValidNumber(number)) {
-            return '';
-        }
-        return number < 10 ? `0${number}` : number;
-    }
-
     // This method converts a given number to display comma number.
     getNumberWithCommas(number) {
         if (number <= -1 || !validationUtils.isValidNumber(number)) {
             return '';
         }
         return number.toString().replace(regexUtils.numberCommasRegex, ',');
-    }
-
-    addBackslash(text) {
-        if (!text) {
-            return '';
-        }
-        return `${text}/`;
     }
 
     getSplitNumber(text) {

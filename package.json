@@ -18,7 +18,7 @@
       "url": "https://github.com/orassayag"
     }
   ],
-  "main": "src/scripts/purchase.script.js",
+  "main": "src/scripts/outdated.script.js",
   "files": [
     "src",
     ".eslintignore",

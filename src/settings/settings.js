@@ -2,8 +2,12 @@ const { pathUtils } = require('../utils');
 
 const settings = {
     // ===GENERAL=== //
+    // Determine if to auto update the package.json / package-lock.json files in each project.
+    IS_AUTO_UPDATE: false,
 
     // ===LOG=== //
+    // Determine the name of the resulting comments in the new TXT file in the 'dist' directory.
+    DIST_FILE_NAME: 'outdated',
 
     // ===COUNT & LIMIT=== //
     // Determine the milliseconds count timeout to wait before exiting the application.
@@ -12,6 +16,13 @@ const settings = {
     MAXIMUM_URL_VALIDATION_COUNT: 5,
     // Determine the milliseconds count timeout to wait between URL validation retry.
     MILLISECONDS_TIMEOUT_URL_VALIDATION: 1000,
+
+    // ===SOURCE=== //
+    // D
+    PROJECTS_PATH: pathUtils.getJoinPath({
+        targetPath: __dirname,
+        targetName: '../../'
+    }),
 
     // ===ROOT PATH=== //
     // Determine the application name used for some of the calculated paths.

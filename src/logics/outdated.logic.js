@@ -3,7 +3,7 @@ const { applicationService, confirmationService, countLimitService, logService,
     pathService, validationService } = require('../services');
 const { Status } = require('../core/enums');
 const globalUtils = require('../utils/files/global.utils');
-const { logUtils, systemUtils, validationUtils } = require('../utils');
+const { logUtils, systemUtils } = require('../utils');
 
 class OutdatedLogic {
 
@@ -13,14 +13,14 @@ class OutdatedLogic {
         // Validate all settings that fit the user's needs.
         await this.confirm();
         // Initiate all the settings, configurations, services, etc...
-        this.initiate();
+        await this.initiate();
         // Validate general settings.
         await this.validateGeneralSettings();
         // Start the scan for outdated packages process.
         await this.startSession();
     }
 
-    initiate() {
+    async initiate() {
         this.updateStatus('INITIATE THE SERVICES', Status.INITIATE);
         countLimitService.initiate(settings);
         applicationService.initiate({
@@ -28,7 +28,7 @@ class OutdatedLogic {
             status: Status.INITIATE
         });
         pathService.initiate(settings);
-        logService.initiate(settings);
+        await logService.initiate(settings);
     }
 
     async validateGeneralSettings() {
@@ -40,11 +40,13 @@ class OutdatedLogic {
     async startSession() {
         // Initiate.
         applicationService.applicationData.startDateTime = new Date();
+        // Create the projects.
+        //
         await this.exit(Status.FINISH);
     }
 
     async sleep() {
-        await globalUtils.sleep(countLimitService.countLimitData.millisecondsSendEmailDelayCount);
+        await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutExitApplication);
     }
 
     // Let the user confirm all the IMPORTANT settings before the process starts.
@@ -71,7 +73,7 @@ class OutdatedLogic {
 }
 
 module.exports = OutdatedLogic;
-
+/*         console.log('ok'); */
 /* const settings = require('../settings/settings');
 const { accountService, applicationService, confirmationService, countLimitService,
     courseService, createCourseService, logService, pathService, puppeteerService,

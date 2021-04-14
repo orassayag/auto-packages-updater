@@ -1,18 +1,38 @@
+const { LogData } = require('../../core/models');
+const pathService = require('./path.service');
+const { fileUtils } = require('../../utils');
+
 class LogService {
 
-	constructor() { }
+	constructor() {
+		this.logData = null;
+		// ===PATH=== //
+		this.baseSessionPath = null;
+	}
+
+	async initiate(settings) {
+		this.logData = new LogData(settings);
+		await this.initiateDirectories();
+	}
+
+	async initiateDirectories() {
+		// ===PATH=== //
+		this.baseSessionPath = pathService.pathData.distPath;
+		fileUtils.createDirectory(this.baseSessionPath);
+		this.distFileName = `${this.baseSessionPath}\\${this.logData.distFileName}.txt`;
+		await fileUtils.removeFile(this.distFileName);
+	}
 }
 
 module.exports = new LogService();
 
-/* const { LogData } = require('../../core/models');
+/*
 const { CourseStatusLog, CourseStatus, Color, Method, Mode, Placeholder, StatusIcon } = require('../../core/enums');
 const accountService = require('./account.service');
 const applicationService = require('./application.service');
 const countLimitService = require('./countLimit.service');
 const courseService = require('./course.service');
 const domService = require('./dom.service');
-const pathService = require('./path.service');
 const puppeteerService = require('./puppeteer.service');
 const { fileUtils, logUtils, pathUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
 
@@ -36,17 +56,6 @@ class LogService {
 		this.emptyValue = '##';
 		this.logSeparator = '==========';
 		this.isLogs = true;
-	}
-
-	initiate(settings) {
-		this.logData = new LogData(settings);
-		// Check if any logs active.
-		this.isLogs = applicationService.applicationData.mode === Mode.STANDARD &&
-			(this.logData.isLogCreateCoursesMethodValid || this.logData.isLogCreateCoursesMethodInvalid ||
-				this.logData.isLogUpdateCoursesMethodValid || this.logData.isLogUpdateCoursesMethodInvalid ||
-				this.logData.isLogPurchaseCoursesMethodValid || this.logData.isLogPurchaseCoursesMethodInvalid);
-		this.initiateDirectories();
-		this.isLogProgress = applicationService.applicationData.mode === Mode.STANDARD;
 	}
 
 	initiateDirectories() {

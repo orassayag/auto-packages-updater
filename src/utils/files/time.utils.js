@@ -1,11 +1,30 @@
+const textUtils = require('./text.utils');
+
 class TimeUtils {
 
     constructor() {}
+
+    getDateNoSpaces() {
+        const date = new Date();
+        return [this.getDay(date), this.getMonth(date), this.getYear(date)].join('');
+    }
+
+    getDay(date) {
+        return textUtils.addLeadingZero(date.getDate());
+    }
+
+    getMonth(date) {
+        return textUtils.addLeadingZero(date.getMonth() + 1);
+    }
+
+    getYear(date) {
+        return date.getFullYear();
+    }
 }
 
 module.exports = new TimeUtils();
 
-/* const textUtils = require('./text.utils');
+/*
 const validationUtils = require('./validation.utils'); */
 
 /*     constructor() {
@@ -18,11 +37,6 @@ const validationUtils = require('./validation.utils'); */
     getFullTime() {
         const date = new Date();
         return `${this.getHours(date)}:${this.getMinutes(date)}:${this.getSeconds(date)}`;
-    }
-
-    getDateNoSpaces() {
-        const date = new Date();
-        return [this.getDay(date), this.getMonth(date), this.getYear(date)].join('');
     }
 
     getDateNoSpacesFromString(date) {
@@ -67,18 +81,6 @@ const validationUtils = require('./validation.utils'); */
 
     getHours(date) {
         return textUtils.addLeadingZero(date.getHours());
-    }
-
-    getDay(date) {
-        return textUtils.addLeadingZero(date.getDate());
-    }
-
-    getMonth(date) {
-        return textUtils.addLeadingZero(date.getMonth() + 1);
-    }
-
-    getYear(date) {
-        return date.getFullYear();
     }
 
     getDifferenceTimeBetweenDates(data) {

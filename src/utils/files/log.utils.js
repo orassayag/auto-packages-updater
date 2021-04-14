@@ -1,35 +1,34 @@
+const textUtils = require('./text.utils');
+
 class LogUtils {
 
     constructor() { }
+
+    log(message) {
+        console.log(message);
+    }
+
+    logStatus(status) {
+        if (!status) {
+            return '';
+        }
+        this.log(textUtils.setLogStatus(status));
+    }
 }
 
 module.exports = new LogUtils();
 /* const logUpdate = require('../../log-update');
 const { Color } = require('../../core/enums');
 const colorUtils = require('./color.utils');
-const textUtils = require('./text.utils');
 const validationUtils = require('./validation.utils'); */
 
-/*     log(message) {
-        console.log(message);
-    }
+/*
 
     logColor(message, color) {
         return colorUtils.createColorMessage({
             message: message,
             color: color
         });
-    }
-
-    logColorStatus(data) {
-        const { status, color } = data;
-        if (!status || !color) {
-            return '';
-        }
-        this.log(colorUtils.createColorMessage({
-            message: textUtils.setLogStatus(status),
-            color: color
-        }));
     }
 
     logMagentaStatus(text) {

@@ -15,18 +15,22 @@ ToDo tasks:
 -In the second step, it will auto-update the package.json with the new version of the outdated NPM packages,
  and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory,
  and log all the updated projects.
--Add validation that if no projects exists in the configuration file - Throw an exception.
+-Add validation that if no projects exists in the project.json file - Throw an exception.
 -On the custom package file, validate the package name - Make sure it exists.
--For each package name and package version, validate the name and the version (by regex - Take it from the Crawler project).
+-For each package name and package version, validate the name and the version (by regex - Take it from the crawler project).
+-If a specific project is invalid for some reason, continue to the next project.
+-If a specific package is invalid for some reason, continue to the next package.
+-If package.json does not include any packages, continue to the next project.
+-For each any reason that faild or any exception that has been throwen - Log it under the project title.
 -After the NPM update packages, will verify the update by checking the package.json file again.
 -A referance: https://github.com/chegele/AutoGitUpdate/blob/master/index.js
 -Each configuration of a project will look as the following:
 [{
    "name": "project-name",
-   "update-type": "FULL" ("FULL" / "CUSTOM")
+   "update-type": "FULL", ("FULL" / "CUSTOM")
    "packages-path": "C:\\package.json",
    "custom-packages-path": null,
-   "exclude-packages-list": null / [
+   "exclude-packages-list": null, / [
        "jsdom"
    ],
    "include-dev-dependencies": true / false
@@ -39,18 +43,23 @@ ToDo tasks:
 ===sender (1/13)===
 jsdom: ^16.5.2 => ^16.5.3
 ===udemy-courses (0/22)===
+-All packages up to date.
 ===youtube-comments (0/12)===
+-All packages up to date.
 -The output of the TXT file of the second step will look like:
 ===sender (2/13)===
 jsdom: ^16.5.2 => ^16.5.3 | V Updated
 jsdom: ^16.5.2 => ^16.5.3 | X Failed
 ===udemy-courses (0/22)===
+-All packages up to date.
 ===youtube-comments (0/12)===
+-All packages up to date.
 -Add example of the projects.json file in the 'misc/examples' directory.
 -Add exmaple of customPackagesPath file in the 'misc/examples' directory.
--Add README.txt file with explination for each field of the project configuration (place it in the 'misc/examples' directory).
+-Add README.txt file with explination for each field of the project.json file (place it in the 'misc/examples' directory).
 -The log progress will look like:
 ===Working: sender (1/13 | 65.49%)===
+-Rename and check: countLimitService.countLimitData.millisecondsSendEmailDelayCount.
 -Edit the package.json description, the INSTRUCTIONS.md, and the README.md files.
 -Update packages + Recreate package-lock.json.
 -Remove code comments to a backup TXT file.
