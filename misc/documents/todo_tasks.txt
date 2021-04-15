@@ -11,10 +11,8 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
+-Build the 'backup' logic + initiate service logic. *
 -In the first step, to detect outdated NPM packages in a list projects, and log each project results into a TXT file.
--In the second step, it will auto-update the package.json with the new version of the outdated NPM packages,
- and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory,
- and log all the updated projects.
 -Add validation that if no projects exists in the project.json file - Throw an exception.
 -On the custom package file, validate the package name - Make sure it exists.
 -For each package name and package version, validate the name and the version (by regex - Take it from the crawler project).
@@ -46,6 +44,17 @@ jsdom: ^16.5.2 => ^16.5.3
 -All packages up to date.
 ===youtube-comments (0/12)===
 -All packages up to date.
+-Add example of the projects.json file in the 'misc/examples' directory.
+-Add exmaple of customPackagesPath file in the 'misc/examples' directory.
+-Add README.txt file with explination for each field of the project.json file (place it in the 'misc/examples' directory).
+-The log progress will look like:
+===Working: sender (1/13 | 65.49%)===
+-Rename and check: countLimitService.countLimitData.millisecondsSendEmailDelayCount.
+-Second step:
+-In the second step, it will auto-update the package.json with the new version of the outdated NPM packages,
+ and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory,
+ and log all the updated projects.
+-Add the number of maximum retries on each project on settings.js. Log all the retries results.
 -The output of the TXT file of the second step will look like:
 ===sender (2/13)===
 jsdom: ^16.5.2 => ^16.5.3 | V Updated
@@ -54,12 +63,6 @@ jsdom: ^16.5.2 => ^16.5.3 | X Failed
 -All packages up to date.
 ===youtube-comments (0/12)===
 -All packages up to date.
--Add example of the projects.json file in the 'misc/examples' directory.
--Add exmaple of customPackagesPath file in the 'misc/examples' directory.
--Add README.txt file with explination for each field of the project.json file (place it in the 'misc/examples' directory).
--The log progress will look like:
-===Working: sender (1/13 | 65.49%)===
--Rename and check: countLimitService.countLimitData.millisecondsSendEmailDelayCount.
 -Edit the package.json description, the INSTRUCTIONS.md, and the README.md files.
 -Update packages + Recreate package-lock.json.
 -Remove code comments to a backup TXT file.
@@ -86,7 +89,7 @@ export default
 -Detect all comments without a dot at the end: ^// .*(?<!\.)$
 -Do all the 'ToDo' tasks.
 -Format all documents.
--Verify all works well.
+-Verify all works well + Write on each project the task to update packages.
 -Fix TXT files spell mistakes via Gmail.
 -Move all complete tasks from here to complete_tasks.txt.
 -Upload to GitHub.

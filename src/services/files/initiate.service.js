@@ -96,6 +96,10 @@ class InitiateService {
 		const keys = this.scriptType === ScriptType.BACKUP ? ['BACKUPS_PATH'] : [];
 		[
 			...keys,
+			// ===LOG=== //
+			'DIST_FILE_NAME',
+			// ===SOURCE=== //
+			'PROJECTS_PATH',
 			// ===ROOT PATH=== //
 			'APPLICATION_NAME', 'OUTER_APPLICATION_PATH', 'INNER_APPLICATION_PATH',
 			// ===DYNAMIC PATH=== //
@@ -122,22 +126,34 @@ class InitiateService {
 	}
 
 	validateSpecial() {
+		const { PROJECTS_PATH } = settings;
+		this.validateDirectory(PROJECTS_PATH);
+		// ===SOURCE=== //
+		if (!fileUtils.isFilePath(PROJECTS_PATH)) {
+			throw new Error(`The path PROJECTS_PATH parameter needs to be a file path but it's a directory path: ${PROJECTS_PATH} (1000008)`);
+		}
+	}
+
+	validateDirectory(directory) {
+		// Verify that the dist and the sources paths exist.
+		globalUtils.isPathExistsError(directory);
+		// Verify that the dist and the sources paths are accessible.
+		globalUtils.isPathAccessible(directory);
 	}
 
 	validateDirectories() {
 		const keys = this.scriptType === ScriptType.BACKUP ? ['BACKUPS_PATH'] : [];
 		[
 			...keys,
+			// ===SOURCE=== //
+			'PROJECTS_PATH',
 			// ===ROOT PATH=== //
 			'OUTER_APPLICATION_PATH', 'INNER_APPLICATION_PATH',
 			// ===DYNAMIC PATH=== //
 			'APPLICATION_PATH', 'PACKAGE_JSON_PATH'
 		].map(key => {
 			const value = settings[key];
-			// Verify that the dist and the sources paths exists.
-			globalUtils.isPathExistsError(value);
-			// Verify that the dist and the source paths are accessible.
-			globalUtils.isPathAccessible(value);
+			this.validateDirectory(value);
 		});
 		[
 			...keys,
@@ -147,7 +163,7 @@ class InitiateService {
 			const value = settings[key];
 			// Verify that the paths are of directory and not a file.
 			if (!fileUtils.isDirectoryPath(value)) {
-				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000024)`);
+				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000009)`);
 			}
 		});
 	}

@@ -20,6 +20,10 @@ class PathUtils {
     getBasename(source) {
         return path.basename(source);
     }
+
+    getExtension(targetPath) {
+        return path.extname(targetPath);
+    }
 }
 
 module.exports = new PathUtils();
@@ -28,7 +32,4 @@ module.exports = new PathUtils();
 getDirName(targetPath) {
     return path.dirname(targetPath);
 }
-
-getExtension(targetPath) {
-    return path.extname(targetPath);
-} */
+ */

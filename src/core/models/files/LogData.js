@@ -2,7 +2,8 @@ class LogData {
 
 	constructor(settings) {
 		// Set the parameters from the settings file.
-		//const { } = settings;
+		const { DIST_FILE_NAME } = settings;
+		this.distFileName = DIST_FILE_NAME;
 	}
 }
 

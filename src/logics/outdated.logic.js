@@ -41,7 +41,8 @@ class OutdatedLogic {
         // Initiate.
         applicationService.applicationData.startDateTime = new Date();
         // Create the projects.
-        //
+        console.log('ok');
+        // Check for outdated packages.
         await this.exit(Status.FINISH);
     }
 

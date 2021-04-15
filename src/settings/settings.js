@@ -2,8 +2,6 @@ const { pathUtils } = require('../utils');
 
 const settings = {
     // ===GENERAL=== //
-    // Determine if to auto update the package.json / package-lock.json files in each project.
-    IS_AUTO_UPDATE: false,
 
     // ===LOG=== //
     // Determine the name of the resulting comments in the new TXT file in the 'dist' directory.
@@ -18,7 +16,8 @@ const settings = {
     MILLISECONDS_TIMEOUT_URL_VALIDATION: 1000,
 
     // ===SOURCE=== //
-    // D
+    // Determine the path of the projects.json file, the file which contains all the projects
+    // to check for outdated packages.
     PROJECTS_PATH: pathUtils.getJoinPath({
         targetPath: __dirname,
         targetName: '../../'
@@ -86,6 +85,8 @@ const settings = {
 };
 
 module.exports = settings;
+/*     // Determine if to auto update the package.json / package-lock.json files in each project.
+    IS_AUTO_UPDATE: false, */
 
 /* const { Mode } = require('../core/enums');
 const { courseUtils, pathUtils } = require('../utils');
