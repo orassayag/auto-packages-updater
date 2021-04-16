@@ -4,6 +4,10 @@ class TimeUtils {
 
     constructor() {}
 
+    getCurrentDate() {
+        return new Date();
+    }
+
     getDateNoSpaces() {
         const date = new Date();
         return [this.getDay(date), this.getMonth(date), this.getYear(date)].join('');

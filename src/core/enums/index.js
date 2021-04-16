@@ -1,6 +1,7 @@
+const { ProjectStatus, UpdateType } = require('./files/project.enum');
 const { ScriptType, Status } = require('./files/system.enum');
 
-module.exports = { ScriptType, Status };
+module.exports = { ProjectStatus, ScriptType, Status, UpdateType };
 
 /* const { CourseStatus, CourseStatusLog, CourseType } = require('./files/course.enum');
 const { Placeholder } = require('./files/placeholder.enum');

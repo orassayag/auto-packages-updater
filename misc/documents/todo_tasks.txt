@@ -15,10 +15,14 @@ ToDo tasks:
 -In the first step, to detect outdated NPM packages in a list projects, and log each project results into a TXT file.
 -Add validation that if no projects exists in the project.json file - Throw an exception.
 -On the custom package file, validate the package name - Make sure it exists.
--For each package name and package version, validate the name and the version (by regex - Take it from the crawler project).
+-Add validation to the maximum character count to the project's name.
+-Convert all 'new Date()' to be from the timeUtils. Change in all places.
+-For each package name and package version, validate the name (Also here, validate maximum character count to package name and cut the rest).
+-Validate only that package version exists.
 -If a specific project is invalid for some reason, continue to the next project.
 -If a specific package is invalid for some reason, continue to the next package.
 -If package.json does not include any packages, continue to the next project.
+-Add unexpected and excpected fields validation, like in the udemy courses project.
 -For each any reason that faild or any exception that has been throwen - Log it under the project title.
 -After the NPM update packages, will verify the update by checking the package.json file again.
 -A referance: https://github.com/chegele/AutoGitUpdate/blob/master/index.js
@@ -97,3 +101,4 @@ export default
 
 Complete / canceled tasks:
 ==========================
+ and the version (by regex - Take it from the crawler project). *

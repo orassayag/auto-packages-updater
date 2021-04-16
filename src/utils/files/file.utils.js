@@ -4,6 +4,10 @@ class FileUtils {
 
     constructor() { }
 
+    async read(targetPath) {
+        return await fs.readFile(targetPath, 'utf-8');
+    }
+
     async isPathExists(targetPath) {
         // Check if the path parameter was received.
         if (!targetPath) {
@@ -53,16 +57,17 @@ class FileUtils {
         const stats = fs.statSync(path);
         return stats.isDirectory();
     }
+
+    isFilePath(path) {
+        const stats = fs.statSync(path);
+        return stats.isFile();
+    }
 }
 
 module.exports = new FileUtils();
 
 /*
 const pathUtils = require('./path.utils');
-
-async read(targetPath) {
-    return await fs.readFile(targetPath, 'utf-8');
-}
 
 getAllDirectories(targetPath) {
     return fs.readdirSync(targetPath, { withFileTypes: true })
@@ -85,8 +90,4 @@ async appendFile(data) {
     await fs.appendFile(targetPath, message);
 }
 
-isFilePath(path) {
-    const stats = fs.statSync(path);
-    return stats.isFile();
-}
  */

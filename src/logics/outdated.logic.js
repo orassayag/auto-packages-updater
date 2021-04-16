@@ -1,6 +1,6 @@
 const settings = require('../settings/settings');
-const { applicationService, confirmationService, countLimitService, logService,
-    pathService, validationService } = require('../services');
+const { applicationService, confirmationService, countLimitService, createProjectService,
+    logService, pathService, validationService } = require('../services');
 const { Status } = require('../core/enums');
 const globalUtils = require('../utils/files/global.utils');
 const { logUtils, systemUtils } = require('../utils');
@@ -29,6 +29,7 @@ class OutdatedLogic {
         });
         pathService.initiate(settings);
         await logService.initiate(settings);
+        createProjectService.initiate();
     }
 
     async validateGeneralSettings() {
@@ -41,7 +42,7 @@ class OutdatedLogic {
         // Initiate.
         applicationService.applicationData.startDateTime = new Date();
         // Create the projects.
-        console.log('ok');
+        await createProjectService.initiateProjects();
         // Check for outdated packages.
         await this.exit(Status.FINISH);
     }
@@ -74,6 +75,11 @@ class OutdatedLogic {
 }
 
 module.exports = OutdatedLogic;
+/*         projectService.initiate(); */
+        //await projectService.initiateProjects();
+/* projectService,  */
+/* createProjects(); */
+        //console.log('ok');
 /*         console.log('ok'); */
 /* const settings = require('../settings/settings');
 const { accountService, applicationService, confirmationService, countLimitService,

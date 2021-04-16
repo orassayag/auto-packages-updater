@@ -20,7 +20,7 @@ const settings = {
     // to check for outdated packages.
     PROJECTS_PATH: pathUtils.getJoinPath({
         targetPath: __dirname,
-        targetName: '../../'
+        targetName: '../../sources/projects.json'
     }),
 
     // ===ROOT PATH=== //

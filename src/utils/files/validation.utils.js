@@ -32,6 +32,14 @@ class ValidationUtils {
     isValidArray(variable) {
         return Object.prototype.toString.call(variable) === '[object Array]';
     }
+
+    isValidString(variable) {
+        return typeof variable === 'string' || variable instanceof String;
+    }
+
+    isPropertyExists(obj, fieldName) {
+        return Object.prototype.hasOwnProperty.call(obj, fieldName);
+    }
 }
 
 module.exports = new ValidationUtils();
@@ -74,10 +82,6 @@ module.exports = new ValidationUtils();
 
     isValidEmailAddress(emailAddress) {
         return regexUtils.validateEmailAddressRegex.test(emailAddress);
-    }
-
-    isPropertyExists(obj, fieldName) {
-        return Object.prototype.hasOwnProperty.call(obj, fieldName);
     } */
 
 /* const regexUtils = require('./regex.utils'); */

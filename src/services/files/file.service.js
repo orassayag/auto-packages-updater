@@ -6,10 +6,10 @@ class FileService {
     constructor() { }
 
     async getFileData(data) {
-        const { filePath, parameterName, fileExtension } = data;
+        const { filePath, parameterName, fileExtension, isPackageJSONFile } = data;
         const fileDataResult = new FileDataResult();
         if (!await fileUtils.isPathExists(filePath)) {
-            fileDataResult.errorMessage = `Invalid or no ${parameterName} parameter was found: Expected a number but received: ${filePath} (1000010)`;
+            fileDataResult.errorMessage = `Path not exists: ${filePath} (1000010)`;
             return fileDataResult;
         }
         if (!fileUtils.isFilePath(filePath)) {
@@ -25,7 +25,7 @@ class FileService {
         if (fileExtension === '.json') {
             fileDataResult.resultData = JSON.parse(fileDataResult.resultData);
         }
-        if (!validationUtils.isExists(fileDataResult.resultData)) {
+        if (!isPackageJSONFile && !validationUtils.isExists(fileDataResult.resultData)) {
             fileDataResult.errorMessage = `No data exists in the file: ${filePath} (1000013)`;
             return fileDataResult;
         }
@@ -34,13 +34,15 @@ class FileService {
 }
 
 module.exports = new FileService();
+/*         console.log(fileDataResult.resultData); */
+/*             fileDataResult.errorMessage = `Invalid or no ${parameterName} parameter was found: Expected a number but received: ${filePath} (1000010)`; */
 /* textUtils,  */
 /*  environment, */
-            /*         fileDataResult.resultData =  */
+/*         fileDataResult.resultData =  */
         //return resultData;
-            /*             throw new Error(`No data exists in the file: ${filePath} (1000013)`); */
+/*             throw new Error(`No data exists in the file: ${filePath} (1000013)`); */
                     //const fileData = await fileUtils.read(filePath);
 /*         let resultData = null; */
-            /*             throw new Error(`The parameter path ${parameterName} must be a ${fileExtension} file but it's: ${extension} file (1000012)`); */
-            /*             throw new Error(`Invalid or no ${parameterName} parameter was found: Expected a number but received: ${filePath} (1000010)`); */
+/*             throw new Error(`The parameter path ${parameterName} must be a ${fileExtension} file but it's: ${extension} file (1000012)`); */
+/*             throw new Error(`Invalid or no ${parameterName} parameter was found: Expected a number but received: ${filePath} (1000010)`); */
 /*             throw new Error(`The parameter path ${parameterName} marked as file but it's a path of a directory: ${filePath} (1000011)`); */

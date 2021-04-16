@@ -5,10 +5,12 @@ const CountLimitData = require('./files/CountLimitData');
 const FileDataResult = require('./files/FileDataResult');
 const LogData = require('./files/LogData');
 const PathData = require('./files/PathData');
+const ProjectData = require('./files/ProjectData');
+const ProjectsData = require('./files/ProjectsData');
 
 module.exports = {
-    ApplicationData, BackupData, BackupDirectory, CountLimitData, LogData, PathData,
-    FileDataResult
+    ApplicationData, BackupData, BackupDirectory, CountLimitData, FileDataResult, LogData,
+    PathData, ProjectData, ProjectsData
 };
 
 /* const AccountData = require('./files/AccountData');
