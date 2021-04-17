@@ -8,8 +8,11 @@ class ProjectData {
         this.updateType = null;
         this.packagesPath = null;
         this.customPackagesPath = null;
+        this.customPackagesList = null;
         this.excludePackagesList = null;
         this.isIncludeDevDependencies = null;
+        this.dependencies = null;
+        this.devDependencies = null;
         this.status = status;
         this.resultDateTime = null;
         this.resultMessage = null;
@@ -18,6 +21,9 @@ class ProjectData {
 }
 
 module.exports = ProjectData;
+/*         this.packagesList = null; */
+/*         this.customPackagesList = null;
+ */
 /* this.id = id;
 this.createDateTime = createDateTime;
 this.name = name;

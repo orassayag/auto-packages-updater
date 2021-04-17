@@ -37,6 +37,11 @@ class ValidationUtils {
         return typeof variable === 'string' || variable instanceof String;
     }
 
+    // This method validates if a given variable is a valid boolean and returns the result.
+    isValidBoolean(boolean) {
+        return typeof boolean == typeof true;
+    }
+
     isPropertyExists(obj, fieldName) {
         return Object.prototype.hasOwnProperty.call(obj, fieldName);
     }
@@ -44,10 +49,6 @@ class ValidationUtils {
 
 module.exports = new ValidationUtils();
 /*
-    // This method validates if a given variable is a valid boolean and returns the result.
-    isValidBoolean(boolean) {
-        return typeof boolean == typeof true;
-    }
 
     isValidURL(url) {
         return regexUtils.validateURLRegex.test(url);

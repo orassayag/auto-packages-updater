@@ -3,11 +3,15 @@ require('../services/files/initiate.service').initiate('test');
 (() => {
 })();
 
-/*
+/* eslint-disable quotes */
+/* const { validationUtils } = require('../utils'); */
+/*     console.log(validationUtils.isExists(true)); */
+
+/* (async () => {
 const ncu = require('npm-check-updates');
 
 const json = JSON.stringify({
-        "dependencies": {
+        "dependenc1ies": {
             "ansi-escapes": "^4.3.2",
             "babel-eslint": "^10.1.0",
             "cli-cursor": "^3.1.0",
@@ -22,8 +26,7 @@ const json = JSON.stringify({
             "puppeteer-extra-plugin-stealth": "^2.7.6",
             "random-useragent": "^0.5.0",
             "slice-ansi": "^4.0.0",
-            "tree-kill": "^1.2.2",
-            "wrap-ansi": "^7.0.0"
+            "tree-kill": "^1.2.2"
         }
     });
 
@@ -32,10 +35,10 @@ const json = JSON.stringify({
         packageData: json,
         upgrade: false,
         // Defaults:
-        // jsonUpgraded: true,
-        // silent: true,
+        jsonUpgraded: true,
+        silent: true
     });
 
     console.log(upgraded);
 
- */
+})(); */

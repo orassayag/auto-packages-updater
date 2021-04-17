@@ -80,8 +80,7 @@ class InitiateService {
 	validatePositiveNumbers() {
 		[
 			// ===COUNT & LIMIT=== //
-			'MILLISECONDS_TIMEOUT_EXIT_APPLICATION', 'MAXIMUM_URL_VALIDATION_COUNT',
-			'MILLISECONDS_TIMEOUT_URL_VALIDATION',
+			'MILLISECONDS_TIMEOUT_EXIT_APPLICATION', 'MAXIMUM_URL_VALIDATION_COUNT', 'MILLISECONDS_TIMEOUT_URL_VALIDATION',
 			// ===BACKUP=== //
 			'MILLISECONDS_DELAY_VERIFY_BACKUP_COUNT', 'BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT'
 		].map(key => {
@@ -181,7 +180,7 @@ class InitiateService {
 }
 
 module.exports = new InitiateService();
-
+/* 'MAXIMUM_PACKAGE_NAME_CHARACTERS_COUNT', 'MAXIMUM_PACKAGE_VERSION_CHARACTERS_COUNT',  */
 /* const settings = require('../../settings/settings');
 const { Mode, ScriptType } = require('../../core/enums');
 const { fileUtils, pathUtils, validationUtils } = require('../../utils');

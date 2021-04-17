@@ -1,8 +1,9 @@
 class ProjectsData {
 
     constructor() {
-        this.projectsList = null;
+        this.projectsList = [];
     }
 }
 
 module.exports = ProjectsData;
+/*         //this.projectsList = null; */

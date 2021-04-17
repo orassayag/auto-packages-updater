@@ -11,34 +11,10 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
--Build the 'backup' logic + initiate service logic. *
--In the first step, to detect outdated NPM packages in a list projects, and log each project results into a TXT file.
--Add validation that if no projects exists in the project.json file - Throw an exception.
--On the custom package file, validate the package name - Make sure it exists.
--Add validation to the maximum character count to the project's name.
--Convert all 'new Date()' to be from the timeUtils. Change in all places.
--For each package name and package version, validate the name (Also here, validate maximum character count to package name and cut the rest).
--Validate only that package version exists.
--If a specific project is invalid for some reason, continue to the next project.
--If a specific package is invalid for some reason, continue to the next package.
--If package.json does not include any packages, continue to the next project.
--Add unexpected and excpected fields validation, like in the udemy courses project.
+-Add validation that if the update type is 'custom' and no custom packages found - Throw an exception.
+-Clear duplicdate packages if exdantly exists (custom, dependencies and in dev-dependencies - not between them).
 -For each any reason that faild or any exception that has been throwen - Log it under the project title.
 -After the NPM update packages, will verify the update by checking the package.json file again.
--A referance: https://github.com/chegele/AutoGitUpdate/blob/master/index.js
--Each configuration of a project will look as the following:
-[{
-   "name": "project-name",
-   "update-type": "FULL", ("FULL" / "CUSTOM")
-   "packages-path": "C:\\package.json",
-   "custom-packages-path": null,
-   "exclude-packages-list": null, / [
-       "jsdom"
-   ],
-   "include-dev-dependencies": true / false
-}]
--Validate that each project: All fields exists and in the correct type, updateType correct,
- package.json path exists and valid, if customPackagesPath path exists - need to be valid.
 -Convert to list of projects classes.
 -Do the logic of validating.
 -The output of the TXT file of the first step will look like:
@@ -58,6 +34,7 @@ jsdom: ^16.5.2 => ^16.5.3
 -In the second step, it will auto-update the package.json with the new version of the outdated NPM packages,
  and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory,
  and log all the updated projects.
+-Check if the node_moudles directory exists, if not, create and delete it. If it is, re-create it without to delete it.
 -Add the number of maximum retries on each project on settings.js. Log all the retries results.
 -The output of the TXT file of the second step will look like:
 ===sender (2/13)===
@@ -101,4 +78,32 @@ export default
 
 Complete / canceled tasks:
 ==========================
+-Each configuration of a project will look as the following: *
+[{ *
+   "name": "project-name", *
+   "update-type": "FULL", ("FULL" / "CUSTOM") *
+   "packages-path": "C:\\package.json", *
+   "custom-packages-path": null, *
+   "exclude-packages-list": null, / [ *
+       "jsdom" *
+   ], *
+   "include-dev-dependencies": true / false *
+}] *
+-A referance: https://github.com/chegele/AutoGitUpdate/blob/master/index.js *
+-Validate that each project: All fields exists and in the correct type, updateType correct, *
+ package.json path exists and valid, if customPackagesPath path exists - need to be valid. *
+-Build the 'backup' logic + initiate service logic. *
+-In the first step, to detect outdated NPM packages in a list projects, and log each project results into a TXT file. *
+-Add validation that if no projects exists in the project.json file - Throw an exception. *
+-If a specific package is invalid for some reason, continue to the next package - Canceled. *
+-For each package name and package version, validate the name (Also here, validate maximum character count to package name and cut the rest) - Canceled. *
+-Validate only that package version exists - Canceled. *
+-Rebuild the packages logic.
+-On the custom package file, validate the package name - Make sure it exists - Canceled. *
+-Add validation to the maximum character count to the project's name - Canceled. *
+-Convert all 'new Date()' to be from the timeUtils. Change in all places. *
+-If a specific project is invalid for some reason, continue to the next project. *
+-If package.json does not include any packages, continue to the next project. *
+-Add unexpected and excpected fields validation on the projectsData and on all the project's packages lists, *
+like in the udemy courses project, and validate the status (on projectData). *
  and the version (by regex - Take it from the crawler project). *

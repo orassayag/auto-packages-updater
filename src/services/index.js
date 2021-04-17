@@ -11,6 +11,8 @@ module.exports = {
     applicationService, confirmationService, countLimitService, createProjectService, fileService, logService,
     pathService, validationService
 };
+/* const packageService = require('./files/package.service'); */
+/* packageService,  */
 /* , projectService */
 //const projectService = require('./files/project.service');
 /* const accountService = require('./files/account.service');

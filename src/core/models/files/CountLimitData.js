@@ -10,7 +10,14 @@ class CountLimitData {
 }
 
 module.exports = CountLimitData;
-
+			/* ,
+			MAXIMUM_PACKAGE_NAME_CHARACTERS_COUNT, MAXIMUM_PACKAGE_VERSION_CHARACTERS_COUNT  */
+/* 		this.maximumPackageNameCharactersCount = MAXIMUM_PACKAGE_NAME_CHARACTERS_COUNT;
+		this.maximumPackageVersionCharactersCount = MAXIMUM_PACKAGE_VERSION_CHARACTERS_COUNT; */
+		/* 			    // Determine the maximum characters count of the package name.
+		MAXIMUM_PACKAGE_NAME_CHARACTERS_COUNT: 300,
+		// Determine the maximum characters count of the package version.
+		MAXIMUM_PACKAGE_VERSION_CHARACTERS_COUNT: 300, */
 /* class CountLimitData {
 
 	constructor(settings) {

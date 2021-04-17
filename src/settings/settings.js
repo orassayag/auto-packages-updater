@@ -85,6 +85,10 @@ const settings = {
 };
 
 module.exports = settings;
+/*     // Determine the maximum characters count of the package name.
+    MAXIMUM_PACKAGE_NAME_CHARACTERS_COUNT: 300,
+    // Determine the maximum characters count of the package version.
+    MAXIMUM_PACKAGE_VERSION_CHARACTERS_COUNT: 300, */
 /*     // Determine if to auto update the package.json / package-lock.json files in each project.
     IS_AUTO_UPDATE: false, */
 

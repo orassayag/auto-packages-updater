@@ -13,6 +13,17 @@ class TextUtils {
         return `${this.b}${status}${this.b}`;
     }
 
+    cutText(data) {
+        const { text, count } = data;
+        if (!text) {
+            return '';
+        }
+        if (text.length > count) {
+            return text.substring(0, count);
+        }
+        return text;
+    }
+
     // This method adds leading 0 if needed.
     addLeadingZero(number) {
         if (!validationUtils.isValidNumber(number)) {
@@ -39,16 +50,7 @@ module.exports = new TextUtils();
 const regexUtils = require('./regex.utils'); */
 
 
-/*     cutText(data) {
-        const { text, count } = data;
-        if (!text) {
-            return '';
-        }
-        if (text.length > count) {
-            return text.substring(0, count);
-        }
-        return text;
-    }
+/*
 
     setLogStatusColored(status, color) {
         if (!status || !color) {
