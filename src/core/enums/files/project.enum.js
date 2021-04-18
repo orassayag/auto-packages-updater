@@ -25,6 +25,10 @@ const ProjectStatus = enumUtils.createEnum([
     ['MISSING_EXCLUDE_PACKAGES_LIST', 'missing exclude packages list'],
     ['INVALID_EXCLUDE_PACKAGES_LIST', 'invalid exclude packages list'],
     ['EMPTY_EXCLUDE_PACKAGES_LIST', 'empty exclude packages list'],
+    ['NO_CUSTOM_PACKAGES', 'no custom packages'],
+    ['NO_MATCH_CUSTOM_PACKAGES', 'no match custom packages'],
+    ['DUPLICATE', 'duplicate'],
+    ['NO_TEMPLATE_PACKAGES', 'no template packages'],
     ['FAIL', 'fail'],
     ['FINISH', 'finish']
 ]);

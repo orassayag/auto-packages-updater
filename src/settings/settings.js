@@ -8,6 +8,9 @@ const settings = {
     DIST_FILE_NAME: 'outdated',
 
     // ===COUNT & LIMIT=== //
+    // Determine the maximum number of projects to check for outdated packages.
+    // If the limit exceeded, will take the first projects in the JSON file by the original order.
+    MAXIMUM_PROJECTS_COUNT: 100,
     // Determine the milliseconds count timeout to wait before exiting the application.
     MILLISECONDS_TIMEOUT_EXIT_APPLICATION: 1000,
     // Determine the number of retries to validate the URLs.

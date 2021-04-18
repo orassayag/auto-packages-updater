@@ -24,6 +24,13 @@ class TextUtils {
         return text;
     }
 
+    removeDuplicates(list) {
+        if (validationUtils.isExists(list) && list.length > 1) {
+            list = [...new Set(list)];
+        }
+        return list;
+    }
+
     // This method adds leading 0 if needed.
     addLeadingZero(number) {
         if (!validationUtils.isValidNumber(number)) {
@@ -42,6 +49,13 @@ class TextUtils {
             return '';
         }
         return `${text}/`;
+    }
+
+    toLowerCaseTrim(text) {
+        if (!text) {
+            return '';
+        }
+        return text.toLowerCase().trim();
     }
 }
 
@@ -83,13 +97,6 @@ const regexUtils = require('./regex.utils'); */
             return '';
         }
         return text.toLowerCase();
-    }
-
-    toLowerCaseTrim(text) {
-        if (!text) {
-            return '';
-        }
-        return text.toLowerCase().trim();
     }
 
     removeAllNoneNumbers(text) {

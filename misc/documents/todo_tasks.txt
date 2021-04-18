@@ -11,12 +11,8 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
--Add validation that if the update type is 'custom' and no custom packages found - Throw an exception.
--Clear duplicdate packages if exdantly exists (custom, dependencies and in dev-dependencies - not between them).
+-Convert to list of projects classes. *
 -For each any reason that faild or any exception that has been throwen - Log it under the project title.
--After the NPM update packages, will verify the update by checking the package.json file again.
--Convert to list of projects classes.
--Do the logic of validating.
 -The output of the TXT file of the first step will look like:
 ===sender (1/13)===
 jsdom: ^16.5.2 => ^16.5.3
@@ -28,9 +24,18 @@ jsdom: ^16.5.2 => ^16.5.3
 -Add exmaple of customPackagesPath file in the 'misc/examples' directory.
 -Add README.txt file with explination for each field of the project.json file (place it in the 'misc/examples' directory).
 -The log progress will look like:
-===Working: sender (1/13 | 65.49%)===
+===[/] Working: sender (1/13 | 05.50%)===
 -Rename and check: countLimitService.countLimitData.millisecondsSendEmailDelayCount.
--Second step:
+-Second step - Different scripts, same logic with a flag of true:
+ 1. Update the package.json file with the updated packages versions.
+ 2. If the package-lock.json exists, delete it.
+ 3. If the 'node_modules' directory exists, mark it and, and delete it.
+ 4. Run 'npm i', wait for the results.
+ 5. If success, according to the mark flag, delete again the 'node_modules' directory or keep it.
+ 6. Remove the last empty line (mark it as flag in settings.js) in the package.json and package-lock.json files.
+ 7. If failed, add to 1 to the retries, and go to the retry process: Delete the 'node_modules' directory and run 'npm i' again.
+ 8. If retries exceeded the limit, mark an error to the project and continue to the next project.
+-After the NPM update packages, will verify the update by checking the package.json file again.
 -In the second step, it will auto-update the package.json with the new version of the outdated NPM packages,
  and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory,
  and log all the updated projects.
@@ -73,11 +78,17 @@ export default
 -Verify all works well + Write on each project the task to update packages.
 -Fix TXT files spell mistakes via Gmail.
 -Move all complete tasks from here to complete_tasks.txt.
+-Remove the 'test' directory from the project's directory.
 -Upload to GitHub.
 -Backup to iOmega.
 
 Complete / canceled tasks:
 ==========================
+-Add validation that if the update type is 'custom' and no custom packages found - Log error to the project. *
+-Do the logic of validating. *
+-Add validation for duplicate project with the same package.json path. *
+-Clear duplicdate packages if accidentally exists (custom and exclude, dependencies and devDependencies are objects). *
+-Add maximum projects to check - After that, take the first count of projects. *
 -Each configuration of a project will look as the following: *
 [{ *
    "name": "project-name", *

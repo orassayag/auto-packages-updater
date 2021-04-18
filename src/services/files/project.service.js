@@ -1,10 +1,11 @@
 const { ProjectData, ProjectsData } = require('../../core/models');
 const { ProjectStatus, UpdateType } = require('../../core/enums');
+const countLimitService = require('./countLimit.service');
 const fileService = require('./file.service');
 const pathService = require('./path.service');
-const { validationUtils, timeUtils } = require('../../utils');
+const { validationUtils, textUtils, timeUtils } = require('../../utils');
 
-class CreateProjectService {
+class ProjectService {
 
     constructor() {
         this.projectsData = null;
@@ -14,7 +15,7 @@ class CreateProjectService {
         this.projectsData = new ProjectsData();
     }
 
-    async initiateProjects() {
+    async findOutdatedPackages() {
         // Get the projects data from the projects.json file.
         const fileDataResult = await fileService.getFileData({
             filePath: pathService.pathData.projectsPath,
@@ -34,28 +35,69 @@ class CreateProjectService {
         }
         // Validate and create all the projects.
         await this.createProjects(resultData);
+        // Validate the projects.
+        this.validateProjects();
+        console.log(this.projectsData.projectsList);
+        // Check for updates in all the projects.
+
+        // Log all the projects with the results.
     }
 
+    // This method creates the projects.
     async createProjects(resultData) {
+        let lastProjectId = 1;
         for (let i = 0; i < resultData.length; i++) {
-            const projectData = await this.validateCreateProject(resultData[i]);
+            const projectData = await this.validateCreateProject(resultData[i], lastProjectId);
             if (!projectData) {
                 throw new Error('Invalid or no projectData object was found (1000015)');
             }
+            lastProjectId++;
             this.projectsData.projectsList.push(projectData);
-            console.log(projectData);
         }
     }
 
-    async validateCreateProject(data) {
+    // This method validate the projects.
+    validateProjects() {
+        if (this.projectsData.projectsList.length <= 1) {
+            return;
+        }
+        // Clean duplicate projects (by the same package.json paths).
+        for (let i = 0; i < this.projectsData.projectsList.length; i++) {
+            this.compareProjects(this.projectsData.projectsList[i]);
+        }
+        // Validate that the maximum number of projects don't exceeded the limit.
+        if (this.projectsData.projectsList.length > countLimitService.countLimitData.maximumProjectsCount) {
+            this.projectsData.projectsList = this.projectsData.projectsList.slice(0, countLimitService.countLimitData.maximumProjectsCount);
+        }
+    }
+
+    // This method check if duplicate projects exist, based on the same package.json paths.
+    compareProjects(projectData) {
+        if (projectData.status !== ProjectStatus.CREATE) {
+            return;
+        }
+        for (let i = 0; i < this.projectsData.projectsList.length; i++) {
+            const currentProjectData = this.projectsData.projectsList[i];
+            if (projectData.id === currentProjectData.id || currentProjectData.status !== ProjectStatus.CREATE) {
+                continue;
+            }
+            if (projectData.packagesPath === currentProjectData.packagesPath) {
+                this.projectsData.projectsList[i] = this.updateProjectStatus({
+                    projectData: currentProjectData,
+                    status: ProjectStatus.DUPLICATE,
+                    resultMessage: `The project's package.json already exists in the list of projects: ${projectData.updateType} (1000014)`
+                });
+            }
+        }
+    }
+
+    async validateCreateProject(data, lastProjectId) {
         // Create a new project data.
-        let lastProjectId = 1;
         let projectData = new ProjectData({
             id: lastProjectId,
             createDateTime: timeUtils.getCurrentDate(),
             status: ProjectStatus.CREATE
         });
-        lastProjectId++;
         // Validate the 'name' field.
         projectData = this.validateName(projectData, data);
         if (projectData.resultMessage) {
@@ -88,6 +130,8 @@ class CreateProjectService {
         }
         // Validate the entire project data.
         projectData = this.validateProject(projectData);
+        // Finalize the project data.
+        projectData = this.finalizeProject(projectData);
         return projectData;
     }
 
@@ -192,6 +236,10 @@ class CreateProjectService {
 
     // This method validate the 'custom-packages-path' field.
     async validateCustomPackagesPath(projectData, data) {
+        // If the update type is full, ignore the custom logic.
+        if (projectData.updateType === UpdateType.FULL) {
+            return projectData;
+        }
         projectData = this.validateJSONString({
             projectData: projectData,
             jsonFieldName: 'custom-packages-path',
@@ -221,7 +269,7 @@ class CreateProjectService {
                 resultMessage: errorMessage
             });
         }
-        projectData.customPackagesList = resultData.split('\r\n').map(p => p.trim());
+        projectData.customPackagesList = resultData.split('\r\n').map(p => textUtils.toLowerCaseTrim(p));
         return projectData;
     }
 
@@ -236,6 +284,9 @@ class CreateProjectService {
             invalidStatus: ProjectStatus.INVALID_EXCLUDE_PACKAGES_LIST,
             emptyStatus: ProjectStatus.EMPTY_EXCLUDE_PACKAGES_LIST
         }, data);
+        if (validationUtils.isExists(projectData.excludePackagesList)) {
+            projectData.excludePackagesList = projectData.excludePackagesList.map(p => textUtils.toLowerCaseTrim(p));
+        }
         return projectData;
     }
 
@@ -335,24 +386,6 @@ class CreateProjectService {
         return projectData;
     }
 
-    validateProject(projectData) {
-        // Validate all expected fields.
-        const scanFieldsResult = this.scanFields({
-            projectData: projectData,
-            keysList: ['id', 'createDateTime', 'name', 'updateType', 'packagesPath', 'isIncludeDevDependencies', 'dependencies', 'status', 'retriesCount']
-        });
-        if (scanFieldsResult) {
-            return this.updateProjectStatus({
-                projectData: projectData,
-                status: scanFieldsResult.status,
-                resultMessage: scanFieldsResult.resultMessage
-            });
-        }
-        // Validate the updateType.
-        
-        return projectData;
-    }
-
     scanFields(data) {
         const { projectData, keysList } = data;
         let scanFieldsResult = null;
@@ -370,6 +403,115 @@ class CreateProjectService {
         return scanFieldsResult;
     }
 
+    // This method validate that if the update type is custom, at least one package from custom
+    // match the dependencies or to devDependencies objects (if required).
+    findMatchCustomPackages(projectData) {
+        let isMatchPackage = false;
+        const { customPackagesList, dependencies, devDependencies, isIncludeDevDependencies } = projectData;
+        for (let i = 0; i < customPackagesList.length; i++) {
+            const customPackageName = customPackagesList[i];
+            if (validationUtils.isPropertyExists(dependencies, customPackageName)) {
+                isMatchPackage = true;
+                break;
+            }
+            if (isIncludeDevDependencies && devDependencies) {
+                if (validationUtils.isPropertyExists(devDependencies, customPackageName)) {
+                    isMatchPackage = true;
+                    break;
+                }
+            }
+        }
+        return isMatchPackage;
+    }
+
+    // This method validate the entire project data.
+    validateProject(projectData) {
+        // Validate all expected fields.
+        const scanFieldsResult = this.scanFields({
+            projectData: projectData,
+            keysList: ['id', 'createDateTime', 'name', 'updateType', 'packagesPath', 'isIncludeDevDependencies', 'dependencies', 'status', 'retriesCount']
+        });
+        if (scanFieldsResult) {
+            return this.updateProjectStatus({
+                projectData: projectData,
+                status: scanFieldsResult.status,
+                resultMessage: scanFieldsResult.resultMessage
+            });
+        }
+        // Validate that if the update type is custom, make sure there are custom packages.
+        if (projectData.updateType === UpdateType.CUSTOM) {
+            if (!validationUtils.isExists(projectData.customPackagesList)) {
+                return this.updateProjectStatus({
+                    projectData: projectData,
+                    status: ProjectStatus.NO_CUSTOM_PACKAGES,
+                    resultMessage: 'The project update type marked as custom but no custom packages were found (1000034)'
+                });
+            }
+            // Validate that if the update type is custom, at least one package from custom
+            // match the dependencies or to devDependencies objects (if required).
+            if (!this.findMatchCustomPackages(projectData)) {
+                return this.updateProjectStatus({
+                    projectData: projectData,
+                    status: ProjectStatus.NO_MATCH_CUSTOM_PACKAGES,
+                    resultMessage: 'No match custom package in the dependencies or devDependencies objects were found (1000034)'
+                });
+            }
+        }
+        return projectData;
+    }
+
+    finalizeProject(projectData) {
+        // Clear all duplicate packages, regardless to the versions.
+        projectData.customPackagesList = textUtils.removeDuplicates(projectData.customPackagesList);
+        projectData.excludePackagesList = textUtils.removeDuplicates(projectData.excludePackagesList);
+        // If the project data contains no error -
+        // Create the final version of the package.json structure data to check for outdated packages.
+        projectData = this.createPackagesTemplate(projectData);
+        return projectData;
+    }
+
+    createPackagesTemplate(projectData) {
+        const { updateType, customPackagesList, excludePackagesList, isIncludeDevDependencies, dependencies, devDependencies } = projectData;
+        let packagesTemplate = { ...dependencies };
+        if (isIncludeDevDependencies && devDependencies) {
+            packagesTemplate = { ...packagesTemplate, ...devDependencies };
+        }
+        // If the update type is custom - Remove all the packages that are not listed in the customPackagesList.
+        if (updateType === UpdateType.CUSTOM) {
+            const customPackagesTemplate = {};
+            for (let i = 0; i < customPackagesList.length; i++) {
+                const packageName = customPackagesList[i];
+                const packageVersion = packagesTemplate[packageName];
+                if (packageVersion) {
+                    customPackagesTemplate[packageName] = packageVersion;
+                }
+            }
+            packagesTemplate = customPackagesTemplate;
+        }
+        // Remove the exclude packages from the list, if exists.
+        if (validationUtils.isExists(excludePackagesList)) {
+            for (let i = 0; i < excludePackagesList.length; i++) {
+                delete packagesTemplate[excludePackagesList[i]];
+            }
+        }
+        // Validate that there are any packages in the template. If not, update the status.
+        if (!validationUtils.isExists(Object.keys(packagesTemplate))) {
+            return this.updateProjectStatus({
+                projectData: projectData,
+                status: ProjectStatus.NO_TEMPLATE_PACKAGES,
+                resultMessage: 'There are no packages to validate. Consider rechecking the custom/exclude lists (1000034)'
+            });
+        }
+        projectData.packagesTemplate = packagesTemplate;
+        return projectData;
+    }
+
+    validateCheckResult() {
+        // ToDo: On the second step here - Logic of update packages - Here - If outdated packages exists.
+
+        // Prepare and save the result to log.
+    }
+
     updateProjectStatus(data) {
         const { projectData, status, resultMessage } = data;
         if (!status || !validationUtils.isValidEnum({
@@ -385,25 +527,68 @@ class CreateProjectService {
     }
 }
 
-module.exports = new CreateProjectService();
+module.exports = new ProjectService();
+/*                 debugger; */
+/*         //projectData.customPackagesList = resultData.split('\r\n').map(p => p.trim()); */
+/*         switch (updateType) {
+            case UpdateType.FULL: {
+                break;
+            }
+            case UpdateType.CUSTOM: {
+                break;
+            }
+        } */
+/*     this.packagesPath = null;
+this.customPackagesPath = null;
+this.customPackagesList = null;
+this.excludePackagesList = null;
+this.isIncludeDevDependencies = null;
+this.dependencies = null;
+this.devDependencies = null; */
+/*         let packagesTemplate = { ...projectData.dependencies };
+        if (projectData.isIncludeDevDependencies && projectData.devDependencies) {
+            packagesTemplate = { ...packagesTemplate, ...projectData.devDependencies };
+        } */
+        // If the update type is custom - Remove all the packages that are not listed in the customPackagesList.
+        //if (projectData.updateType === UpdateType.CUSTOM) {
+        //for (let i = )
+/*             const keys = Object.keys(packagesTemplate);
+            for (let i = 0; i < keys.length; i++) {
+
+            } */
+        //    else if ()
+        //}
+/* } */
+/*         console.log(resultData.length); */
+/*         this.lastProjectId = null; */
+/*             console.log(projectData); */
+/*         this.lastProjectId++; */
+/*                 this.coursesData.coursesList[i] = this.updateCourseStatus({
+                    course: currentCourse,
+                    status: CourseStatus.DUPLICATE,
+                    details: 'This course repeats multiple times in this session and should be purchased.'
+                }); */
+/* initiateProjects */
+/* CreateProjectService */
+/* CreateProjectService */
 /*         // Verify all fields that expected to be filled are filled. */
-    /*    constructor(data) {
-   const { id, createDateTime, status } = data;
-   this.id = id;
-   this.createDateTime = createDateTime;
-   this.name = null;
-   this.updateType = null;
-   this.packagesPath = null;
-   this.customPackagesPath = null;
-   this.customPackagesList = null;
-   this.excludePackagesList = null;
-   this.isIncludeDevDependencies = null;
-   this.dependencies = null;
-   this.devDependencies = null;
-   this.status = status;
-   this.resultDateTime = null;
-   this.resultMessage = null;
-   this.retriesCount = 0;
+/*    constructor(data) {
+const { id, createDateTime, status } = data;
+this.id = id;
+this.createDateTime = createDateTime;
+this.name = null;
+this.updateType = null;
+this.packagesPath = null;
+this.customPackagesPath = null;
+this.customPackagesList = null;
+this.excludePackagesList = null;
+this.isIncludeDevDependencies = null;
+this.dependencies = null;
+this.devDependencies = null;
+this.status = status;
+this.resultDateTime = null;
+this.resultMessage = null;
+this.retriesCount = 0;
 } */
 /*         if (projectData.resultMessage) {
             return projectData;
@@ -603,7 +788,7 @@ emptyStatus: null */
                    case 'boolean': { validationMethod = validationUtils.isValidBoolean; break; }
                } */
                                 //if (!validationMethod(fieldValue)) {
-                                    //${fieldType} 
+                                    //${fieldType}
                                     //${fieldType}
 /* fieldType === 'string' &&  */
 /*  : fieldValue; */ /* fieldType === 'string' ?  */

@@ -13,6 +13,7 @@ class ProjectData {
         this.isIncludeDevDependencies = null;
         this.dependencies = null;
         this.devDependencies = null;
+        this.packagesTemplate = null;
         this.status = status;
         this.resultDateTime = null;
         this.resultMessage = null;
