@@ -11,46 +11,8 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
--Convert to list of projects classes. *
--For each any reason that faild or any exception that has been throwen - Log it under the project title.
--The output of the TXT file of the first step will look like:
-===sender (1/13)===
-jsdom: ^16.5.2 => ^16.5.3
-===udemy-courses (0/22)===
--All packages up to date.
-===youtube-comments (0/12)===
--All packages up to date.
--Add example of the projects.json file in the 'misc/examples' directory.
--Add exmaple of customPackagesPath file in the 'misc/examples' directory.
--Add README.txt file with explination for each field of the project.json file (place it in the 'misc/examples' directory).
--The log progress will look like:
-===[/] Working: sender (1/13 | 05.50%)===
--Rename and check: countLimitService.countLimitData.millisecondsSendEmailDelayCount.
--Second step - Different scripts, same logic with a flag of true:
- 1. Update the package.json file with the updated packages versions.
- 2. If the package-lock.json exists, delete it.
- 3. If the 'node_modules' directory exists, mark it and, and delete it.
- 4. Run 'npm i', wait for the results.
- 5. If success, according to the mark flag, delete again the 'node_modules' directory or keep it.
- 6. Remove the last empty line (mark it as flag in settings.js) in the package.json and package-lock.json files.
- 7. If failed, add to 1 to the retries, and go to the retry process: Delete the 'node_modules' directory and run 'npm i' again.
- 8. If retries exceeded the limit, mark an error to the project and continue to the next project.
--After the NPM update packages, will verify the update by checking the package.json file again.
--In the second step, it will auto-update the package.json with the new version of the outdated NPM packages,
- and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory,
- and log all the updated projects.
--Check if the node_moudles directory exists, if not, create and delete it. If it is, re-create it without to delete it.
--Add the number of maximum retries on each project on settings.js. Log all the retries results.
--The output of the TXT file of the second step will look like:
-===sender (2/13)===
-jsdom: ^16.5.2 => ^16.5.3 | V Updated
-jsdom: ^16.5.2 => ^16.5.3 | X Failed
-===udemy-courses (0/22)===
--All packages up to date.
-===youtube-comments (0/12)===
--All packages up to date.
--Edit the package.json description, the INSTRUCTIONS.md, and the README.md files.
--Update packages + Recreate package-lock.json.
+-Edit the package.json description, the INSTRUCTIONS.md, and the README.md files. *
+-Update packages + Recreate package-lock.json. *
 -Remove code comments to a backup TXT file.
 -Convert " to ' in the relevant places.
 -Remove all 'debugger' keywords.
@@ -75,7 +37,7 @@ export default
 -Detect all comments without a dot at the end: ^// .*(?<!\.)$
 -Do all the 'ToDo' tasks.
 -Format all documents.
--Verify all works well + Write on each project the task to update packages.
+-Verify all works well + Build the project.json with all the real projects and write on each project the task to update packages.
 -Fix TXT files spell mistakes via Gmail.
 -Move all complete tasks from here to complete_tasks.txt.
 -Remove the 'test' directory from the project's directory.
@@ -84,6 +46,27 @@ export default
 
 Complete / canceled tasks:
 ==========================
+-Add example of the projects.json file in the 'misc/examples' directory. *
+-Add exmaple of customPackagesPath file in the 'misc/examples' directory. *
+-Add README.txt file with explination for each field of the project.json file (place it in the 'misc/examples' directory). *
+-Rename and check: countLimitService.countLimitData.millisecondsSendEmailDelayCount. *
+-The console log progress will look like: *
+===Working: sender (1/13 | 05.50%)=== *
+-For each any reason that faild or any exception that has been throwen - Log it under the project title. *
+-Add delay between each project check/update - Canceled. *
+-Add standard/silent modes for debugging - Canceled. *
+-The output of the TXT file of the first step will look like: *
+===sender (1/13)=== *
+jsdom: ^16.5.2 => ^16.5.3 *
+===udemy-courses (0/22)=== *
+-success | All packages up to date. *
+===youtube-comments (0/12)=== *
+-success | All packages up to date. *
+===[GENERAL] Time: 00.00:00:13 [/] | Method: OUTDATED/UPDATE | Projects: 1/13 (05.50%) | Status: INITIATE/OUTDATE/UPDATE/PAUSE/FINISH=== - Canceled. *
+===[PROCESS] Purchase: ✅  0 | Fail: ❌  0=== - Canceled. *
+===[DATA] Name: sender | Update Type: full | Status: SUCCESS=== // Limit count characters - Canceled. *
+===[RESULT] Success to find the outdated packages===  // Limit count characters - Canceled. *
+-Convert to list of projects classes. *
 -Add validation that if the update type is 'custom' and no custom packages found - Log error to the project. *
 -Do the logic of validating. *
 -Add validation for duplicate project with the same package.json path. *

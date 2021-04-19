@@ -1,4 +1,5 @@
 const validationUtils = require('./validation.utils');
+const regexUtils = require('./regex.utils');
 
 class TextUtils {
 
@@ -57,12 +58,46 @@ class TextUtils {
         }
         return text.toLowerCase().trim();
     }
+
+    // This method converts a given number to display comma number.
+    getNumberWithCommas(number) {
+        if (number <= -1 || !validationUtils.isValidNumber(number)) {
+            return '';
+        }
+        return number.toString().replace(regexUtils.numberCommasRegex, ',');
+    }
+
+    calculatePercentageDisplay(data) {
+        const { partialValue, totalValue } = data;
+        if (!validationUtils.isValidNumber(partialValue) || !validationUtils.isValidNumber(totalValue)) {
+            return '';
+        }
+        return `${this.addLeadingZero(((100 * partialValue) / totalValue).toFixed(2))}%`;
+    }
+
+    getNumberOfNumber(data) {
+        const { number1, number2 } = data;
+        if (!validationUtils.isValidNumber(number1) || !validationUtils.isValidNumber(number2)) {
+            return '';
+        }
+        return `${this.getNumberWithCommas(number1)}/${this.getNumberWithCommas(number2)}`;
+    }
+
+    removeLastCharacters(data) {
+        const { value, charactersCount } = data;
+        if (!value || !validationUtils.isValidNumber(charactersCount)) {
+            return '';
+        }
+        return value.substring(0, value.length - charactersCount);
+    }
+
+    addBreakLine(text) {
+        return `${text}\r\n`;
+    }
 }
 
 module.exports = new TextUtils();
-/* const colorUtils = require('./color.utils');
-const regexUtils = require('./regex.utils'); */
-
+/* const colorUtils = require('./color.utils'); */
 
 /*
 
@@ -75,14 +110,6 @@ const regexUtils = require('./regex.utils'); */
             color: color
         });
         return `${delimiter}${status}${delimiter}`;
-    }
-
-    // This method converts a given number to display comma number.
-    getNumberWithCommas(number) {
-        if (number <= -1 || !validationUtils.isValidNumber(number)) {
-            return '';
-        }
-        return number.toString().replace(regexUtils.numberCommasRegex, ',');
     }
 
     getSplitNumber(text) {
@@ -106,18 +133,6 @@ const regexUtils = require('./regex.utils'); */
         return text.replace(regexUtils.numbersDotOnlyRegex, '');
     }
 
-    addBreakLine(text) {
-        return `${text}\r\n`;
-    }
-
-    removeLastCharacters(data) {
-        const { value, charactersCount } = data;
-        if (!value || !validationUtils.isValidNumber(charactersCount)) {
-            return '';
-        }
-        return value.substring(0, value.length - charactersCount);
-    }
-
     getPositiveNumber(number) {
         if (!validationUtils.isValidNumber(number)) {
             return -1;
@@ -134,22 +149,6 @@ const regexUtils = require('./regex.utils'); */
             return -1;
         }
         return Math.floor(number);
-    }
-
-    getNumberOfNumber(data) {
-        const { number1, number2 } = data;
-        if (!validationUtils.isValidNumber(number1) || !validationUtils.isValidNumber(number2)) {
-            return '';
-        }
-        return `${this.getNumberWithCommas(number1)}/${this.getNumberWithCommas(number2)}`;
-    }
-
-    calculatePercentageDisplay(data) {
-        const { partialValue, totalValue } = data;
-        if (!validationUtils.isValidNumber(partialValue) || !validationUtils.isValidNumber(totalValue)) {
-            return '';
-        }
-        return `${this.addLeadingZero(((100 * partialValue) / totalValue).toFixed(2))}%`;
     }
 
     getNumber2CharactersAfterDot(number) {

@@ -28,17 +28,22 @@ class InitiateService {
 	setup() {
 		// Handle any uncaughtException error.
 		process.on('uncaughtException', (error) => {
+			process.stdout.write('\n\r');
 			process.stdout.clearLine();
 			process.stdout.cursorTo(0);
 			console.log(error);
-			process.exit(0);
 		});
 		// Handle any unhandledRejection promise error.
 		process.on('unhandledRejection', (reason, promise) => {
+			process.stdout.write('\n\r');
 			process.stdout.clearLine();
 			process.stdout.cursorTo(0);
 			console.log(reason);
 			console.log(promise);
+		});
+		// Handle ctrl+v keys.
+		process.on('SIGINT', () => {
+			process.stdout.write('\n\r');
 			process.exit(0);
 		});
 	}
@@ -181,6 +186,24 @@ class InitiateService {
 }
 
 module.exports = new InitiateService();
+/* 	setup() {
+		// Handle any uncaughtException error.
+		process.on('uncaughtException', (error) => {
+			process.stdout.clearLine();
+			process.stdout.cursorTo(0);
+			console.log(error);
+			process.exit(0);
+		});
+		// Handle any unhandledRejection promise error.
+		process.on('unhandledRejection', (reason, promise) => {
+			process.stdout.clearLine();
+			process.stdout.cursorTo(0);
+			console.log(reason);
+			console.log(promise);
+			process.exit(0);
+		});
+	} */
+
 /* 'MAXIMUM_PACKAGE_NAME_CHARACTERS_COUNT', 'MAXIMUM_PACKAGE_VERSION_CHARACTERS_COUNT',  */
 /* const settings = require('../../settings/settings');
 const { Mode, ScriptType } = require('../../core/enums');

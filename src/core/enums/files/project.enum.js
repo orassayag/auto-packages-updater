@@ -30,7 +30,7 @@ const ProjectStatus = enumUtils.createEnum([
     ['DUPLICATE', 'duplicate'],
     ['NO_TEMPLATE_PACKAGES', 'no template packages'],
     ['FAIL', 'fail'],
-    ['FINISH', 'finish']
+    ['SUCCESS', 'success']
 ]);
 
 const UpdateType = enumUtils.createEnum([
@@ -39,6 +39,8 @@ const UpdateType = enumUtils.createEnum([
 ]);
 
 module.exports = { ProjectStatus, UpdateType };
+    /* , */
+/*     ['FINISH', 'finish'] */
 /* const enumUtils = require('../enum.utils');
 
 const PackageStatus = enumUtils.createEnum([

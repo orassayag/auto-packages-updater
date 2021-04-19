@@ -2,6 +2,8 @@ const { ProjectData, ProjectsData } = require('../../core/models');
 const { ProjectStatus, UpdateType } = require('../../core/enums');
 const countLimitService = require('./countLimit.service');
 const fileService = require('./file.service');
+const logService = require('./log.service');
+const packageService = require('./package.service');
 const pathService = require('./path.service');
 const { validationUtils, textUtils, timeUtils } = require('../../utils');
 
@@ -37,10 +39,10 @@ class ProjectService {
         await this.createProjects(resultData);
         // Validate the projects.
         this.validateProjects();
-        console.log(this.projectsData.projectsList);
         // Check for updates in all the projects.
-
-        // Log all the projects with the results.
+        await this.getProjectsOutdatedPackages();
+        // Handle all the project's results.
+        await this.handleResult();
     }
 
     // This method creates the projects.
@@ -506,10 +508,54 @@ class ProjectService {
         return projectData;
     }
 
-    validateCheckResult() {
+    // This method send the packagesTemplate to get the outdated packages.
+    async getProjectOutdatedPackages(data) {
+        let { projectData } = data;
+        if (projectData.status !== ProjectStatus.CREATE) {
+            return projectData;
+        }
+        const { outdatedPackages, errorMessage } = await packageService.getOutdatedPackages({
+            name: projectData.name,
+            packagesTemplate: projectData.packagesTemplate,
+            projectsCount: this.projectsData.projectsList.length,
+            index: data.index
+        });
+        let status, resultMessage = null;
+        if (errorMessage) {
+            status = ProjectStatus.FAIL;
+            resultMessage = errorMessage;
+        }
+        else {
+            status = ProjectStatus.SUCCESS;
+            projectData.outdatedPackagesKeys = Object.keys(outdatedPackages);
+            resultMessage = validationUtils.isExists(projectData.outdatedPackagesKeys) ?
+            'Success to handle the outdated packages.' : 'All packages up to date.';
+        }
+        projectData = this.updateProjectStatus({
+            projectData: projectData,
+            status: status,
+            resultMessage: resultMessage
+        });
+        projectData.outdatedPackages = outdatedPackages;
+        return projectData;
+    }
+
+    // This method loop all the projects and get the outdated packages for each project.
+    async getProjectsOutdatedPackages() {
+        for (let i = 0; i < this.projectsData.projectsList.length; i++) {
+            this.projectsData.projectsList[i] = await this.getProjectOutdatedPackages({
+                projectData: this.projectsData.projectsList[i],
+                index: i
+            });
+        }
+    }
+
+    // This method handle the outdated packages result check.
+    async handleResult() {
         // ToDo: On the second step here - Logic of update packages - Here - If outdated packages exists.
 
-        // Prepare and save the result to log.
+        // Log the result.
+        await logService.logProjects(this.projectsData);
     }
 
     updateProjectStatus(data) {
@@ -528,6 +574,25 @@ class ProjectService {
 }
 
 module.exports = new ProjectService();
+        /*         const { index } = data; */
+        /* projectData */
+/*         const { name, index, projectsCount  } = data;
+        let { packagesTemplate } = data;
+        const { outdatedPackages, errorMessage } = await packageService.getOutdatedPackages(projectData.packagesTemplate); */
+/*             if (validationUtils.isExists(Object.keys(outdatedPackages))) {
+                resultMessage = 'Success to find the outdated packages';
+            } */
+   /*   // Prepare and save the result to log. */
+/*         console.log(this.projectsData.projectsList); */
+/*         debugger; */
+/*         console.log(projectData.updateType); */
+/*        if (errorMessage) {
+          projectData = this.updateProjectStatus({
+              projectData: projectData,
+              status: ProjectStatus.FAIL,
+              resultMessage: errorMessage
+          });
+      } */
 /*                 debugger; */
 /*         //projectData.customPackagesList = resultData.split('\r\n').map(p => p.trim()); */
 /*         switch (updateType) {

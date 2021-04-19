@@ -1,5 +1,7 @@
 # Auto Packages Updater
 
+Built in April 2021. A Node.js application to check multi projects declared in external JSON file, to get a list of outdated NPM packages and log them to an external TXT file.
+
 ## Getting Started
 
 Clone the application to your computer.

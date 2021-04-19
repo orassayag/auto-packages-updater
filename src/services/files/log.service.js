@@ -1,6 +1,7 @@
 const { LogData } = require('../../core/models');
+const { ProjectStatus } = require('../../core/enums');
 const pathService = require('./path.service');
-const { fileUtils } = require('../../utils');
+const { fileUtils, logUtils, textUtils, validationUtils } = require('../../utils');
 
 class LogService {
 
@@ -22,10 +23,140 @@ class LogService {
 		this.distFileName = `${this.baseSessionPath}\\${this.logData.distFileName}.txt`;
 		await fileUtils.removeFile(this.distFileName);
 	}
+
+	createProjectTemplate(data) {
+		const { name, packagesTemplate, outdatedPackages, outdatedPackagesKeys, status, resultMessage } = data;
+		const lines = [];
+		const displayName = `${name} ${textUtils.addLeadingZero(outdatedPackagesKeys.length)}/${textUtils.addLeadingZero(Object.keys(packagesTemplate).length)}`;
+		lines.push(textUtils.setLogStatus(displayName));
+		if (status === ProjectStatus.SUCCESS && validationUtils.isExists(outdatedPackagesKeys)) {
+			for (let i = 0; i < outdatedPackagesKeys.length; i++) {
+				const packageName = outdatedPackagesKeys[i];
+				const currentVersion = packagesTemplate[packageName];
+				const newerVersion = outdatedPackages[packageName];
+				lines.push(`${packageName}: ${currentVersion} => ${newerVersion}`);
+			}
+		}
+		else {
+			lines.push(`${status} | ${resultMessage}`);
+		}
+		lines.push('\n');
+		return lines.join('\n');
+	}
+
+	// This method gets the project and prepare and log the result.
+	async logProjects(projectsData) {
+		if (!projectsData) {
+			throw new Error('Invalid or no projectsData object was found (1000015)');
+		}
+		let resultLog = '';
+		// Prepare the result as log template.
+		for (let i = 0; i < projectsData.projectsList.length; i++) {
+			resultLog += this.createProjectTemplate(projectsData.projectsList[i]);
+		}
+		// Log the result.
+		await fileUtils.appendFile({
+			targetPath: this.distFileName,
+			message: resultLog
+		});
+	}
+
+	logProgress(data) {
+		const { name, currentNumber, totalNumber } = data;
+		logUtils.logProgress({
+			progressData: {
+				'WORKING': `${name} ${textUtils.getNumberOfNumber({ number1: currentNumber, number2: totalNumber })}`
+			},
+			percentage: textUtils.calculatePercentageDisplay({
+				partialValue: currentNumber,
+				totalValue: totalNumber
+			})
+		});
+	}
+
+	createLineTemplate(title, value) {
+		return textUtils.addBreakLine(`${title}: ${value}`);
+	}
+
+	createConfirmSettingsTemplate(settings) {
+		const parameters = ['DIST_FILE_NAME', 'MAXIMUM_PROJECTS_COUNT', 'PROJECTS_PATH'];
+		let settingsText = Object.keys(settings).filter(s => parameters.indexOf(s) > -1)
+			.map(k => this.createLineTemplate(k, settings[k])).join('');
+		settingsText = textUtils.removeLastCharacters({
+			value: settingsText,
+			charactersCount: 1
+		});
+		return `${textUtils.setLogStatus('IMPORTANT SETTINGS')}
+${settingsText}
+========================
+OK to run? (y = yes)`;
+	}
 }
 
 module.exports = new LogService();
+/* 		let isResultMessage = false; */
+/* 	//===Working: sender (1/13 | 05.50%)=== */
+/* 	logProgress(currentCommentsCount) {
+		logService.logProgress({
+			currentNumber: currentCommentsCount,
+			totalNumber: this.youtubeData.commentsCount
+		});
+	} */
+/* 		console.log(data); */
+/*
+===sender (1/13)===
+jsdom: ^16.5.2 => ^16.5.3
+===udemy-courses (0/22)===
+-All packages up to date.
+===youtube-comments (0/12)===
+-All packages up to date.
+*/
 
+/* 	const { id, createDateTime, status } = data;
+	this.id = id;
+	this.createDateTime = createDateTime;
+	this.name = null;
+	this.updateType = null;
+	this.packagesPath = null;
+	this.customPackagesPath = null;
+	this.customPackagesList = null;
+	this.excludePackagesList = null;
+	this.isIncludeDevDependencies = null;
+	this.dependencies = null;
+	this.devDependencies = null;
+	this.packagesTemplate = null;
+	this.outdatedPackages = null;
+	this.status = status;
+	this.resultDateTime = null;
+	this.resultMessage = null;
+	this.retriesCount = 0; */
+
+/* 		const { course, isLog } = data;
+		const { id, postId, creationDateTime, pageNumber, indexPageNumber, publishDate, priceNumber, priceDisplay, courseURLCourseName,
+			udemyURLCourseName, type, isFree, courseURL, udemyURL, couponKey, status, resultDateTime, resultDetails } = course;
+		const time = timeUtils.getFullTime(resultDateTime);
+		const displayCreationDateTime = timeUtils.getFullDateTemplate(creationDateTime);
+		const displayPriceNumber = priceNumber ? priceNumber : this.emptyValue;
+		const displayPriceDisplay = priceDisplay ? priceDisplay : this.emptyValue;
+		const displayStatus = CourseStatusLog[status];
+		const name = this.getCourseName({
+			courseURLCourseName: courseURLCourseName,
+			udemyURLCourseName: udemyURLCourseName,
+			isLog: isLog
+		});
+		const displayCourseURL = textUtils.cutText({ text: courseURL, count: countLimitService.countLimitData.maximumURLCharactersDisplayCount });
+		const displayUdemyURL = udemyURL ? textUtils.cutText({ text: udemyURL, count: countLimitService.countLimitData.maximumURLCharactersDisplayCount }) : this.emptyValue;
+		const displayResultDetails = resultDetails.join('\n');
+		const lines = [];
+		lines.push(`Time: ${time} | Id: ${id} | Post Id: ${postId ? postId : this.emptyValue} | Creation Date Time: ${displayCreationDateTime}`);
+		lines.push(`Publish Date: ${publishDate} | Price Number: ${displayPriceNumber} | Price Display: ${displayPriceDisplay} | Coupon Key: ${couponKey}`);
+		lines.push(`Status: ${displayStatus} | Page Number: ${pageNumber} | Index Page Number: ${indexPageNumber} | Type: ${type} | Is Free: ${isFree}`);
+		lines.push(`Name: ${name}`);
+		lines.push(`Course URL: ${displayCourseURL}`);
+		lines.push(`Udemy URL: ${displayUdemyURL}`);
+		lines.push(`Result Details: ${displayResultDetails}`);
+		lines.push(`${this.logSeparator}${isLog ? '\n' : ''}`);
+		return lines.join('\n'); */
 /*
 const { CourseStatusLog, CourseStatus, Color, Method, Mode, Placeholder, StatusIcon } = require('../../core/enums');
 const accountService = require('./account.service');
@@ -408,31 +539,6 @@ class LogService {
 			}
 		}
 		return this.createLineTemplate(title, value);
-	}
-
-	createLineTemplate(title, value) {
-		return textUtils.addBreakLine(`${logUtils.logColor(`${title}:`, Color.MAGENTA)} ${value}`);
-	}
-
-	createConfirmSettingsTemplate(settings) {
-		const parameters = ['MODE', 'IS_PRODUCTION_ENVIRONMENT', 'COURSES_BASE_URL', 'UDEMY_BASE_URL', 'SINGLE_COURSE_INIT',
-			'SPECIFIC_COURSES_PAGE_NUMBER', 'KEYWORDS_FILTER_LIST', 'IS_CREATE_COURSES_METHOD_ACTIVE',
-			'IS_UPDATE_COURSES_METHOD_ACTIVE', 'IS_PURCHASE_COURSES_METHOD_ACTIVE', 'IS_LOG_CREATE_COURSES_METHOD_VALID',
-			'IS_LOG_CREATE_COURSES_METHOD_INVALID', 'IS_LOG_UPDATE_COURSES_METHOD_VALID', 'IS_LOG_UPDATE_COURSES_METHOD_INVALID',
-			'IS_LOG_PURCHASE_COURSES_METHOD_VALID', 'IS_LOG_PURCHASE_COURSES_METHOD_INVALID', 'IS_LOG_PURCHASE_COURSES_METHOD_ONLY',
-			'MAXIMUM_COURSES_PURCHASE_COUNT', 'MAXIMUM_PAGES_NUMBER'];
-		let settingsText = this.getCourseTime('COURSES_DATES_VALUE', settings['COURSES_DATES_VALUE']);
-		settingsText += this.createLineTemplate('EMAIL', accountService.accountData.email);
-		settingsText += Object.keys(settings).filter(s => parameters.indexOf(s) > -1)
-			.map(k => this.createLineTemplate(k, settings[k])).join('');
-		settingsText = textUtils.removeLastCharacters({
-			value: settingsText,
-			charactersCount: 1
-		});
-		return `${textUtils.setLogStatus('IMPORTANT SETTINGS')}
-${settingsText}
-========================
-OK to run? (y = yes)`;
 	}
 }
 

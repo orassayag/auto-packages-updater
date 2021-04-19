@@ -14,6 +14,8 @@ class ProjectData {
         this.dependencies = null;
         this.devDependencies = null;
         this.packagesTemplate = null;
+        this.outdatedPackages = null;
+        this.outdatedPackagesKeys = null;
         this.status = status;
         this.resultDateTime = null;
         this.resultMessage = null;

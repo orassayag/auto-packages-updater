@@ -24,12 +24,10 @@ class PathUtils {
     getExtension(targetPath) {
         return path.extname(targetPath);
     }
+
+    getDirName(targetPath) {
+        return path.dirname(targetPath);
+    }
 }
 
 module.exports = new PathUtils();
-/*
-
-getDirName(targetPath) {
-    return path.dirname(targetPath);
-}
- */

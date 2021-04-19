@@ -53,9 +53,9 @@ class OutdatedLogic {
 
     // Let the user confirm all the IMPORTANT settings before the process starts.
     async confirm() {
-        /*         if (!await confirmationService.confirm(settings)) {
-                    this.exit(Status.ABORT_BY_THE_USER);
-                } */
+        if (!await confirmationService.confirm(settings)) {
+            this.exit(Status.ABORT_BY_THE_USER);
+        }
     }
 
     updateStatus(text, status) {
@@ -70,6 +70,7 @@ class OutdatedLogic {
             applicationService.applicationData.status = status;
             await this.sleep();
         }
+        logUtils.logSpace();
         systemUtils.exit(status);
     }
 }

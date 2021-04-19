@@ -1,14 +1,10 @@
 {
-  "name": "auto-packages-updater",
+  "name": "example-project",
   "version": "1.0.0",
   "private": true,
-  "description": "A Node.js application to check multi projects declared in external JSON file, to get a list of outdated NPM packages and log them to an external TXT file.",
+  "description": "example-project.",
   "keywords": [
-    "package",
-    "packages",
-    "project",
-    "projects",
-    "npm"
+    "test"
   ],
   "license": "UNLICENSED",
   "author": "Or Assayag <orassayag@gmail.com>",
@@ -19,7 +15,7 @@
       "url": "https://github.com/orassayag"
     }
   ],
-  "main": "src/scripts/outdated.script.js",
+  "main": "src/scripts/test.script.js",
   "files": [
     "src",
     ".eslintignore",
@@ -34,7 +30,7 @@
   ],
   "scripts": {
     "backup": "node src/scripts/backup.script.js",
-    "start": "node src/scripts/outdated.script.js",
+    "start": "node src/scripts/test.script.js",
     "sand": "node src/tests/sandBox.test.js",
     "stop": "taskkill -f -im node.exe"
   },
@@ -45,10 +41,22 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "babel-eslint": "^10.1.0",
+    "ansi-escapes": "^4.3.2",
+    "cli-cursor": "^3.1.0",
     "eslint": "^7.24.0",
     "fs-extra": "^9.1.0",
     "is-reachable": "^5.0.0",
-    "npm-check-updates": "^11.4.1"
+    "jsdom": "^16.5.2",
+    "lorem-ipsum": "^2.0.3",
+    "puppeteer": "^8.0.0",
+    "puppeteer-extra": "^3.1.18",
+    "puppeteer-extra-plugin-stealth": "^2.7.6",
+    "random-useragent": "^0.5.0",
+    "slice-ansi": "^4.0.0",
+    "tree-kill": "^1.2.2",
+    "wrap-ansi": "^7.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0"
   }
 }

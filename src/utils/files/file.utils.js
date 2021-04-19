@@ -1,4 +1,5 @@
 const fs = require('fs-extra');
+const pathUtils = require('./path.utils');
 
 class FileUtils {
 
@@ -47,6 +48,21 @@ class FileUtils {
         }
     }
 
+    async appendFile(data) {
+        const { targetPath, message } = data;
+        if (!targetPath) {
+            throw new Error(`targetPath not found: ${targetPath} (1000027)`);
+        }
+        if (!message) {
+            throw new Error(`message not found: ${message} (1000028)`);
+        }
+        if (!await this.isPathExists(targetPath)) {
+            await fs.promises.mkdir(pathUtils.getDirName(targetPath), { recursive: true }).catch();
+        }
+        // Append the message to the file.
+        await fs.appendFile(targetPath, message);
+    }
+
     async removeFile(targetPath) {
         if (await this.isPathExists(targetPath)) {
             await fs.unlink(targetPath);
@@ -67,7 +83,6 @@ class FileUtils {
 module.exports = new FileUtils();
 
 /*
-const pathUtils = require('./path.utils');
 
 getAllDirectories(targetPath) {
     return fs.readdirSync(targetPath, { withFileTypes: true })
@@ -75,19 +90,5 @@ getAllDirectories(targetPath) {
         .map(dirent => dirent.name);
 }
 
-async appendFile(data) {
-    const { targetPath, message } = data;
-    if (!targetPath) {
-        throw new Error(`targetPath not found: ${targetPath} (1000027)`);
-    }
-    if (!message) {
-        throw new Error(`message not found: ${message} (1000028)`);
-    }
-    if (!await this.isPathExists(targetPath)) {
-        await fs.promises.mkdir(pathUtils.getDirName(targetPath), { recursive: true }).catch();
-    }
-    // Append the message to the file.
-    await fs.appendFile(targetPath, message);
-}
 
  */

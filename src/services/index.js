@@ -3,13 +3,14 @@ const confirmationService = require('./files/confirmation.service');
 const countLimitService = require('./files/countLimit.service');
 const fileService = require('./files/file.service');
 const logService = require('./files/log.service');
+const packageService = require('./files/package.service');
 const pathService = require('./files/path.service');
 const projectService = require('./files/project.service');
 const validationService = require('./files/validation.service');
 
 module.exports = {
     applicationService, confirmationService, countLimitService, fileService, logService,
-    pathService, projectService, validationService
+    packageService, pathService, projectService, validationService
 };
 /* createProjectService,  */
 /* const createProjectService = require('./files/createProject.service'); */

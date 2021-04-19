@@ -15,14 +15,6 @@ class SystemUtils {
         }
         return `EXIT: ${exitReason}`;
     }
-}
-
-module.exports = new SystemUtils();
-/* const kill = require('tree-kill');
-
- */
-
-/*
 
     getErrorDetails(error) {
         let errorText = '';
@@ -37,6 +29,15 @@ module.exports = new SystemUtils();
         }
         return errorText;
     }
+}
+
+module.exports = new SystemUtils();
+/* const kill = require('tree-kill');
+
+ */
+
+/*
+
 
     killProcess(pid) {
         if (pid) {

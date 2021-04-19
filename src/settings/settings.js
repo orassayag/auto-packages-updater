@@ -1,8 +1,6 @@
 const { pathUtils } = require('../utils');
 
 const settings = {
-    // ===GENERAL=== //
-
     // ===LOG=== //
     // Determine the name of the resulting comments in the new TXT file in the 'dist' directory.
     DIST_FILE_NAME: 'outdated',
@@ -88,6 +86,7 @@ const settings = {
 };
 
 module.exports = settings;
+    // ===GENERAL=== //
 /*     // Determine the maximum characters count of the package name.
     MAXIMUM_PACKAGE_NAME_CHARACTERS_COUNT: 300,
     // Determine the maximum characters count of the package version.
