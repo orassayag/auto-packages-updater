@@ -1,2 +1,91 @@
 Complete / canceled tasks:
 ==========================
+-Scan all files for spell mistakes with the 'files-spell-checker' project. *
+-Edit the package.json description, the INSTRUCTIONS.md, and the README.md files. *
+-Update packages + Recreate package-lock.json. *
+-Remove code comments to a backup TXT file. *
+-Convert " to ' in the relevant places. *
+-Remove all 'debugger' keywords. *
+-Recheck error numbers in error_index.txt. *
+-Check 'let' needs to be converted to 'const'. *
+-Check places to change from simple parameters with dynamic objects to classes. *
+-Make sure all comments '//' have: 1. space 2. ends with a dot. *
+-Make sure 'id' => 'Id', 'url' => 'URL', 'api' => 'API'. *
+-Make sure spaces in all files between bottom, need to fix cases like this: *
+} *
+module.exports *
+} *
+export default *
+-Change all '.length > 0' to 'isExists'. *
+-Remove duplicate import/require (convert to index.js if possible). *
+-Sort alphabetically all the imports/requires by https://alphabetizer.flap.tv/. *
+-Sort alphabetically all the imports/requires: external packages, settings, (containers, components, store, assert) data, models, enums, services, utils. *
+-File extensions should be upper case: JSON, TXT, etc. *
+-Remove the space lines inside methods and functions. *
+-Remove the duplicate empty lines: \n\s*\n\s*\n *
+-Remove the last empty line: \n\s*$(?!\n) *
+-Detect all comments without a dot at the end: ^// .*(?<!\.)$ *
+-Do all the 'ToDo' tasks. *
+-Search for 'async ' and create a list of functions/methods, and make sure that all calls have await. *
+-Format all documents. *
+-Verify all works well + Build the project.json with all the real projects and write on each project the task to update packages. *
+-Remove the 'test' directory from the project's directory. *
+-Fix TXT files spell mistakes via Gmail. *
+-Move all complete tasks from here to complete_tasks.txt. *
+-Upload to GitHub. *
+-Backup to iOmega. *
+-Add example of the projects.json file in the 'misc/examples' directory. *
+-Add example of customPackagesPath file in the 'misc/examples' directory. *
+-Add README.txt file with explanation for each field of the project.json file (place it in the 'misc/examples' directory). *
+-Rename and check: countLimitService.countLimitData.millisecondsSendEmailDelayCount. *
+-The console log progress will look like: *
+===Working: sender (1/13 | 05.50%)=== *
+-For each any reason that failed or any exception that has been thrown - Log it under the project title. *
+-Add delay between each project check/update - Canceled. *
+-Add standard/silent modes for debugging - Canceled. *
+-The output of the TXT file of the first step will look like: *
+===sender (1/13)=== *
+jsdom: ^16.5.2 => ^16.5.3 *
+===udemy-courses (0/22)=== *
+-success | All packages up to date. *
+===youtube-comments (0/12)=== *
+-success | All packages up to date. *
+===[GENERAL] Time: 00.00:00:13 [/] | Method: OUTDATED/UPDATE | Projects: 1/13 (05.50%) | Status: INITIATE/OUTDATE/UPDATE/PAUSE/FINISH=== - Canceled. *
+===[PROCESS] Purchase: ✅  0 | Fail: ❌  0=== - Canceled. *
+===[DATA] Name: sender | Update Type: full | Status: SUCCESS=== // Limit count characters - Canceled. *
+===[RESULT] Success to find the outdated packages===  // Limit count characters - Canceled. *
+-Convert to list of project classes. *
+-Add validation that if the update type is 'custom' and no custom packages found - Log error to the project. *
+-Do the logic of validating. *
+-Add validation for duplicate project with the same package.json path. *
+-Clear duplicate packages if accidentally exist (custom and exclude, dependencies and devDependencies are objects). *
+-Add maximum projects to check - After that, take the first count of projects. *
+-Each configuration of a project will look as the following: *
+[{ *
+   "name": "project-name", *
+   "update-type": "FULL", ("FULL" / "CUSTOM") *
+   "packages-path": "C:\\package.json", *
+   "custom-packages-path": null, *
+   "exclude-packages-list": null, / [ *
+       "jsdom" *
+   ], *
+   "include-dev-dependencies": true / false *
+}] *
+-A reference: https://github.com/chegele/AutoGitUpdate/blob/master/index.js *
+-Validate that each project: All fields exists and in the correct type, updateType correct, *
+ package.json path exists and valid, if customPackagesPath path exists - need to be valid. *
+-Build the 'backup' logic + initiate service logic. *
+-In the first step, to detect outdated NPM packages in a list of projects, and log each project results into a TXT file. *
+-Add validation that if no projects exist in the project.json file - Throw an exception. *
+-If a specific package is invalid for some reason, continue to the next package - Canceled. *
+-For each package name and package version, validate the name (Also here, validate maximum character count to package name and cut the rest) - Canceled. *
+-Validate only that package version exists - Canceled. *
+-Rebuild the package logic.
+-On the custom package file, validate the package name - Make sure it exists - Canceled. *
+-Add validation to the maximum character count to the project's name - Canceled. *
+-Convert all 'new Date()' to be from the timeUtils. Change in all places. *
+-If a specific project is invalid for some reason, continue to the next project. *
+-If package.json does not include any packages, continue to the next project. *
+-Add unexpected and expected fields validation on the projectsData and on all the project's packages lists, *
+like in the udemy courses project, and validate the status (on projectData). *
+ and the version (by regex - Take it from the crawler project). *  

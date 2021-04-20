@@ -3,6 +3,20 @@
         "jsbeautifyrc",
         "orassayag"
     ],
+    "cSpell.ignorePaths": [
+        "**/node_modules",
+        "node_modules/**",
+        "**/node_modules/**",
+        "**/dist",
+        "dist/**",
+        "**/dist/**",
+        "**/sources",
+        "sources/**",
+        "**/sources/**",
+        "**/misc",
+        "misc/**",
+        "**/misc/**"
+    ],
     "search.exclude": {
         "**/.vscode": true,
         "**/dist": true,

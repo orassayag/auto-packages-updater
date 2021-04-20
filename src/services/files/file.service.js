@@ -9,16 +9,16 @@ class FileService {
         const { filePath, parameterName, fileExtension, isPackageJSONFile } = data;
         const fileDataResult = new FileDataResult();
         if (!await fileUtils.isPathExists(filePath)) {
-            fileDataResult.errorMessage = `Path not exists: ${filePath} (1000010)`;
+            fileDataResult.errorMessage = `Path not exists: ${filePath} (1000003)`;
             return fileDataResult;
         }
         if (!fileUtils.isFilePath(filePath)) {
-            fileDataResult.errorMessage = `The parameter path ${parameterName} marked as file but it's a path of a directory: ${filePath} (1000011)`;
+            fileDataResult.errorMessage = `The parameter path ${parameterName} marked as file but it's a path of a directory: ${filePath} (1000004)`;
             return fileDataResult;
         }
         const extension = pathUtils.getExtension(filePath);
         if (extension !== fileExtension) {
-            fileDataResult.errorMessage = `The parameter path ${parameterName} must be a ${fileExtension} file but it's: ${extension} file (1000012)`;
+            fileDataResult.errorMessage = `The parameter path ${parameterName} must be a ${fileExtension} file but it's: ${extension} file (1000005)`;
             return fileDataResult;
         }
         fileDataResult.resultData = await fileUtils.read(filePath);
@@ -26,7 +26,7 @@ class FileService {
             fileDataResult.resultData = JSON.parse(fileDataResult.resultData);
         }
         if (!isPackageJSONFile && !validationUtils.isExists(fileDataResult.resultData)) {
-            fileDataResult.errorMessage = `No data exists in the file: ${filePath} (1000013)`;
+            fileDataResult.errorMessage = `No data exists in the file: ${filePath} (1000006)`;
             return fileDataResult;
         }
         return fileDataResult;
@@ -34,15 +34,3 @@ class FileService {
 }
 
 module.exports = new FileService();
-/*         console.log(fileDataResult.resultData); */
-/*             fileDataResult.errorMessage = `Invalid or no ${parameterName} parameter was found: Expected a number but received: ${filePath} (1000010)`; */
-/* textUtils,  */
-/*  environment, */
-/*         fileDataResult.resultData =  */
-        //return resultData;
-/*             throw new Error(`No data exists in the file: ${filePath} (1000013)`); */
-                    //const fileData = await fileUtils.read(filePath);
-/*         let resultData = null; */
-/*             throw new Error(`The parameter path ${parameterName} must be a ${fileExtension} file but it's: ${extension} file (1000012)`); */
-/*             throw new Error(`Invalid or no ${parameterName} parameter was found: Expected a number but received: ${filePath} (1000010)`); */
-/*             throw new Error(`The parameter path ${parameterName} marked as file but it's a path of a directory: ${filePath} (1000011)`); */

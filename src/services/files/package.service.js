@@ -9,7 +9,7 @@ class PackageService {
 
     // This method returns the outdated packages of a given package.json data template.
     async getOutdatedPackages(data) {
-        const { name, index, projectsCount  } = data;
+        const { name, index, projectsCount } = data;
         let { packagesTemplate } = data;
         if (!packagesTemplate) {
             throw new Error('Invalid or no packagesTemplate object was found (1000015)');
@@ -18,11 +18,11 @@ class PackageService {
         const outdatedResult = new OutdatedResult();
         try {
             // Log the progress.
-			logService.logProgress({
-				name: name,
-				currentNumber: index + 1,
-				totalNumber: projectsCount
-			});
+            logService.logProgress({
+                name: name,
+                currentNumber: index + 1,
+                totalNumber: projectsCount
+            });
             // Check for packages updates.
             outdatedResult.outdatedPackages = await ncu.run({
                 // Pass any CLI option.
@@ -41,4 +41,3 @@ class PackageService {
 }
 
 module.exports = new PackageService();
-/*         debugger; */

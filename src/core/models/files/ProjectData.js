@@ -14,6 +14,7 @@ class ProjectData {
         this.dependencies = null;
         this.devDependencies = null;
         this.packagesTemplate = null;
+        this.packagesTemplateKeys = null;
         this.outdatedPackages = null;
         this.outdatedPackagesKeys = null;
         this.status = status;
@@ -24,21 +25,3 @@ class ProjectData {
 }
 
 module.exports = ProjectData;
-/*         this.packagesList = null; */
-/*         this.customPackagesList = null;
- */
-/* this.id = id;
-this.createDateTime = createDateTime;
-this.name = name;
-this.updateType = updateType;
-this.packagesPath = packagesPath;
-this.customPackagesPath = customPackagesPath;
-this.excludePackagesList = excludePackagesList;
-this.isIncludeDevDependencies = isIncludeDevDependencies;
-this.status = status;
-this.resultMessage = null;
-this.retriesCount = 0; */
-/* data */
-/*         const { id, createDateTime, name, updateType, packagesPath, customPackagesPath, excludePackagesList,
-             isIncludeDevDependencies, status } = data; */
-/* const { ProjectStatus, UpdateType } = require('../../enums'); */

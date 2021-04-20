@@ -6,4 +6,3 @@ class ProjectsData {
 }
 
 module.exports = ProjectsData;
-/*         //this.projectsList = null; */

@@ -32,15 +32,3 @@ class SystemUtils {
 }
 
 module.exports = new SystemUtils();
-/* const kill = require('tree-kill');
-
- */
-
-/*
-
-
-    killProcess(pid) {
-        if (pid) {
-            kill(pid);
-        }
-    } */
