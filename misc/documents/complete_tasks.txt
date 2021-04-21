@@ -1,5 +1,9 @@
 Complete / canceled tasks:
 ==========================
+-Convert all 'new Date()' to be from the timeUtils. Change in all places. *
+-Fix TXT files spell mistakes via Gmail (Also, convert '_' to ' ' in all places when checking). *
+-Make sure all switch-case have curly braces. *
+-Reformat all files + Add words to the workspace dictionary. *
 -Scan all files for spell mistakes with the 'files-spell-checker' project. *
 -Edit the package.json description, the INSTRUCTIONS.md, and the README.md files. *
 -Update packages + Recreate package-lock.json. *

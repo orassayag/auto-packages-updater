@@ -22,6 +22,7 @@ export default
 -Remove the first empty line: ^(?<![\s])\n
 -Remove the last empty line: \n\s*$(?!\n)
 -Detect all comments without a dot at the end: ^// .*(?<!\.)$
+-Make sure all switch-case have curly braces.
 -Clear unused enums and make sure all in used really exists.
 -Search for 'async ' and create a list of functions/methods, and make sure that all calls have await.
 -Scan all files for spell mistakes with the 'files-spell-checker' project.

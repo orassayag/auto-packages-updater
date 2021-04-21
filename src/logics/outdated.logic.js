@@ -3,7 +3,7 @@ const { Status } = require('../core/enums');
 const { applicationService, confirmationService, countLimitService, logService,
     pathService, projectService, validationService } = require('../services');
 const globalUtils = require('../utils/files/global.utils');
-const { logUtils, systemUtils } = require('../utils');
+const { logUtils, systemUtils, timeUtils } = require('../utils');
 
 class OutdatedLogic {
 
@@ -41,7 +41,7 @@ class OutdatedLogic {
     async startSession() {
         // Initiate.
         this.updateStatus('OUTDATED PACKAGES', Status.OUTDATED);
-        applicationService.applicationData.startDateTime = new Date();
+        applicationService.applicationData.startDateTime = timeUtils.getCurrentDate();
         // Run the process - Check for outdated packages.
         await projectService.findOutdatedPackages();
         await this.exit(Status.FINISH);

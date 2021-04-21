@@ -9,7 +9,7 @@ class TimeUtils {
     }
 
     getDateNoSpaces() {
-        const date = new Date();
+        const date = this.getCurrentDate();
         return [this.getDay(date), this.getMonth(date), this.getYear(date)].join('');
     }
 
