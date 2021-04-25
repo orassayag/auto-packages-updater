@@ -1,11 +1,12 @@
 const textUtils = require('./text.utils');
+const validationUtils = require('./validation.utils');
 
 class TimeUtils {
 
     constructor() { }
 
-    getCurrentDate() {
-        return new Date();
+    getCurrentDate(value) {
+        return value ? validationUtils.isValidArray(value) ? new Date(...value) : new Date(value) : new Date();
     }
 
     getDateNoSpaces() {

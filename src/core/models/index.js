@@ -1,15 +1,15 @@
-const ApplicationData = require('./files/ApplicationData');
-const BackupData = require('./files/BackupData');
-const BackupDirectory = require('./files/BackupDirectory');
-const CountLimitData = require('./files/CountLimitData');
-const FileDataResult = require('./files/FileDataResult');
-const LogData = require('./files/LogData');
-const OutdatedResult = require('./files/OutdatedResult');
-const PathData = require('./files/PathData');
-const ProjectData = require('./files/ProjectData');
-const ProjectsData = require('./files/ProjectsData');
+const ApplicationDataModel = require('./files/ApplicationData.model');
+const BackupDataModel = require('./files/BackupData.model');
+const BackupDirectoryModel = require('./files/BackupDirectory.model');
+const CountLimitDataModel = require('./files/CountLimitData.model');
+const FileDataResultModel = require('./files/FileDataResult.model');
+const LogDataModel = require('./files/LogData.model');
+const OutdatedResultModel = require('./files/OutdatedResult.model');
+const PathDataModel = require('./files/PathData.model');
+const ProjectDataModel = require('./files/ProjectData.model');
+const ProjectsDataModel = require('./files/ProjectsData.model');
 
 module.exports = {
-    ApplicationData, BackupData, BackupDirectory, CountLimitData, FileDataResult, LogData,
-    OutdatedResult, PathData, ProjectData, ProjectsData
+    ApplicationDataModel, BackupDataModel, BackupDirectoryModel, CountLimitDataModel, FileDataResultModel, LogDataModel,
+    OutdatedResultModel, PathDataModel, ProjectDataModel, ProjectsDataModel
 };

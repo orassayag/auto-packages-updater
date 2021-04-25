@@ -1,4 +1,4 @@
-class FileDataResult {
+class FileDataResultModel {
 
     constructor() {
         this.resultData = null;
@@ -6,4 +6,4 @@ class FileDataResult {
     }
 }
 
-module.exports = FileDataResult;
+module.exports = FileDataResultModel;

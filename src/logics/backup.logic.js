@@ -71,7 +71,7 @@ class BackupLogic {
 
     filterDirectories(source) {
         let isIncluded = true;
-        const { ignoreDirectories, ignoreFiles, includeFiles } = this.backupData.backupDirectory;
+        const { ignoreDirectories, ignoreFiles, includeFiles } = this.backupData.backupDirectoryModel;
         for (let i = 0, length = ignoreDirectories.length; i < length; i++) {
             const currentPath = ignoreDirectories[i];
             isIncluded = !(source.indexOf(currentPath) > -1);

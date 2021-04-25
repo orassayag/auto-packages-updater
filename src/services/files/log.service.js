@@ -1,35 +1,35 @@
-const { LogData } = require('../../core/models');
-const { ProjectStatus } = require('../../core/enums');
+const { LogDataModel } = require('../../core/models');
+const { ProjectStatusEnum } = require('../../core/enums');
 const pathService = require('./path.service');
 const { fileUtils, logUtils, textUtils, validationUtils } = require('../../utils');
 
 class LogService {
 
 	constructor() {
-		this.logData = null;
+		this.logDataModel = null;
 		// ===PATH=== //
 		this.baseSessionPath = null;
 	}
 
 	async initiate(settings) {
-		this.logData = new LogData(settings);
+		this.logDataModel = new LogDataModel(settings);
 		await this.initiateDirectories();
 	}
 
 	async initiateDirectories() {
 		// ===PATH=== //
-		this.baseSessionPath = pathService.pathData.distPath;
+		this.baseSessionPath = pathService.pathDataModel.distPath;
 		fileUtils.createDirectory(this.baseSessionPath);
-		this.distFileName = `${this.baseSessionPath}\\${this.logData.distFileName}.txt`;
+		this.distFileName = `${this.baseSessionPath}\\${this.logDataModel.distFileName}.txt`;
 		await fileUtils.removeFile(this.distFileName);
 	}
 
 	createProjectTemplate(data) {
 		const { name, packagesTemplate, packagesTemplateKeys, outdatedPackages, outdatedPackagesKeys, status, resultMessage } = data;
 		const lines = [];
-		const displayName = `${name} ${textUtils.addLeadingZero(outdatedPackagesKeys.length)}/${textUtils.addLeadingZero(packagesTemplateKeys.length)}`;
+		const displayName = `${name} ${textUtils.addLeadingZero(outdatedPackagesKeys?.length)}/${textUtils.addLeadingZero(packagesTemplateKeys?.length)}`;
 		lines.push(textUtils.setLogStatus(displayName));
-		if (status === ProjectStatus.SUCCESS && validationUtils.isExists(outdatedPackagesKeys)) {
+		if (status === ProjectStatusEnum.SUCCESS && validationUtils.isExists(outdatedPackagesKeys)) {
 			for (let i = 0; i < outdatedPackagesKeys.length; i++) {
 				const packageName = outdatedPackagesKeys[i];
 				const currentVersion = packagesTemplate[packageName];
@@ -45,14 +45,14 @@ class LogService {
 	}
 
 	// This method gets the project and prepares and logs the result.
-	async logProjects(projectsData) {
-		if (!projectsData) {
-			throw new Error('Invalid or no projectsData object was found (1000014)');
+	async logProjects(projectsDataModel) {
+		if (!projectsDataModel) {
+			throw new Error('Invalid or no projectsDataModel object was found (1000014)');
 		}
 		let resultLog = '';
 		// Prepare the result as a log template.
-		for (let i = 0; i < projectsData.projectsList.length; i++) {
-			resultLog += this.createProjectTemplate(projectsData.projectsList[i]);
+		for (let i = 0; i < projectsDataModel.projectsList.length; i++) {
+			resultLog += this.createProjectTemplate(projectsDataModel.projectsList[i]);
 		}
 		// Log the result.
 		await fileUtils.appendFile({

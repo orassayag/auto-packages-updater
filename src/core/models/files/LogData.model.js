@@ -1,4 +1,4 @@
-class LogData {
+class LogDataModel {
 
 	constructor(settings) {
 		// Set the parameters from the settings file.
@@ -7,4 +7,4 @@ class LogData {
 	}
 }
 
-module.exports = LogData;
+module.exports = LogDataModel;

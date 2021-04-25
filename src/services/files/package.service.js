@@ -1,5 +1,5 @@
 const ncu = require('npm-check-updates');
-const { OutdatedResult } = require('../../core/models');
+const { OutdatedResultModel } = require('../../core/models');
 const logService = require('./log.service');
 const { systemUtils } = require('../../utils');
 
@@ -15,7 +15,7 @@ class PackageService {
             throw new Error('Invalid or no packagesTemplate object was found (1000015)');
         }
         packagesTemplate = { dependencies: packagesTemplate };
-        const outdatedResult = new OutdatedResult();
+        const outdatedResultModel = new OutdatedResultModel();
         try {
             // Log the progress.
             logService.logProgress({
@@ -24,7 +24,7 @@ class PackageService {
                 totalNumber: projectsCount
             });
             // Check for packages updates.
-            outdatedResult.outdatedPackages = await ncu.run({
+            outdatedResultModel.outdatedPackages = await ncu.run({
                 // Pass any CLI option.
                 packageData: JSON.stringify(packagesTemplate),
                 upgrade: false,
@@ -34,9 +34,9 @@ class PackageService {
             });
         }
         catch (error) {
-            outdatedResult.errorMessage = systemUtils.getErrorDetails(error);
+            outdatedResultModel.errorMessage = systemUtils.getErrorDetails(error);
         }
-        return outdatedResult;
+        return outdatedResultModel;
     }
 }
 

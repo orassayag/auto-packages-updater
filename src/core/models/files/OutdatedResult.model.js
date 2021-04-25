@@ -1,4 +1,4 @@
-class OutdatedResult {
+class OutdatedResultModel {
 
     constructor() {
         this.outdatedPackages = null;
@@ -6,4 +6,4 @@ class OutdatedResult {
     }
 }
 
-module.exports = OutdatedResult;
+module.exports = OutdatedResultModel;

@@ -6,6 +6,10 @@ class ValidationUtils {
         return list && list.length > 0;
     }
 
+    isEmpty(value) {
+        return value === null || typeof value === 'undefined' || value.length === 0;
+    }
+
     // This method validates if a given value is a valid number and returns the result.
     isValidNumber(number) {
         number = Number(number);

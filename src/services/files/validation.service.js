@@ -8,9 +8,9 @@ class ValidationService {
     constructor() { }
 
     async validateInternetConnection() {
-        const url = applicationService.applicationData.validationConnectionLink;
+        const url = applicationService.applicationDataModel.validationConnectionLink;
         let isConnected = true;
-        for (let i = 0; i < countLimitService.countLimitData.maximumURLValidationCount; i++) {
+        for (let i = 0; i < countLimitService.countLimitDataModel.maximumURLValidationCount; i++) {
             try {
                 isConnected = await isReachable(url);
             } catch (error) {
@@ -20,7 +20,7 @@ class ValidationService {
                 break;
             }
             else {
-                await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutURLValidation);
+                await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutURLValidation);
             }
         }
         if (!isConnected) {

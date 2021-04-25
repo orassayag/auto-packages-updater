@@ -1,5 +1,5 @@
-const { ProjectData, ProjectsData } = require('../../core/models');
-const { ProjectStatus, UpdateType } = require('../../core/enums');
+const { ProjectDataModel, ProjectsDataModel } = require('../../core/models');
+const { ProjectStatusEnum, UpdateTypeEnum } = require('../../core/enums');
 const countLimitService = require('./countLimit.service');
 const fileService = require('./file.service');
 const logService = require('./log.service');
@@ -10,25 +10,25 @@ const { textUtils, timeUtils, validationUtils } = require('../../utils');
 class ProjectService {
 
     constructor() {
-        this.projectsData = null;
+        this.projectsDataModel = null;
     }
 
     initiate() {
-        this.projectsData = new ProjectsData();
+        this.projectsDataModel = new ProjectsDataModel();
     }
 
     async findOutdatedPackages() {
         // Get the projects data from the projects.json file.
-        const fileDataResult = await fileService.getFileData({
-            filePath: pathService.pathData.projectsPath,
+        const fileDataResultModel = await fileService.getFileData({
+            filePath: pathService.pathDataModel.projectsPath,
             parameterName: 'projectsPath',
             fileExtension: '.json',
             isPackageJSONFile: false
         });
-        if (!fileDataResult) {
-            throw new Error('Invalid or no fileDataResult object was found (1000016)');
+        if (!fileDataResultModel) {
+            throw new Error('Invalid or no fileDataResultModel object was found (1000016)');
         }
-        const { resultData, errorMessage } = fileDataResult;
+        const { resultData, errorMessage } = fileDataResultModel;
         if (errorMessage) {
             throw new Error(errorMessage);
         }
@@ -49,45 +49,45 @@ class ProjectService {
     async createProjects(resultData) {
         let lastProjectId = 1;
         for (let i = 0; i < resultData.length; i++) {
-            const projectData = await this.validateCreateProject(resultData[i], lastProjectId);
-            if (!projectData) {
-                throw new Error('Invalid or no projectData object was found (1000018)');
+            const projectDataModel = await this.validateCreateProject(resultData[i], lastProjectId);
+            if (!projectDataModel) {
+                throw new Error('Invalid or no projectDataModel object was found (1000018)');
             }
             lastProjectId++;
-            this.projectsData.projectsList.push(projectData);
+            this.projectsDataModel.projectsList.push(projectDataModel);
         }
     }
 
     // This method validates the projects.
     validateProjects() {
-        if (this.projectsData.projectsList.length <= 1) {
+        if (this.projectsDataModel.projectsList.length <= 1) {
             return;
         }
         // Clean duplicate projects (by the same package.json paths).
-        for (let i = 0; i < this.projectsData.projectsList.length; i++) {
-            this.compareProjects(this.projectsData.projectsList[i]);
+        for (let i = 0; i < this.projectsDataModel.projectsList.length; i++) {
+            this.compareProjects(this.projectsDataModel.projectsList[i]);
         }
         // Validate that the maximum number of projects don't exceed the limit.
-        if (this.projectsData.projectsList.length > countLimitService.countLimitData.maximumProjectsCount) {
-            this.projectsData.projectsList = this.projectsData.projectsList.slice(0, countLimitService.countLimitData.maximumProjectsCount);
+        if (this.projectsDataModel.projectsList.length > countLimitService.countLimitDataModel.maximumProjectsCount) {
+            this.projectsDataModel.projectsList = this.projectsDataModel.projectsList.slice(0, countLimitService.countLimitDataModel.maximumProjectsCount);
         }
     }
 
     // This method checks if duplicate projects exist, based on the same package.json paths.
-    compareProjects(projectData) {
-        if (projectData.status !== ProjectStatus.CREATE) {
+    compareProjects(projectDataModel) {
+        if (projectDataModel.status !== ProjectStatusEnum.CREATE) {
             return;
         }
-        for (let i = 0; i < this.projectsData.projectsList.length; i++) {
-            const currentProjectData = this.projectsData.projectsList[i];
-            if (projectData.id === currentProjectData.id || currentProjectData.status !== ProjectStatus.CREATE) {
+        for (let i = 0; i < this.projectsDataModel.projectsList.length; i++) {
+            const currentProjectDataModel = this.projectsDataModel.projectsList[i];
+            if (projectDataModel.id === currentProjectDataModel.id || currentProjectDataModel.status !== ProjectStatusEnum.CREATE) {
                 continue;
             }
-            if (projectData.packagesPath === currentProjectData.packagesPath) {
-                this.projectsData.projectsList[i] = this.updateProjectStatus({
-                    projectData: currentProjectData,
-                    status: ProjectStatus.DUPLICATE,
-                    resultMessage: `The project's package.json already exists in the list of projects: ${projectData.updateType} (1000019)`
+            if (projectDataModel.packagesPath === currentProjectDataModel.packagesPath) {
+                this.projectsDataModel.projectsList[i] = this.updateProjectStatus({
+                    projectDataModel: currentProjectDataModel,
+                    status: ProjectStatusEnum.DUPLICATE,
+                    resultMessage: `The project's package.json already exists in the list of projects: ${projectDataModel.updateType} (1000019)`
                 });
             }
         }
@@ -95,124 +95,124 @@ class ProjectService {
 
     async validateCreateProject(data, lastProjectId) {
         // Create a new project data.
-        let projectData = new ProjectData({
+        let projectDataModel = new ProjectDataModel({
             id: lastProjectId,
             createDateTime: timeUtils.getCurrentDate(),
-            status: ProjectStatus.CREATE
+            status: ProjectStatusEnum.CREATE
         });
         // Validate the 'name' field.
-        projectData = this.validateName(projectData, data);
-        if (projectData.resultMessage) {
-            return projectData;
+        projectDataModel = this.validateName(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
         }
         // Validate the 'update-type' field.
-        projectData = this.validateUpdateType(projectData, data);
-        if (projectData.resultMessage) {
-            return projectData;
+        projectDataModel = this.validateUpdateType(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
         }
         // Validate the 'include-dev-dependencies' field.
-        projectData = await this.validateIncludeDevDependencies(projectData, data);
-        if (projectData.resultMessage) {
-            return projectData;
+        projectDataModel = await this.validateIncludeDevDependencies(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
         }
         // Validate the 'packages-path' field.
-        projectData = await this.validatePackagesPath(projectData, data);
-        if (projectData.resultMessage) {
-            return projectData;
+        projectDataModel = await this.validatePackagesPath(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
         }
         // Validate the 'custom-packages-path' field.
-        projectData = await this.validateCustomPackagesPath(projectData, data);
-        if (projectData.resultMessage) {
-            return projectData;
+        projectDataModel = await this.validateCustomPackagesPath(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
         }
         // Validate the 'exclude-packages-list' field.
-        projectData = await this.validateExcludePackagesList(projectData, data);
-        if (projectData.resultMessage) {
-            return projectData;
+        projectDataModel = await this.validateExcludePackagesList(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
         }
         // Validate the entire project data.
-        projectData = this.validateProject(projectData);
+        projectDataModel = this.validateProject(projectDataModel);
         // Finalize the project data.
-        projectData = this.finalizeProject(projectData);
-        return projectData;
+        projectDataModel = this.finalizeProject(projectDataModel);
+        return projectDataModel;
     }
 
     // This method validates the 'name' field.
-    validateName(projectData, data) {
+    validateName(projectDataModel, data) {
         return this.validateJSONString({
-            projectData: projectData,
+            projectDataModel: projectDataModel,
             jsonFieldName: 'name',
             projectFieldName: 'name',
             isRequired: true,
-            missingStatus: ProjectStatus.MISSING_NAME,
-            invalidStatus: ProjectStatus.INVALID_NAME,
-            emptyStatus: ProjectStatus.EMPTY_NAME
+            missingStatus: ProjectStatusEnum.MISSING_NAME,
+            invalidStatus: ProjectStatusEnum.INVALID_NAME,
+            emptyStatus: ProjectStatusEnum.EMPTY_NAME
         }, data);
     }
 
     // This method validates the 'update-type' field.
-    validateUpdateType(projectData, data) {
-        projectData = this.validateJSONString({
-            projectData: projectData,
+    validateUpdateType(projectDataModel, data) {
+        projectDataModel = this.validateJSONString({
+            projectDataModel: projectDataModel,
             jsonFieldName: 'update-type',
             projectFieldName: 'updateType',
             isRequired: true,
-            missingStatus: ProjectStatus.MISSING_UPDATE_TYPE,
-            invalidStatus: ProjectStatus.INVALID_UPDATE_TYPE,
-            emptyStatus: ProjectStatus.EMPTY_UPDATE_TYPE
+            missingStatus: ProjectStatusEnum.MISSING_UPDATE_TYPE,
+            invalidStatus: ProjectStatusEnum.INVALID_UPDATE_TYPE,
+            emptyStatus: ProjectStatusEnum.EMPTY_UPDATE_TYPE
         }, data);
-        if (projectData.resultMessage) {
-            return projectData;
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
         }
         if (!validationUtils.isValidEnum({
-            enum: UpdateType,
-            value: projectData.updateType
+            enum: UpdateTypeEnum,
+            value: projectDataModel.updateType
         })) {
             return this.updateProjectStatus({
-                projectData: projectData,
-                status: ProjectStatus.MISMATCH_UPDATE_TYPE,
-                resultMessage: `Mismatch UpdateType parameter was found: ${projectData.updateType} (1000020)`
+                projectDataModel: projectDataModel,
+                status: ProjectStatusEnum.MISMATCH_UPDATE_TYPE,
+                resultMessage: `Mismatch UpdateTypeEnum parameter was found: ${projectDataModel.updateType} (1000020)`
             });
         }
-        return projectData;
+        return projectDataModel;
     }
 
     // This method validates the 'packages-path' field.
-    async validatePackagesPath(projectData, data) {
-        projectData = this.validateJSONString({
-            projectData: projectData,
+    async validatePackagesPath(projectDataModel, data) {
+        projectDataModel = this.validateJSONString({
+            projectDataModel: projectDataModel,
             jsonFieldName: 'packages-path',
             projectFieldName: 'packagesPath',
             isRequired: true,
-            missingStatus: ProjectStatus.MISSING_PACKAGES_PATH,
-            invalidStatus: ProjectStatus.INVALID_PACKAGES_PATH,
-            emptyStatus: ProjectStatus.EMPTY_PACKAGES_PATH
+            missingStatus: ProjectStatusEnum.MISSING_PACKAGES_PATH,
+            invalidStatus: ProjectStatusEnum.INVALID_PACKAGES_PATH,
+            emptyStatus: ProjectStatusEnum.EMPTY_PACKAGES_PATH
         }, data);
-        if (projectData.resultMessage) {
-            return projectData;
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
         }
-        const fileDataResult = await fileService.getFileData({
-            filePath: projectData.packagesPath,
+        const fileDataResultModel = await fileService.getFileData({
+            filePath: projectDataModel.packagesPath,
             parameterName: 'packagesPath',
             fileExtension: '.json',
             isPackageJSONFile: true
         });
-        if (!fileDataResult) {
-            throw new Error('Invalid or no fileDataResult object was found (1000021)');
+        if (!fileDataResultModel) {
+            throw new Error('Invalid or no fileDataResultModel object was found (1000021)');
         }
-        const { resultData, errorMessage } = fileDataResult;
+        const { resultData, errorMessage } = fileDataResultModel;
         if (errorMessage) {
             return this.updateProjectStatus({
-                projectData: projectData,
-                status: ProjectStatus.FILE_ERROR_PACKAGES_PATH,
+                projectDataModel: projectDataModel,
+                status: ProjectStatusEnum.FILE_ERROR_PACKAGES_PATH,
                 resultMessage: errorMessage
             });
         }
         // Check that 'dependencies' field exists - Throw an exception if not.
         if (!resultData.dependencies) {
             return this.updateProjectStatus({
-                projectData: projectData,
-                status: ProjectStatus.INVALID_STRUCTURE_PACKAGES_PATH,
+                projectDataModel: projectDataModel,
+                status: ProjectStatusEnum.INVALID_STRUCTURE_PACKAGES_PATH,
                 resultMessage: `Invalid package.json file structure: missing 'dependencies' property (1000022)`
             });
         }
@@ -220,96 +220,96 @@ class ProjectService {
         const dependenciesKeys = Object.keys(resultData.dependencies);
         if (!validationUtils.isExists(dependenciesKeys)) {
             return this.updateProjectStatus({
-                projectData: projectData,
-                status: ProjectStatus.NO_PACKAGES_IN_PACKAGES_PATH,
+                projectDataModel: projectDataModel,
+                status: ProjectStatusEnum.NO_PACKAGES_IN_PACKAGES_PATH,
                 resultMessage: `No packages exists in the package.json file (1000023)`
             });
         }
-        projectData.dependencies = resultData.dependencies;
+        projectDataModel.dependencies = resultData.dependencies;
         // Check that 'devDependencies' is required.
-        if (projectData.isIncludeDevDependencies && resultData.devDependencies) {
+        if (projectDataModel.isIncludeDevDependencies && resultData.devDependencies) {
             const devDependenciesKeys = Object.keys(resultData.devDependencies);
             if (validationUtils.isExists(devDependenciesKeys)) {
-                projectData.devDependencies = resultData.devDependencies;
+                projectDataModel.devDependencies = resultData.devDependencies;
             }
         }
-        return projectData;
+        return projectDataModel;
     }
 
     // This method validates the 'custom-packages-path' field.
-    async validateCustomPackagesPath(projectData, data) {
+    async validateCustomPackagesPath(projectDataModel, data) {
         // If the update type is full, ignore the custom logic.
-        if (projectData.updateType === UpdateType.FULL) {
-            return projectData;
+        if (projectDataModel.updateType === UpdateTypeEnum.FULL) {
+            return projectDataModel;
         }
-        projectData = this.validateJSONString({
-            projectData: projectData,
+        projectDataModel = this.validateJSONString({
+            projectDataModel: projectDataModel,
             jsonFieldName: 'custom-packages-path',
             projectFieldName: 'customPackagesPath',
             isRequired: false,
-            missingStatus: ProjectStatus.MISSING_CUSTOM_PACKAGES_PATH,
-            invalidStatus: ProjectStatus.INVALID_CUSTOM_PACKAGES_PATH,
+            missingStatus: ProjectStatusEnum.MISSING_CUSTOM_PACKAGES_PATH,
+            invalidStatus: ProjectStatusEnum.INVALID_CUSTOM_PACKAGES_PATH,
             emptyStatus: null
         }, data);
-        if (!projectData.customPackagesPath || projectData.resultMessage) {
-            return projectData;
+        if (!projectDataModel.customPackagesPath || projectDataModel.resultMessage) {
+            return projectDataModel;
         }
-        const fileDataResult = await fileService.getFileData({
-            filePath: projectData.customPackagesPath,
+        const fileDataResultModel = await fileService.getFileData({
+            filePath: projectDataModel.customPackagesPath,
             parameterName: 'customPackagesPath',
             fileExtension: '.txt',
             isPackageJSONFile: false
         });
-        if (!fileDataResult) {
-            throw new Error('Invalid or no fileDataResult object was found (1000024)');
+        if (!fileDataResultModel) {
+            throw new Error('Invalid or no fileDataResultModel object was found (1000024)');
         }
-        const { resultData, errorMessage } = fileDataResult;
+        const { resultData, errorMessage } = fileDataResultModel;
         if (errorMessage) {
             return this.updateProjectStatus({
-                projectData: projectData,
-                status: ProjectStatus.FILE_ERROR_CUSTOM_PACKAGES_PATH,
+                projectDataModel: projectDataModel,
+                status: ProjectStatusEnum.FILE_ERROR_CUSTOM_PACKAGES_PATH,
                 resultMessage: errorMessage
             });
         }
-        projectData.customPackagesList = resultData.split('\r\n').map(p => textUtils.toLowerCaseTrim(p));
-        return projectData;
+        projectDataModel.customPackagesList = resultData.split('\r\n').map(p => textUtils.toLowerCaseTrim(p));
+        return projectDataModel;
     }
 
     // This method validates the 'exclude-packages-list' field.
-    validateExcludePackagesList(projectData, data) {
-        projectData = this.validateJSONArray({
-            projectData: projectData,
+    validateExcludePackagesList(projectDataModel, data) {
+        projectDataModel = this.validateJSONArray({
+            projectDataModel: projectDataModel,
             jsonFieldName: 'exclude-packages-list',
             projectFieldName: 'excludePackagesList',
             isRequired: false,
-            missingStatus: ProjectStatus.MISSING_EXCLUDE_PACKAGES_LIST,
-            invalidStatus: ProjectStatus.INVALID_EXCLUDE_PACKAGES_LIST,
-            emptyStatus: ProjectStatus.EMPTY_EXCLUDE_PACKAGES_LIST
+            missingStatus: ProjectStatusEnum.MISSING_EXCLUDE_PACKAGES_LIST,
+            invalidStatus: ProjectStatusEnum.INVALID_EXCLUDE_PACKAGES_LIST,
+            emptyStatus: ProjectStatusEnum.EMPTY_EXCLUDE_PACKAGES_LIST
         }, data);
-        if (validationUtils.isExists(projectData.excludePackagesList)) {
-            projectData.excludePackagesList = projectData.excludePackagesList.map(p => textUtils.toLowerCaseTrim(p));
+        if (validationUtils.isExists(projectDataModel.excludePackagesList)) {
+            projectDataModel.excludePackagesList = projectDataModel.excludePackagesList.map(p => textUtils.toLowerCaseTrim(p));
         }
-        return projectData;
+        return projectDataModel;
     }
 
     // This method validates the 'include-dev-dependencies' field.
-    validateIncludeDevDependencies(projectData, data) {
+    validateIncludeDevDependencies(projectDataModel, data) {
         return this.validateJSONBoolean({
-            projectData: projectData,
+            projectDataModel: projectDataModel,
             jsonFieldName: 'include-dev-dependencies',
             projectFieldName: 'isIncludeDevDependencies',
             isRequired: true,
-            missingStatus: ProjectStatus.MISSING_INCLUDE_DEV_DEPENDENCIES,
-            invalidStatus: ProjectStatus.INVALID_INCLUDE_DEV_DEPENDENCIES
+            missingStatus: ProjectStatusEnum.MISSING_INCLUDE_DEV_DEPENDENCIES,
+            invalidStatus: ProjectStatusEnum.INVALID_INCLUDE_DEV_DEPENDENCIES
         }, data);
     }
 
     // This method validates a string field from the project.json file.
     validateJSONString(data, jsonData) {
-        const { projectData, jsonFieldName, projectFieldName, isRequired, missingStatus, invalidStatus, emptyStatus } = data;
+        const { projectDataModel, jsonFieldName, projectFieldName, isRequired, missingStatus, invalidStatus, emptyStatus } = data;
         if (!validationUtils.isPropertyExists(jsonData, jsonFieldName)) {
             return this.updateProjectStatus({
-                projectData: projectData,
+                projectDataModel: projectDataModel,
                 status: missingStatus,
                 resultMessage: `Field '${jsonFieldName}' does not exists in the project.`
             });
@@ -318,29 +318,29 @@ class ProjectService {
         if (isRequired || fieldValue) {
             if (!validationUtils.isValidString(fieldValue)) {
                 return this.updateProjectStatus({
-                    projectData: projectData,
+                    projectDataModel: projectDataModel,
                     status: invalidStatus,
                     resultMessage: `Invalid '${jsonFieldName}' parameter was found: Expected a string but received: ${fieldValue} (1000025)`
                 });
             }
             if (!validationUtils.isExists(fieldValue)) {
                 return this.updateProjectStatus({
-                    projectData: projectData,
+                    projectDataModel: projectDataModel,
                     status: emptyStatus,
                     resultMessage: `Empty '${jsonFieldName}' parameter was found: Expected a string but received: ${fieldValue} (1000026)`
                 });
             }
         }
-        projectData[projectFieldName] = fieldValue ? fieldValue.trim() : fieldValue;
-        return projectData;
+        projectDataModel[projectFieldName] = fieldValue ? fieldValue.trim() : fieldValue;
+        return projectDataModel;
     }
 
     // This method validates a boolean field from the project.json file.
     validateJSONBoolean(data, jsonData) {
-        const { projectData, jsonFieldName, projectFieldName, isRequired, missingStatus, invalidStatus } = data;
+        const { projectDataModel, jsonFieldName, projectFieldName, isRequired, missingStatus, invalidStatus } = data;
         if (!validationUtils.isPropertyExists(jsonData, jsonFieldName)) {
             return this.updateProjectStatus({
-                projectData: projectData,
+                projectDataModel: projectDataModel,
                 status: missingStatus,
                 resultMessage: `Field '${jsonFieldName}' does not exists in the project.`
             });
@@ -348,21 +348,21 @@ class ProjectService {
         const fieldValue = jsonData[jsonFieldName];
         if (isRequired && !validationUtils.isValidBoolean(fieldValue)) {
             return this.updateProjectStatus({
-                projectData: projectData,
+                projectDataModel: projectDataModel,
                 status: invalidStatus,
                 resultMessage: `Invalid '${jsonFieldName}' parameter was found: Expected a boolean but received: ${fieldValue} (1000027)`
             });
         }
-        projectData[projectFieldName] = fieldValue;
-        return projectData;
+        projectDataModel[projectFieldName] = fieldValue;
+        return projectDataModel;
     }
 
     // This method validates an array field from the project.json file.
     validateJSONArray(data, jsonData) {
-        const { projectData, jsonFieldName, projectFieldName, isRequired, missingStatus, invalidStatus, emptyStatus } = data;
+        const { projectDataModel, jsonFieldName, projectFieldName, isRequired, missingStatus, invalidStatus, emptyStatus } = data;
         if (!validationUtils.isPropertyExists(jsonData, jsonFieldName)) {
             return this.updateProjectStatus({
-                projectData: projectData,
+                projectDataModel: projectDataModel,
                 status: missingStatus,
                 resultMessage: `Field '${jsonFieldName}' does not exists in the project.`
             });
@@ -371,32 +371,32 @@ class ProjectService {
         if (isRequired || fieldValue) {
             if (!validationUtils.isValidArray(fieldValue)) {
                 return this.updateProjectStatus({
-                    projectData: projectData,
+                    projectDataModel: projectDataModel,
                     status: invalidStatus,
                     resultMessage: `Invalid '${jsonFieldName}' parameter was found: Expected an array but received: ${fieldValue} (1000028)`
                 });
             }
             if (!validationUtils.isExists(fieldValue)) {
                 return this.updateProjectStatus({
-                    projectData: projectData,
+                    projectDataModel: projectDataModel,
                     status: emptyStatus,
                     resultMessage: `Empty '${jsonFieldName}' parameter was found: Expected an array but received: ${fieldValue} (1000029)`
                 });
             }
         }
-        projectData[projectFieldName] = fieldValue;
-        return projectData;
+        projectDataModel[projectFieldName] = fieldValue;
+        return projectDataModel;
     }
 
     scanFields(data) {
-        const { projectData, keysList } = data;
+        const { projectDataModel, keysList } = data;
         let scanFieldsResult = null;
         for (let i = 0; i < keysList.length; i++) {
             const key = keysList[i];
-            const value = projectData[key];
-            if (!value && value !== 0) {
+            const value = projectDataModel[key];
+            if (validationUtils.isEmpty(value)) {
                 scanFieldsResult = {
-                    status: ProjectStatus.MISSING_FIELD,
+                    status: ProjectStatusEnum.MISSING_FIELD,
                     resultMessage: `Field ${key} should not be empty, but does not contain any value.`
                 };
                 break;
@@ -407,9 +407,9 @@ class ProjectService {
 
     // This method validates that if the update type is custom, at least one package from custom
     // matches the dependencies or to devDependencies objects (if required).
-    findMatchCustomPackages(projectData) {
+    findMatchCustomPackages(projectDataModel) {
         let isMatchPackage = false;
-        const { customPackagesList, dependencies, devDependencies, isIncludeDevDependencies } = projectData;
+        const { customPackagesList, dependencies, devDependencies, isIncludeDevDependencies } = projectDataModel;
         for (let i = 0; i < customPackagesList.length; i++) {
             const customPackageName = customPackagesList[i];
             if (validationUtils.isPropertyExists(dependencies, customPackageName)) {
@@ -427,59 +427,59 @@ class ProjectService {
     }
 
     // This method validates the entire project data.
-    validateProject(projectData) {
+    validateProject(projectDataModel) {
         // Validate all expected fields.
         const scanFieldsResult = this.scanFields({
-            projectData: projectData,
+            projectDataModel: projectDataModel,
             keysList: ['id', 'createDateTime', 'name', 'updateType', 'packagesPath', 'isIncludeDevDependencies', 'dependencies', 'status', 'retriesCount']
         });
         if (scanFieldsResult) {
             return this.updateProjectStatus({
-                projectData: projectData,
+                projectDataModel: projectDataModel,
                 status: scanFieldsResult.status,
                 resultMessage: scanFieldsResult.resultMessage
             });
         }
         // Validate that if the update type is custom, make sure there are custom packages.
-        if (projectData.updateType === UpdateType.CUSTOM) {
-            if (!validationUtils.isExists(projectData.customPackagesList)) {
+        if (projectDataModel.updateType === UpdateTypeEnum.CUSTOM) {
+            if (!validationUtils.isExists(projectDataModel.customPackagesList)) {
                 return this.updateProjectStatus({
-                    projectData: projectData,
-                    status: ProjectStatus.NO_CUSTOM_PACKAGES,
+                    projectDataModel: projectDataModel,
+                    status: ProjectStatusEnum.NO_CUSTOM_PACKAGES,
                     resultMessage: 'The project update type marked as custom but no custom packages were found (1000030)'
                 });
             }
             // Validate that if the update type is custom, at least one package from custom
             // matches the dependencies or to devDependencies objects (if required).
-            if (!this.findMatchCustomPackages(projectData)) {
+            if (!this.findMatchCustomPackages(projectDataModel)) {
                 return this.updateProjectStatus({
-                    projectData: projectData,
-                    status: ProjectStatus.NO_MATCH_CUSTOM_PACKAGES,
+                    projectDataModel: projectDataModel,
+                    status: ProjectStatusEnum.NO_MATCH_CUSTOM_PACKAGES,
                     resultMessage: 'No match custom package in the dependencies or devDependencies objects were found (1000031)'
                 });
             }
         }
-        return projectData;
+        return projectDataModel;
     }
 
-    finalizeProject(projectData) {
+    finalizeProject(projectDataModel) {
         // Clear all duplicate packages, regardless of the versions.
-        projectData.customPackagesList = textUtils.removeDuplicates(projectData.customPackagesList);
-        projectData.excludePackagesList = textUtils.removeDuplicates(projectData.excludePackagesList);
+        projectDataModel.customPackagesList = textUtils.removeDuplicates(projectDataModel.customPackagesList);
+        projectDataModel.excludePackagesList = textUtils.removeDuplicates(projectDataModel.excludePackagesList);
         // If the project data contains no error -
         // Create the final version of the package.json structure data to check for outdated packages.
-        projectData = this.createPackagesTemplate(projectData);
-        return projectData;
+        projectDataModel = this.createPackagesTemplate(projectDataModel);
+        return projectDataModel;
     }
 
-    createPackagesTemplate(projectData) {
-        const { updateType, customPackagesList, excludePackagesList, isIncludeDevDependencies, dependencies, devDependencies } = projectData;
+    createPackagesTemplate(projectDataModel) {
+        const { updateType, customPackagesList, excludePackagesList, isIncludeDevDependencies, dependencies, devDependencies } = projectDataModel;
         let packagesTemplate = { ...dependencies };
         if (isIncludeDevDependencies && devDependencies) {
             packagesTemplate = { ...packagesTemplate, ...devDependencies };
         }
         // If the update type is custom - Remove all the packages that are not listed in the customPackagesList.
-        if (updateType === UpdateType.CUSTOM) {
+        if (updateType === UpdateTypeEnum.CUSTOM) {
             const customPackagesTemplate = {};
             for (let i = 0; i < customPackagesList.length; i++) {
                 const packageName = customPackagesList[i];
@@ -497,55 +497,55 @@ class ProjectService {
             }
         }
         // Validate that there are any packages in the template. If not, update the status.
-        projectData.packagesTemplateKeys = Object.keys(packagesTemplate);
-        if (!validationUtils.isExists(projectData.packagesTemplateKeys)) {
+        projectDataModel.packagesTemplateKeys = Object.keys(packagesTemplate);
+        if (!validationUtils.isExists(projectDataModel.packagesTemplateKeys)) {
             return this.updateProjectStatus({
-                projectData: projectData,
-                status: ProjectStatus.NO_TEMPLATE_PACKAGES,
+                projectDataModel: projectDataModel,
+                status: ProjectStatusEnum.NO_TEMPLATE_PACKAGES,
                 resultMessage: 'There are no packages to validate. Consider rechecking the custom/exclude lists (1000032)'
             });
         }
-        projectData.packagesTemplate = packagesTemplate;
-        return projectData;
+        projectDataModel.packagesTemplate = packagesTemplate;
+        return projectDataModel;
     }
 
     // This method sends the packagesTemplate to get the outdated packages.
     async getProjectOutdatedPackages(data) {
-        let { projectData } = data;
-        if (projectData.status !== ProjectStatus.CREATE) {
-            return projectData;
+        let { projectDataModel } = data;
+        if (projectDataModel.status !== ProjectStatusEnum.CREATE) {
+            return projectDataModel;
         }
         const { outdatedPackages, errorMessage } = await packageService.getOutdatedPackages({
-            name: projectData.name,
-            packagesTemplate: projectData.packagesTemplate,
-            projectsCount: this.projectsData.projectsList.length,
+            name: projectDataModel.name,
+            packagesTemplate: projectDataModel.packagesTemplate,
+            projectsCount: this.projectsDataModel.projectsList.length,
             index: data.index
         });
         let status, resultMessage = null;
         if (errorMessage) {
-            status = ProjectStatus.FAIL;
+            status = ProjectStatusEnum.FAIL;
             resultMessage = errorMessage;
         }
         else {
-            status = ProjectStatus.SUCCESS;
-            projectData.outdatedPackagesKeys = Object.keys(outdatedPackages);
-            resultMessage = validationUtils.isExists(projectData.outdatedPackagesKeys) ?
+            status = ProjectStatusEnum.SUCCESS;
+            projectDataModel.outdatedPackagesKeys = Object.keys(outdatedPackages);
+            resultMessage = validationUtils.isExists(projectDataModel.outdatedPackagesKeys) ?
                 'Success to handle the outdated packages.' : 'All packages up to date.';
         }
-        projectData = this.updateProjectStatus({
-            projectData: projectData,
+        projectDataModel = this.updateProjectStatus({
+            projectDataModel: projectDataModel,
             status: status,
             resultMessage: resultMessage
         });
-        projectData.outdatedPackages = outdatedPackages;
-        return projectData;
+        projectDataModel.outdatedPackages = outdatedPackages;
+        return projectDataModel;
     }
 
     // This method loops all the projects and gets the outdated packages for each project.
     async getProjectsOutdatedPackages() {
-        for (let i = 0; i < this.projectsData.projectsList.length; i++) {
-            this.projectsData.projectsList[i] = await this.getProjectOutdatedPackages({
-                projectData: this.projectsData.projectsList[i],
+        for (let i = 0; i < this.projectsDataModel.projectsList.length; i++) {
+            this.projectsDataModel.projectsList[i] = await this.getProjectOutdatedPackages({
+                projectDataModel: this.projectsDataModel.projectsList[i],
                 index: i
             });
         }
@@ -555,21 +555,21 @@ class ProjectService {
     async handleResult() {
         // ToDo: On the second step here - Logic of update packages - Here - If outdated packages exist.
         // Log the result.
-        await logService.logProjects(this.projectsData);
+        await logService.logProjects(this.projectsDataModel);
     }
 
     updateProjectStatus(data) {
-        const { projectData, status, resultMessage } = data;
+        const { projectDataModel, status, resultMessage } = data;
         if (!status || !validationUtils.isValidEnum({
-            enum: ProjectStatus,
+            enum: ProjectStatusEnum,
             value: status
         })) {
-            throw new Error(`Invalid or no ProjectStatus parameter was found: ${status} (1000033)`);
+            throw new Error(`Invalid or no ProjectStatusEnum parameter was found: ${status} (1000033)`);
         }
-        projectData.status = status;
-        projectData.resultMessage = resultMessage;
-        projectData.resultDateTime = timeUtils.getCurrentDate();
-        return projectData;
+        projectDataModel.status = status;
+        projectDataModel.resultMessage = resultMessage;
+        projectDataModel.resultDateTime = timeUtils.getCurrentDate();
+        return projectDataModel;
     }
 }
 

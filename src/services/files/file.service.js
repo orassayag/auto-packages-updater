@@ -1,4 +1,4 @@
-const { FileDataResult } = require('../../core/models');
+const { FileDataResultModel } = require('../../core/models');
 const { fileUtils, pathUtils, validationUtils } = require('../../utils');
 
 class FileService {
@@ -7,29 +7,29 @@ class FileService {
 
     async getFileData(data) {
         const { filePath, parameterName, fileExtension, isPackageJSONFile } = data;
-        const fileDataResult = new FileDataResult();
+        const fileDataResultModel = new FileDataResultModel();
         if (!await fileUtils.isPathExists(filePath)) {
-            fileDataResult.errorMessage = `Path not exists: ${filePath} (1000003)`;
-            return fileDataResult;
+            fileDataResultModel.errorMessage = `Path not exists: ${filePath} (1000003)`;
+            return fileDataResultModel;
         }
         if (!fileUtils.isFilePath(filePath)) {
-            fileDataResult.errorMessage = `The parameter path ${parameterName} marked as file but it's a path of a directory: ${filePath} (1000004)`;
-            return fileDataResult;
+            fileDataResultModel.errorMessage = `The parameter path ${parameterName} marked as file but it's a path of a directory: ${filePath} (1000004)`;
+            return fileDataResultModel;
         }
         const extension = pathUtils.getExtension(filePath);
         if (extension !== fileExtension) {
-            fileDataResult.errorMessage = `The parameter path ${parameterName} must be a ${fileExtension} file but it's: ${extension} file (1000005)`;
-            return fileDataResult;
+            fileDataResultModel.errorMessage = `The parameter path ${parameterName} must be a ${fileExtension} file but it's: ${extension} file (1000005)`;
+            return fileDataResultModel;
         }
-        fileDataResult.resultData = await fileUtils.read(filePath);
+        fileDataResultModel.resultData = await fileUtils.read(filePath);
         if (fileExtension === '.json') {
-            fileDataResult.resultData = JSON.parse(fileDataResult.resultData);
+            fileDataResultModel.resultData = JSON.parse(fileDataResultModel.resultData);
         }
-        if (!isPackageJSONFile && !validationUtils.isExists(fileDataResult.resultData)) {
-            fileDataResult.errorMessage = `No data exists in the file: ${filePath} (1000006)`;
-            return fileDataResult;
+        if (!isPackageJSONFile && !validationUtils.isExists(fileDataResultModel.resultData)) {
+            fileDataResultModel.errorMessage = `No data exists in the file: ${filePath} (1000006)`;
+            return fileDataResultModel;
         }
-        return fileDataResult;
+        return fileDataResultModel;
     }
 }
 

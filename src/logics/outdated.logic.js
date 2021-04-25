@@ -1,5 +1,5 @@
 const settings = require('../settings/settings');
-const { Status } = require('../core/enums');
+const { StatusEnum } = require('../core/enums');
 const { applicationService, confirmationService, countLimitService, logService,
     pathService, projectService, validationService } = require('../services');
 const globalUtils = require('../utils/files/global.utils');
@@ -21,11 +21,11 @@ class OutdatedLogic {
     }
 
     async initiate() {
-        this.updateStatus('INITIATE THE SERVICES', Status.INITIATE);
+        this.updateStatus('INITIATE THE SERVICES', StatusEnum.INITIATE);
         countLimitService.initiate(settings);
         applicationService.initiate({
             settings: settings,
-            status: Status.INITIATE
+            status: StatusEnum.INITIATE
         });
         pathService.initiate(settings);
         await logService.initiate(settings);
@@ -33,41 +33,41 @@ class OutdatedLogic {
     }
 
     async validateGeneralSettings() {
-        this.updateStatus('VALIDATE GENERAL SETTINGS', Status.VALIDATE);
+        this.updateStatus('VALIDATE GENERAL SETTINGS', StatusEnum.VALIDATE);
         // Validate that the internet connection works.
         await validationService.validateInternetConnection();
     }
 
     async startSession() {
         // Initiate.
-        this.updateStatus('OUTDATED PACKAGES', Status.OUTDATED);
-        applicationService.applicationData.startDateTime = timeUtils.getCurrentDate();
+        this.updateStatus('OUTDATED PACKAGES', StatusEnum.OUTDATED);
+        applicationService.applicationDataModel.startDateTime = timeUtils.getCurrentDate();
         // Run the process - Check for outdated packages.
         await projectService.findOutdatedPackages();
-        await this.exit(Status.FINISH);
+        await this.exit(StatusEnum.FINISH);
     }
 
     async sleep() {
-        await globalUtils.sleep(countLimitService.countLimitData.millisecondsTimeoutExitApplication);
+        await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutExitApplication);
     }
 
     // Let the user confirm all the IMPORTANT settings before the process starts.
     async confirm() {
         if (!await confirmationService.confirm(settings)) {
-            await this.exit(Status.ABORT_BY_THE_USER);
+            await this.exit(StatusEnum.ABORT_BY_THE_USER);
         }
     }
 
     updateStatus(text, status) {
         logUtils.logStatus(text);
-        if (applicationService.applicationData) {
-            applicationService.applicationData.status = status;
+        if (applicationService.applicationDataModel) {
+            applicationService.applicationDataModel.status = status;
         }
     }
 
     async exit(status) {
-        if (applicationService.applicationData) {
-            applicationService.applicationData.status = status;
+        if (applicationService.applicationDataModel) {
+            applicationService.applicationDataModel.status = status;
             await this.sleep();
         }
         logUtils.logSpace();

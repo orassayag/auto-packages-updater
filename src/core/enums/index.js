@@ -1,4 +1,4 @@
-const { ProjectStatus, UpdateType } = require('./files/project.enum');
-const { ScriptType, Status } = require('./files/system.enum');
+const { ProjectStatusEnum, UpdateTypeEnum } = require('./files/project.enum');
+const { ScriptTypeEnum, StatusEnum } = require('./files/system.enum');
 
-module.exports = { ProjectStatus, ScriptType, Status, UpdateType };
+module.exports = { ProjectStatusEnum, ScriptTypeEnum, StatusEnum, UpdateTypeEnum };

@@ -1,8 +1,8 @@
-class ProjectsData {
+class ProjectsDataModel {
 
     constructor() {
         this.projectsList = [];
     }
 }
 
-module.exports = ProjectsData;
+module.exports = ProjectsDataModel;

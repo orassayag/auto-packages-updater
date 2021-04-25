@@ -1,6 +1,6 @@
 const enumUtils = require('../enum.utils');
 
-const ProjectStatus = enumUtils.createEnum([
+const ProjectStatusEnum = enumUtils.createEnum([
     ['CREATE', 'create'],
     ['MISSING_FIELD', 'missing field'],
     ['UPDATE', 'update'],
@@ -33,9 +33,9 @@ const ProjectStatus = enumUtils.createEnum([
     ['SUCCESS', 'success']
 ]);
 
-const UpdateType = enumUtils.createEnum([
+const UpdateTypeEnum = enumUtils.createEnum([
     ['FULL', 'full'],
     ['CUSTOM', 'custom']
 ]);
 
-module.exports = { ProjectStatus, UpdateType };
+module.exports = { ProjectStatusEnum, UpdateTypeEnum };

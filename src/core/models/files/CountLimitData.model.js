@@ -1,4 +1,4 @@
-class CountLimitData {
+class CountLimitDataModel {
 
 	constructor(settings) {
 		// Set the parameters from the settings file.
@@ -11,4 +11,4 @@ class CountLimitData {
 	}
 }
 
-module.exports = CountLimitData;
+module.exports = CountLimitDataModel;

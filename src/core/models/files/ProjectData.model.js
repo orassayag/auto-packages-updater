@@ -1,4 +1,4 @@
-class ProjectData {
+class ProjectDataModel {
 
     constructor(data) {
         const { id, createDateTime, status } = data;
@@ -24,4 +24,4 @@ class ProjectData {
     }
 }
 
-module.exports = ProjectData;
+module.exports = ProjectDataModel;

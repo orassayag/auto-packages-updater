@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": false,
   "description": "A Node.js application to check multi projects declared in an external JSON file, to get a list of outdated NPM packages and log them to an external TXT file.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/orassayag/auto-packages-updater.git"
+  },
   "keywords": [
     "node",
     "paths",
@@ -50,9 +54,9 @@
   ],
   "dependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.24.0",
+    "eslint": "^7.25.0",
     "fs-extra": "^9.1.0",
     "is-reachable": "^5.0.0",
-    "npm-check-updates": "^11.5.0"
+    "npm-check-updates": "^11.5.1"
   }
 }

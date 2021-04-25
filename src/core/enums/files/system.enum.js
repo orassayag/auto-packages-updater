@@ -1,12 +1,12 @@
 const enumUtils = require('../enum.utils');
 
-const ScriptType = enumUtils.createEnum([
+const ScriptTypeEnum = enumUtils.createEnum([
     ['BACKUP', 'backup'],
     ['OUTDATED', 'outdated'],
     ['TEST', 'test']
 ]);
 
-const Status = enumUtils.createEnum([
+const StatusEnum = enumUtils.createEnum([
     ['INITIATE', 'INITIATE'],
     ['VALIDATE', 'VALIDATE'],
     ['OUTDATED', 'OUTDATED'],
@@ -14,4 +14,4 @@ const Status = enumUtils.createEnum([
     ['FINISH', 'FINISH']
 ]);
 
-module.exports = { ScriptType, Status };
+module.exports = { ScriptTypeEnum, StatusEnum };

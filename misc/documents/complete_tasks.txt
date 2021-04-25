@@ -1,5 +1,22 @@
 Complete / canceled tasks:
 ==========================
+-Update packages + Recreate package-lock.json. *
+-Add to the 'package.json' file (below the 'description' field) the 'repository' field: *
+"repository": { *
+  "type": "git", *
+  "url": "git://github.com/username/repository.git" *
+} *
+-Convert in all places from all versions of canceled keyword to 'Canceled' keyword. *
+-Add in all places 'name.model' to all models. *
+-Check that in all places the name of the file includes the name of tha parent directory. For example: name.model inside 'models' directory. *
+-Don't forget to do the same rename logic for all the enums in the project. *
+-Fixed bug with empty value. *
+-Change in all places the config from 'misc/backup' to 'misc/backups' directory. *
+-Change all (where it's possible) from 'console.log' to 'logUtils.log'. *
+-Take the latest settings from '.vscode/settings.json' and implement them. *
+-Change in all places that globalUtils will be on top. *
+-Replace the 'getCurrentDate' method with the updated one from the 'udemy-courses' project. *
+-Copy the '.eslintignore' file from the 'udemy-courses' project. *
 -Convert all 'new Date()' to be from the timeUtils. Change in all places. *
 -Fix TXT files spell mistakes via Gmail (Also, convert '_' to ' ' in all places when checking). *
 -Make sure all switch-case have curly braces. *
