@@ -1,6 +1,7 @@
 Complete / canceled tasks:
 ==========================
 -Update packages + Recreate package-lock.json. *
+-Update packages + Recreate package-lock.json. *
 -Add to the 'package.json' file (below the 'description' field) the 'repository' field: *
 "repository": { *
   "type": "git", *

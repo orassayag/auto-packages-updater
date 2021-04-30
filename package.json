@@ -57,6 +57,6 @@
     "eslint": "^7.25.0",
     "fs-extra": "^9.1.0",
     "is-reachable": "^5.0.0",
-    "npm-check-updates": "^11.5.4"
+    "npm-check-updates": "^11.5.7"
   }
 }
