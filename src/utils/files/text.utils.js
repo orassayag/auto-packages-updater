@@ -94,6 +94,13 @@ class TextUtils {
     addBreakLine(text) {
         return `${text}\r\n`;
     }
+
+    clearLastBreakLines(text) {
+        if (!text) {
+            return '';
+        }
+        return text.replace(regexUtils.clearLastBreakLines, '');
+    }
 }
 
 module.exports = new TextUtils();

@@ -3,6 +3,7 @@ class RegexUtils {
 
 	constructor() {
 		this.numberCommasRegex = /\B(?=(\d{3})+(?!\d))/g;
+		this.clearLastBreakLines = /\n+$/;
 	}
 }
 

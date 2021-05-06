@@ -54,6 +54,7 @@ class LogService {
 		for (let i = 0; i < projectsDataModel.projectsList.length; i++) {
 			resultLog += this.createProjectTemplate(projectsDataModel.projectsList[i]);
 		}
+		resultLog = textUtils.clearLastBreakLines(resultLog);
 		// Log the result.
 		await fileUtils.appendFile({
 			targetPath: this.distFileName,

@@ -1,5 +1,6 @@
 Complete / canceled tasks:
 ==========================
+-Fix bug with trailing spaces in the dist output TXT file. *
 -Update packages + Recreate package-lock.json. *
 -Update packages + Recreate package-lock.json. *
 -Add to the 'package.json' file (below the 'description' field) the 'repository' field: *
