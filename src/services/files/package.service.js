@@ -12,7 +12,7 @@ class PackageService {
         const { name, index, projectsCount } = data;
         let { packagesTemplate } = data;
         if (!packagesTemplate) {
-            throw new Error('Invalid or no packagesTemplate object was found (1000015)');
+            throw new Error('Invalid or no packagesTemplate object was found (1000016)');
         }
         packagesTemplate = { dependencies: packagesTemplate };
         const outdatedResultModel = new OutdatedResultModel();

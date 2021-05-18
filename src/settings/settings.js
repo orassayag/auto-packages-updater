@@ -16,6 +16,11 @@ const settings = {
     // Determine the milliseconds count timeout to wait between URL validation retry.
     MILLISECONDS_TIMEOUT_URL_VALIDATION: 1000,
 
+    // ===FLAG=== //
+    // Determine if to log all the projects results regardless of whether there are updates or not (=false),
+    // or to log only the projects that have updates available (=true).
+    IS_LOG_ONLY_UPDATES: true,
+
     // ===SOURCE=== //
     // Determine the path of the projects.json file, the file which contains all the projects
     // to check for outdated packages.

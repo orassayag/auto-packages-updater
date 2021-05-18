@@ -26,14 +26,14 @@ class ProjectService {
             isPackageJSONFile: false
         });
         if (!fileDataResultModel) {
-            throw new Error('Invalid or no fileDataResultModel object was found (1000016)');
+            throw new Error('Invalid or no fileDataResultModel object was found (1000017)');
         }
         const { resultData, errorMessage } = fileDataResultModel;
         if (errorMessage) {
             throw new Error(errorMessage);
         }
         if (!validationUtils.isValidArray(resultData)) {
-            throw new Error('Invalid or no resultData array was found (1000017)');
+            throw new Error('Invalid or no resultData array was found (1000018)');
         }
         // Validate and create all the projects.
         await this.createProjects(resultData);
@@ -51,7 +51,7 @@ class ProjectService {
         for (let i = 0; i < resultData.length; i++) {
             const projectDataModel = await this.validateCreateProject(resultData[i], lastProjectId);
             if (!projectDataModel) {
-                throw new Error('Invalid or no projectDataModel object was found (1000018)');
+                throw new Error('Invalid or no projectDataModel object was found (1000019)');
             }
             lastProjectId++;
             this.projectsDataModel.projectsList.push(projectDataModel);
@@ -87,7 +87,7 @@ class ProjectService {
                 this.projectsDataModel.projectsList[i] = this.updateProjectStatus({
                     projectDataModel: currentProjectDataModel,
                     status: ProjectStatusEnum.DUPLICATE,
-                    resultMessage: `The project's package.json already exists in the list of projects: ${projectDataModel.updateType} (1000019)`
+                    resultMessage: `The project's package.json already exists in the list of projects: ${projectDataModel.updateType} (1000020)`
                 });
             }
         }
@@ -171,7 +171,7 @@ class ProjectService {
             return this.updateProjectStatus({
                 projectDataModel: projectDataModel,
                 status: ProjectStatusEnum.MISMATCH_UPDATE_TYPE,
-                resultMessage: `Mismatch UpdateTypeEnum parameter was found: ${projectDataModel.updateType} (1000020)`
+                resultMessage: `Mismatch UpdateTypeEnum parameter was found: ${projectDataModel.updateType} (1000021)`
             });
         }
         return projectDataModel;
@@ -198,7 +198,7 @@ class ProjectService {
             isPackageJSONFile: true
         });
         if (!fileDataResultModel) {
-            throw new Error('Invalid or no fileDataResultModel object was found (1000021)');
+            throw new Error('Invalid or no fileDataResultModel object was found (1000022)');
         }
         const { resultData, errorMessage } = fileDataResultModel;
         if (errorMessage) {
@@ -213,7 +213,7 @@ class ProjectService {
             return this.updateProjectStatus({
                 projectDataModel: projectDataModel,
                 status: ProjectStatusEnum.INVALID_STRUCTURE_PACKAGES_PATH,
-                resultMessage: `Invalid package.json file structure: missing 'dependencies' property (1000022)`
+                resultMessage: `Invalid package.json file structure: missing 'dependencies' property (1000023)`
             });
         }
         // Check that at least one package exists - Throw an exception if not.
@@ -222,7 +222,7 @@ class ProjectService {
             return this.updateProjectStatus({
                 projectDataModel: projectDataModel,
                 status: ProjectStatusEnum.NO_PACKAGES_IN_PACKAGES_PATH,
-                resultMessage: `No packages exists in the package.json file (1000023)`
+                resultMessage: `No packages exists in the package.json file (1000024)`
             });
         }
         projectDataModel.dependencies = resultData.dependencies;
@@ -261,7 +261,7 @@ class ProjectService {
             isPackageJSONFile: false
         });
         if (!fileDataResultModel) {
-            throw new Error('Invalid or no fileDataResultModel object was found (1000024)');
+            throw new Error('Invalid or no fileDataResultModel object was found (1000025)');
         }
         const { resultData, errorMessage } = fileDataResultModel;
         if (errorMessage) {
@@ -320,14 +320,14 @@ class ProjectService {
                 return this.updateProjectStatus({
                     projectDataModel: projectDataModel,
                     status: invalidStatus,
-                    resultMessage: `Invalid '${jsonFieldName}' parameter was found: Expected a string but received: ${fieldValue} (1000025)`
+                    resultMessage: `Invalid '${jsonFieldName}' parameter was found: Expected a string but received: ${fieldValue} (1000026)`
                 });
             }
             if (!validationUtils.isExists(fieldValue)) {
                 return this.updateProjectStatus({
                     projectDataModel: projectDataModel,
                     status: emptyStatus,
-                    resultMessage: `Empty '${jsonFieldName}' parameter was found: Expected a string but received: ${fieldValue} (1000026)`
+                    resultMessage: `Empty '${jsonFieldName}' parameter was found: Expected a string but received: ${fieldValue} (1000027)`
                 });
             }
         }
@@ -350,7 +350,7 @@ class ProjectService {
             return this.updateProjectStatus({
                 projectDataModel: projectDataModel,
                 status: invalidStatus,
-                resultMessage: `Invalid '${jsonFieldName}' parameter was found: Expected a boolean but received: ${fieldValue} (1000027)`
+                resultMessage: `Invalid '${jsonFieldName}' parameter was found: Expected a boolean but received: ${fieldValue} (1000028)`
             });
         }
         projectDataModel[projectFieldName] = fieldValue;
@@ -373,14 +373,14 @@ class ProjectService {
                 return this.updateProjectStatus({
                     projectDataModel: projectDataModel,
                     status: invalidStatus,
-                    resultMessage: `Invalid '${jsonFieldName}' parameter was found: Expected an array but received: ${fieldValue} (1000028)`
+                    resultMessage: `Invalid '${jsonFieldName}' parameter was found: Expected an array but received: ${fieldValue} (1000029)`
                 });
             }
             if (!validationUtils.isExists(fieldValue)) {
                 return this.updateProjectStatus({
                     projectDataModel: projectDataModel,
                     status: emptyStatus,
-                    resultMessage: `Empty '${jsonFieldName}' parameter was found: Expected an array but received: ${fieldValue} (1000029)`
+                    resultMessage: `Empty '${jsonFieldName}' parameter was found: Expected an array but received: ${fieldValue} (1000030)`
                 });
             }
         }
@@ -446,7 +446,7 @@ class ProjectService {
                 return this.updateProjectStatus({
                     projectDataModel: projectDataModel,
                     status: ProjectStatusEnum.NO_CUSTOM_PACKAGES,
-                    resultMessage: 'The project update type marked as custom but no custom packages were found (1000030)'
+                    resultMessage: 'The project update type marked as custom but no custom packages were found (1000031)'
                 });
             }
             // Validate that if the update type is custom, at least one package from custom
@@ -455,7 +455,7 @@ class ProjectService {
                 return this.updateProjectStatus({
                     projectDataModel: projectDataModel,
                     status: ProjectStatusEnum.NO_MATCH_CUSTOM_PACKAGES,
-                    resultMessage: 'No match custom package in the dependencies or devDependencies objects were found (1000031)'
+                    resultMessage: 'No match custom package in the dependencies or devDependencies objects were found (1000032)'
                 });
             }
         }
@@ -502,7 +502,7 @@ class ProjectService {
             return this.updateProjectStatus({
                 projectDataModel: projectDataModel,
                 status: ProjectStatusEnum.NO_TEMPLATE_PACKAGES,
-                resultMessage: 'There are no packages to validate. Consider rechecking the custom/exclude lists (1000032)'
+                resultMessage: 'There are no packages to validate. Consider rechecking the custom/exclude lists (1000033)'
             });
         }
         projectDataModel.packagesTemplate = packagesTemplate;
@@ -564,7 +564,7 @@ class ProjectService {
             enum: ProjectStatusEnum,
             value: status
         })) {
-            throw new Error(`Invalid or no ProjectStatusEnum parameter was found: ${status} (1000033)`);
+            throw new Error(`Invalid or no ProjectStatusEnum parameter was found: ${status} (1000034)`);
         }
         projectDataModel.status = status;
         projectDataModel.resultMessage = resultMessage;

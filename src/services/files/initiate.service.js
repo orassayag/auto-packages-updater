@@ -64,6 +64,7 @@ class InitiateService {
 		}
 		this.validatePositiveNumbers();
 		this.validateStrings();
+		this.validateBooleans();
 		this.validateArrays();
 		this.validateSpecial();
 	}
@@ -118,6 +119,18 @@ class InitiateService {
 		});
 	}
 
+	validateBooleans() {
+		[
+			// ===FLAG=== //
+			'IS_LOG_ONLY_UPDATES'
+		].map(key => {
+			const value = settings[key];
+			if (!validationUtils.isValidBoolean(value)) {
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a boolean but received: ${value} (1000011)`);
+			}
+		});
+	}
+
 	validateArrays() {
 		[
 			// ===BACKUP=== //
@@ -125,7 +138,7 @@ class InitiateService {
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isValidArray(value)) {
-				throw new Error(`Invalid or no ${key} parameter was found: Expected a array but received: ${value} (1000011)`);
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a array but received: ${value} (1000012)`);
 			}
 		});
 	}
@@ -135,7 +148,7 @@ class InitiateService {
 		this.validateDirectory(PROJECTS_PATH);
 		// ===SOURCE=== //
 		if (!fileUtils.isFilePath(PROJECTS_PATH)) {
-			throw new Error(`The path PROJECTS_PATH parameter needs to be a file path but it's a directory path: ${PROJECTS_PATH} (1000012)`);
+			throw new Error(`The path PROJECTS_PATH parameter needs to be a file path but it's a directory path: ${PROJECTS_PATH} (1000013)`);
 		}
 	}
 
@@ -168,7 +181,7 @@ class InitiateService {
 			const value = settings[key];
 			// Verify that the paths are of directory and not a file.
 			if (!fileUtils.isDirectoryPath(value)) {
-				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000013)`);
+				throw new Error(`The parameter path ${key} marked as directory but it's a path of a file: ${value} (1000014)`);
 			}
 		});
 	}
