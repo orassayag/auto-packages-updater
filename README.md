@@ -23,11 +23,11 @@ Happy testing! :)
 
 ### Prerequisites
 
-You'll need to install VSCode, Node, and clone the application, run npm i.
+You'll need to install VSCode, Node, and clone the application, and in the terminal run npm i.
 
 ## Built With
 
-* [Node.JS](https://nodejs.org/en/) - The web framework used - Server side.
+* [Node.js](https://nodejs.org/en/) - The web framework used - Server side.
 
 ## Contributing
 
