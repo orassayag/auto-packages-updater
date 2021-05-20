@@ -15,7 +15,7 @@ READ THE FOLLOWING SETTINGS BEFORE YOU BEGIN:
 -Instructions & How to use:
 1. Go to the settings.js file and make sure that all settings are fit to needs.
 2. Read the full instructions guide in INSTRUCTIONS.md file.
-3. Run the script by 'npm start' and let the magic begin. :)
+3. Run the script by 'npm start' in the terminal and let the magic begin. :)
 
 In the terminal: npm start
 
