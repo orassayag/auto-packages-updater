@@ -7,8 +7,8 @@ Built in April 2021. A Node.js application to check multi projects declared in a
 Clone the application to your computer.
 Steps to view the solution:
 1. Open server application on IDE (I use VSCode).
-2. In the terminal: npm i
-3. In the terminal: npm start
+2. In the terminal: 'npm i'.
+3. In the terminal: 'npm start'.
 
 READ THE FOLLOWING SETTINGS BEFORE YOU BEGIN:
 
@@ -17,13 +17,13 @@ READ THE FOLLOWING SETTINGS BEFORE YOU BEGIN:
 2. Read the full instructions guide in INSTRUCTIONS.md file.
 3. Run the script by 'npm start' in the terminal and let the magic begin. :)
 
-In the terminal: npm start
+In the terminal: 'npm start'.
 
 Happy testing! :)
 
 ### Prerequisites
 
-You'll need to install VSCode, Node, and clone the application, and in the terminal run npm i.
+You'll need to install VSCode, Node, and clone the application, and in the terminal run: 'npm i'.
 
 ## Built With
 
@@ -47,4 +47,4 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## License
 
-This application has an UNLICENSED License.
+This application has an UNLICENSED license.
