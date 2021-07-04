@@ -7,19 +7,19 @@ Built in April 2021. A Node.js application to check multi projects declared in a
 Clone the application to your computer.
 Steps to view the solution:
 1. Open server application on IDE (I use VSCode).
-2. In the terminal: 'npm i'.
-3. In the terminal: 'npm start'.
+2. In the terminal run: 'npm i'.
+3. In the terminal run: 'npm start'.
 
 READ THE FOLLOWING SETTINGS BEFORE YOU BEGIN:
 
 -Instructions & How to use:
 1. Go to the settings.js file and make sure that all settings are fit to needs.
 2. Read the full instructions guide in INSTRUCTIONS.md file.
-3. Run the script by 'npm start' in the terminal and let the magic begin. :)
+3. Run the script by 'npm start' in the terminal and let the magic begin :).
 
 In the terminal: 'npm start'.
 
-Happy testing! :)
+Happy testing! :).
 
 ### Prerequisites
 
@@ -28,6 +28,7 @@ You'll need to install VSCode, Node, and clone the application, and in the termi
 ## Built With
 
 * [Node.js](https://nodejs.org/en/) - The web framework used - Server side.
+* [Git](https://git-scm.com/) - Source management.
 
 ## Contributing
 
