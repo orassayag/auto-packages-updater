@@ -12,6 +12,8 @@ Each time you change the logic / update NPM package version, do the following st
 ToDo tasks:
 ===========
 -Need to find a way to make all this process automatically, as the project name suggests. All git fetch and git add and git commit and git push and delete delete .git directory need to be automatically.
+-Add all the projects to the source file, add new type of "maintenance" and "past".
+-For other text file, just print the updates avialble for the "past" types.
 
 Complete / canceled tasks:
 ==========================
