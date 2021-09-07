@@ -13,12 +13,16 @@ const ProjectStatusEnum = enumUtils.createEnum([
     ['MISMATCH_UPDATE_TYPE', 'mismatch update type'],
     ['MISSING_INCLUDE_DEV_DEPENDENCIES', 'missing include dev dependencies'],
     ['INVALID_INCLUDE_DEV_DEPENDENCIES', 'invalid include dev dependencies'],
-    ['MISSING_PACKAGES_PATH', 'missing packages path'],
-    ['INVALID_PACKAGES_PATH', 'invalid packages path'],
-    ['EMPTY_PACKAGES_PATH', 'empty packages path'],
-    ['FILE_ERROR_PACKAGES_PATH', 'file error packages path'],
-    ['INVALID_STRUCTURE_PACKAGES_PATH', 'invalid structure packages path'],
-    ['NO_PACKAGES_IN_PACKAGES_PATH', 'no packages in packages path'],
+    ['MISSING_IS_PACKAGES_UPDATE', 'missing is packages update'],
+    ['INVALID_IS_PACKAGES_UPDATE', 'invalid is packages update'],
+    ['MISSING_IS_GIT_UPDATE', 'missing is git update'],
+    ['INVALID_IS_GIT_UPDATE', 'invalid is git update'],
+    ['MISSING_PROJECT_PATH', 'missing project path'],
+    ['INVALID_PROJECT_PATH', 'invalid project path'],
+    ['EMPTY_PROJECT_PATH', 'empty project path'],
+    ['FILE_ERROR_PROJECT_PATH', 'file error project path'],
+    ['INVALID_STRUCTURE_PROJECT_PATH', 'invalid structure project path'],
+    ['NO_PACKAGES_IN_PROJECT_PATH', 'no packages in project path'],
     ['MISSING_CUSTOM_PACKAGES_PATH', 'missing custom packages path'],
     ['INVALID_CUSTOM_PACKAGES_PATH', 'invalid custom packages path'],
     ['FILE_ERROR_CUSTOM_PACKAGES_PATH', 'file error custom packages path'],
@@ -30,7 +34,8 @@ const ProjectStatusEnum = enumUtils.createEnum([
     ['DUPLICATE', 'duplicate'],
     ['NO_TEMPLATE_PACKAGES', 'no template packages'],
     ['FAIL', 'fail'],
-    ['SUCCESS', 'success']
+    ['SUCCESS', 'success'],
+    ['UPDATED', 'updated']
 ]);
 
 const UpdateTypeEnum = enumUtils.createEnum([

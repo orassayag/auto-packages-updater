@@ -1,20 +1,33 @@
 const { pathUtils } = require('../utils');
 
 const settings = {
+    // ===GENERAL=== //
+    // Determine the base URL of the GitHub repository to fetch and push all the repositories.
+    GITHUB_URL: 'https://github.com/orassayag',
+
     // ===LOG=== //
-    // Determine the name of the resulting comments in the new TXT file in the 'dist' directory.
-    DIST_FILE_NAME: 'outdated',
+    // Determine the name of the resulting of the outdated packages comments in the new TXT file in the 'dist' directory.
+    DIST_OUTDATED_FILE_NAME: 'outdated',
+    // Determine the name of the resulting of the updated packages comments in the new TXT file in the 'dist' directory.
+    DIST_UPDATED_FILE_NAME: 'updated',
 
     // ===COUNT & LIMIT=== //
     // Determine the maximum number of projects to check for outdated packages.
     // If the limit exceeded, will take the first projects in the JSON file by the original order.
     MAXIMUM_PROJECTS_COUNT: 100,
+    // Determine the maximum number of projects to auto update their outdated packages.
+    // If the limit exceeded, will take the first projects in the JSON file by the original order.
+    MAXIMUM_PROJECTS_UPDATE_COUNT: 5,
     // Determine the milliseconds count timeout to wait before exiting the application.
     MILLISECONDS_TIMEOUT_EXIT_APPLICATION: 1000,
     // Determine the number of retries to validate the URLs.
     MAXIMUM_URL_VALIDATION_COUNT: 5,
     // Determine the milliseconds count timeout to wait between URL validation retry.
     MILLISECONDS_TIMEOUT_URL_VALIDATION: 1000,
+    // Determine the number of retires to for each repository to update the packages.
+    MAXIMUM_RETRIES_COUNT: 5,
+    // Determine the milliseconds count timeout to wait between update projects.
+    MILLISECONDS_TIMEOUT_UPDATE_PROJECT: 10000,
 
     // ===FLAG=== //
     // Determine if to log all the projects results regardless of whether there are updates or not (=false),
@@ -66,6 +79,9 @@ const settings = {
     // Determine the path of the package-lock.json.
     // (Working example: 'C:\\Or\\Web\\auto-packages-updater\\auto-packages-updater\\package-lock.json').
     PACKAGE_LOCK_JSON_PATH: 'package-lock.json',
+    // Determine the path of the temporary directory where the repository will be downloaded
+    // and will be updated and pushed back to the git repository.
+    TEMPORARY_DIRECTORY_PATH: 'temp',
 
     // ===BACKUP=== //
     // Determine the directories to ignore when a backup copy is taking place.

@@ -1,3 +1,5 @@
+const regexUtils = require('./regex.utils');
+
 class ValidationUtils {
 
     constructor() { }
@@ -48,6 +50,10 @@ class ValidationUtils {
 
     isPropertyExists(obj, fieldName) {
         return Object.prototype.hasOwnProperty.call(obj, fieldName);
+    }
+
+    isValidLink(link) {
+        return regexUtils.validateLinkRegex.test(link);
     }
 }
 

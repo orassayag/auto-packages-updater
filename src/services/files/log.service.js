@@ -6,6 +6,8 @@ const { fileUtils, logUtils, textUtils, validationUtils } = require('../../utils
 class LogService {
 
 	constructor() {
+		this.distOutdatedFileName = null;
+		this.distUpdatedFileName = null;
 		this.logDataModel = null;
 		// ===PATH=== //
 		this.baseSessionPath = null;
@@ -20,8 +22,10 @@ class LogService {
 		// ===PATH=== //
 		this.baseSessionPath = pathService.pathDataModel.distPath;
 		fileUtils.createDirectory(this.baseSessionPath);
-		this.distFileName = `${this.baseSessionPath}\\${this.logDataModel.distFileName}.txt`;
-		await fileUtils.removeFile(this.distFileName);
+		this.distOutdatedFileName = `${this.baseSessionPath}\\${this.logDataModel.distOutdatedFileName}.txt`;
+		this.distUpdatedFileName = `${this.baseSessionPath}\\${this.logDataModel.distUpdatedFileName}.txt`;
+		await fileUtils.removeFile(this.distOutdatedFileName);
+		await fileUtils.removeFile(this.distUpdatedFileName);
 	}
 
 	createProjectTemplate(data) {
@@ -63,7 +67,7 @@ class LogService {
 		resultLog = textUtils.clearLastBreakLines(resultLog);
 		// Log the result.
 		await fileUtils.appendFile({
-			targetPath: this.distFileName,
+			targetPath: this.distOutdatedFileName,
 			message: resultLog
 		});
 	}
@@ -86,7 +90,7 @@ class LogService {
 	}
 
 	createConfirmSettingsTemplate(settings) {
-		const parameters = ['DIST_FILE_NAME', 'MAXIMUM_PROJECTS_COUNT', 'PROJECTS_PATH'];
+		const parameters = ['DIST_OUTDATED_FILE_NAME', 'DIST_UPDATED_FILE_NAME', 'MAXIMUM_PROJECTS_COUNT', 'PROJECTS_PATH'];
 		let settingsText = Object.keys(settings).filter(s => parameters.indexOf(s) > -1)
 			.map(k => this.createLineTemplate(k, settings[k])).join('');
 		settingsText = textUtils.removeLastCharacters({

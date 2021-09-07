@@ -6,11 +6,13 @@ class ProjectDataModel {
         this.createDateTime = createDateTime;
         this.name = null;
         this.updateType = null;
-        this.packagesPath = null;
+        this.projectPath = null;
         this.customPackagesPath = null;
         this.customPackagesList = null;
         this.excludePackagesList = null;
         this.isIncludeDevDependencies = null;
+        this.isPackagesUpdate = null;
+        this.isGitUpdate = null;
         this.dependencies = null;
         this.devDependencies = null;
         this.packagesTemplate = null;

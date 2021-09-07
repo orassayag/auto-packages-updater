@@ -71,7 +71,8 @@ class InitiateService {
 
 	calculateSettings() {
 		const { OUTER_APPLICATION_PATH, INNER_APPLICATION_PATH, APPLICATION_PATH, BACKUPS_PATH,
-			DIST_PATH, NODE_MODULES_PATH, PACKAGE_JSON_PATH, PACKAGE_LOCK_JSON_PATH } = settings;
+			DIST_PATH, NODE_MODULES_PATH, PACKAGE_JSON_PATH, PACKAGE_LOCK_JSON_PATH,
+			TEMPORARY_DIRECTORY_PATH } = settings;
 		// ===DYNAMIC PATH=== //
 		settings.APPLICATION_PATH = pathUtils.getJoinPath({ targetPath: OUTER_APPLICATION_PATH, targetName: APPLICATION_PATH });
 		if (this.scriptType === ScriptTypeEnum.BACKUP) {
@@ -81,13 +82,15 @@ class InitiateService {
 		settings.NODE_MODULES_PATH = pathUtils.getJoinPath({ targetPath: INNER_APPLICATION_PATH, targetName: NODE_MODULES_PATH });
 		settings.PACKAGE_JSON_PATH = pathUtils.getJoinPath({ targetPath: INNER_APPLICATION_PATH, targetName: PACKAGE_JSON_PATH });
 		settings.PACKAGE_LOCK_JSON_PATH = pathUtils.getJoinPath({ targetPath: INNER_APPLICATION_PATH, targetName: PACKAGE_LOCK_JSON_PATH });
+		settings.TEMPORARY_DIRECTORY_PATH = pathUtils.getJoinPath({ targetPath: settings.DIST_PATH, targetName: TEMPORARY_DIRECTORY_PATH });
 	}
 
 	validatePositiveNumbers() {
 		[
 			// ===COUNT & LIMIT=== //
-			'MAXIMUM_PROJECTS_COUNT', 'MILLISECONDS_TIMEOUT_EXIT_APPLICATION', 'MAXIMUM_URL_VALIDATION_COUNT',
-			'MILLISECONDS_TIMEOUT_URL_VALIDATION',
+			'MAXIMUM_PROJECTS_COUNT', 'MAXIMUM_PROJECTS_UPDATE_COUNT', 'MILLISECONDS_TIMEOUT_EXIT_APPLICATION',
+			'MAXIMUM_URL_VALIDATION_COUNT', 'MILLISECONDS_TIMEOUT_URL_VALIDATION', 'MAXIMUM_RETRIES_COUNT',
+			'MILLISECONDS_TIMEOUT_UPDATE_PROJECT',
 			// ===BACKUP=== //
 			'MILLISECONDS_DELAY_VERIFY_BACKUP_COUNT', 'BACKUP_MAXIMUM_DIRECTORY_VERSIONS_COUNT'
 		].map(key => {
@@ -102,15 +105,19 @@ class InitiateService {
 		const keys = this.scriptType === ScriptTypeEnum.BACKUP ? ['BACKUPS_PATH'] : [];
 		[
 			...keys,
+			// ===GENERAL=== //
+			'GITHUB_URL',
 			// ===LOG=== //
-			'DIST_FILE_NAME',
+			'DIST_OUTDATED_FILE_NAME', 'DIST_UPDATED_FILE_NAME',
 			// ===SOURCE=== //
 			'PROJECTS_PATH',
 			// ===ROOT PATH=== //
 			'APPLICATION_NAME', 'OUTER_APPLICATION_PATH', 'INNER_APPLICATION_PATH',
 			// ===DYNAMIC PATH=== //
 			'APPLICATION_PATH', 'DIST_PATH', 'NODE_MODULES_PATH', 'PACKAGE_JSON_PATH',
-			'PACKAGE_LOCK_JSON_PATH'
+			'PACKAGE_LOCK_JSON_PATH', 'TEMPORARY_DIRECTORY_PATH',
+			// ===VALIDATION=== ///
+			'VALIDATION_CONNECTION_LINK'
 		].map(key => {
 			const value = settings[key];
 			if (!validationUtils.isExists(value)) {
@@ -150,6 +157,16 @@ class InitiateService {
 		if (!fileUtils.isFilePath(PROJECTS_PATH)) {
 			throw new Error(`The path PROJECTS_PATH parameter needs to be a file path but it's a directory path: ${PROJECTS_PATH} (1000013)`);
 		}
+		[
+			// ===GENERAL=== //
+			// ===VALIDATION=== //
+			'GITHUB_URL', 'VALIDATION_CONNECTION_LINK'
+		].map(key => {
+			const value = settings[key];
+			if (!validationUtils.isValidLink(value)) {
+				throw new Error(`Invalid or no ${key} parameter was found: Expected a valid URL but received: ${value} (1000012)`);
+			}
+		});
 	}
 
 	validateDirectory(directory) {

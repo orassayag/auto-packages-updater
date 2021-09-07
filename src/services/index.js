@@ -1,4 +1,5 @@
 const applicationService = require('./files/application.service');
+const commandService = require('./files/command.service');
 const confirmationService = require('./files/confirmation.service');
 const countLimitService = require('./files/countLimit.service');
 const fileService = require('./files/file.service');
@@ -9,6 +10,6 @@ const projectService = require('./files/project.service');
 const validationService = require('./files/validation.service');
 
 module.exports = {
-    applicationService, confirmationService, countLimitService, fileService, logService,
-    packageService, pathService, projectService, validationService
+    applicationService, commandService, confirmationService, countLimitService, fileService,
+    logService, packageService, pathService, projectService, validationService
 };

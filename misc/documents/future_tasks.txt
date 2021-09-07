@@ -1,25 +1,2 @@
 Future tasks:
 =============
--Second step - Different scripts, same logic with a flag of true:
- 1. Update the package.json file with the updated packages versions.
- 2. If the package-lock.json exists, delete it.
- 3. If the 'node_modules' directory exists, mark it and, and delete it.
- 4. Run 'npm i', wait for the results.
- 5. If successful, according to the mark flag, delete again the 'node_modules' directory or keep it.
- 6. Remove the last empty line (mark it as flag in settings.js) in the package.json and package-lock.json files.
- 7. If failed, add to 1 to the retries, and go to the retry process: Delete the 'node_modules' directory and run 'npm i' again.
- 8. If retries exceeded the limit, mark an error to the project and continue to the next project.
- 9. After the NPM update packages, will verify the update by checking the package.json file again.
--In the second step, it will auto-update the package.json with the new version of the outdated NPM packages,
- and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory,
- and log all the updated projects.
--Check if the node_moudles directory exists, if not, create and delete it. If it is, re-create it without deleting it.
--Add the number of maximum retries on each project on settings.js. Log all the retries results.
--The output of the TXT file of the second step will look like:
-===sender (2/13)===
-jsdom: ^16.5.2 => ^16.5.3 | V Updated
-jsdom: ^16.5.2 => ^16.5.3 | V Updated
-===udemy-courses (0/22)===
--success | All packages up to date.
-===youtube-comments (0/12)===
--success | All packages up to date.

@@ -11,9 +11,82 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
+-Add to the source file "isUpdate". If true = update. If false = Don't update. *
+-Second step - Different scripts, same logic with a flag of true (each project will be with flag): *
+ 01. Adjust new validations on settings.js file. *
+ 02. Create the temporary directory. *
+ 03. Run the script as today. *
+ 04. Get all the outdated packages. *
+ 05. Get all the projects with 'isUpdate' = true and loop on them. *
+ 06. Of course, if no updates are available, it won't be included in the array of 'isUpdate' projects. *
+ 07. Validate all fields in sources.json file.
+ 08. For each project: *
+     01. Download the repository from GitHub to the temporary directory.
+     02. If the package-lock.json exists, delete it.
+     03. Update the package.json file with the updated packages versions.
+     04. Run 'npm i', wait for the results.
+     05. If successful, run 'git add .', run 'git commit -m 'update packages'', and run 'git push' and wait for a successful message.
+     06. Remove the last empty line (mark it as flag in settings.js) in the package.json and package-lock.json files.
+     07. If failed, add 1 to the retries, and go to the retry process: Delete the 'node_modules' directory and run 'npm i' again.
+     08. If retries exceeded the limit, mark an error to the project and continue to the next project.
+     09. After the NPM update packages, will verify the update by checking the package.json file again.
+     10. After verification complete, delete the package.json and package-lock.json files from the original project.
+     11. After deletion completes, copy the updated package.json and package-lock.json files to the original project's path.
+-Support for multi package.json project (Each directory that contains in the rooy a package.json file it's a project).
+-Add limit count for updates. The default is 1.
 -Need to find a way to make all this process automatically, as the project name suggests. All git fetch and git add and git commit and git push and delete delete .git directory need to be automatically.
--Add all the projects to the source file, add new type of "maintenance" and "past".
--For other text file, just print the updates avialble for the "past" types.
+-Add option to scan each package.json file, and the title will be auto synced with the root directory name.
+-Add all the projects to the source file, add a new type of "project" / "maintenance".
+-For other text files, just print the updates available for the "past" types.
+-In the second step, it will auto-update the package.json with the new version of the outdated NPM packages,
+ and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory,
+ and log all the updated projects.
+-Check if the node_moudles directory exists, if not, create and delete it. If it is, re-create it without deleting it.
+-Add the number of maximum retries on each project on settings.js. Log all the retries results.
+-The output of the TXT file of the second step will look like:
+===sender (2/13)===
+jsdom: ^16.5.2 => ^16.5.3 | V Updated
+jsdom: ^16.5.2 => ^16.5.3 | V Updated
+===udemy-courses (0/22)===
+-success | All packages up to date.
+===youtube-comments (0/12)===
+-success | All packages up to date.
+-Update packages + Recreate package-lock.json.
+-Remove code comments to a backup TXT file.
+-Convert " to ' in the relevant places.
+-Remove all 'debugger' keywords.
+-Recheck error numbers in error_index.txt.
+-Check 'let' needs to be converted to 'const'.
+-Check places to change from simple parameters with dynamic objects to classes.
+-Make sure all comments '//' have: 1. space 2. ends with a dot.
+-Make sure 'id' => 'Id', 'url' => 'URL', 'api' => 'API'.
+-Make sure spaces in all files between bottom, need to fix cases like this:
+}
+module.exports
+}
+export default
+-Change all '.length > 0' to 'isExists'.
+-Change all (where it's possible) from 'console.log' to 'logUtils.log'.
+-Remove duplicate import/require (convert to index.js if possible).
+-Sort alphabetically all the imports/requires by https://alphabetizer.flap.tv/.
+-Sort alphabetically all the imports/requires: external packages, settings, (containers, components, store, assert) data, models, enums, services, utils.
+-File extensions should be upper case: JSON, TXT, etc.
+-Remove the space lines inside methods and functions.
+-Remove the duplicate empty lines: \n\s*\n\s*\n
+-Remove the first empty line: ^(?<![\s])\n
+-Remove the last empty line: \n\s*$(?!\n)
+-Detect all comments without a dot at the end: ^// .*(?<!\.)$
+-Make sure all switch-case have curly braces.
+-Clear unused enums and make sure all in used really exists.
+-Search for 'async ' and create a list of functions/methods, and make sure that all calls have await.
+-Scan all files for spell mistakes with the 'files-spell-checker' project.
+-Do all the 'ToDo' tasks.
+-Format all documents.
+-Verify all works well.
+-Fix TXT files spell mistakes via Gmail (Also, convert '_' to ' ' in all places when checking).
+-Move all complete tasks from here to complete_tasks.txt.
+-Upload to GitHub.
+-Backup to iOmega.
 
 Complete / canceled tasks:
 ==========================
