@@ -24,7 +24,7 @@ class FileUtils {
     }
 
     async removeDirectoryIfExists(targetPath) {
-        if (!await this.isPathExists(targetPath)) {
+        if (await this.isPathExists(targetPath)) {
             await fs.remove(targetPath);
         }
     }
@@ -35,8 +35,18 @@ class FileUtils {
         }
     }
 
+    async copyFile(sourcePath, targetPath) {
+        await fs.copy(sourcePath, targetPath);
+    }
+
     async copyDirectory(sourcePath, targetPath, filterFunction) {
         await fs.copy(sourcePath, targetPath, { filter: filterFunction });
+    }
+
+    async cleanDirectory(targetPath) {
+        if (await this.isPathExists(targetPath)) {
+            fs.emptyDirSync(targetPath);
+        }
     }
 
     createDirectory(targetPath) {

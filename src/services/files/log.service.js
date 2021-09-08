@@ -1,5 +1,6 @@
 const { LogDataModel } = require('../../core/models');
 const { ProjectStatusEnum } = require('../../core/enums');
+const applicationService = require('./application.service');
 const pathService = require('./path.service');
 const { fileUtils, logUtils, textUtils, validationUtils } = require('../../utils');
 
@@ -29,16 +30,14 @@ class LogService {
 	}
 
 	createProjectTemplate(data) {
-		const { name, packagesTemplate, packagesTemplateKeys, outdatedPackages, outdatedPackagesKeys, status, resultMessage } = data;
+		const { displayName, packagesTemplateKeys, outdatedPackagesKeys, packagesList, status, resultMessage } = data;
 		const lines = [];
-		const displayName = `${name} ${textUtils.addLeadingZero(outdatedPackagesKeys?.length)}/${textUtils.addLeadingZero(packagesTemplateKeys?.length)}`;
-		lines.push(textUtils.setLogStatus(displayName));
+		const displayPackageName = `${displayName} ${textUtils.addLeadingZero(outdatedPackagesKeys?.length)}/${textUtils.addLeadingZero(packagesTemplateKeys?.length)}`;
+		lines.push(textUtils.setLogStatus(displayPackageName));
 		if (status === ProjectStatusEnum.SUCCESS && validationUtils.isExists(outdatedPackagesKeys)) {
-			for (let i = 0; i < outdatedPackagesKeys.length; i++) {
-				const packageName = outdatedPackagesKeys[i];
-				const currentVersion = packagesTemplate[packageName];
-				const newerVersion = outdatedPackages[packageName];
-				lines.push(`${packageName}: ${currentVersion} => ${newerVersion}`);
+			for (let i = 0; i < packagesList.length; i++) {
+				const { logDisplay, status: packageStatus } = packagesList[i];
+				lines.push(`${logDisplay} | ${packageStatus}`);
 			}
 		}
 		else {
@@ -66,17 +65,20 @@ class LogService {
 		}
 		resultLog = textUtils.clearLastBreakLines(resultLog);
 		// Log the result.
-		await fileUtils.appendFile({
-			targetPath: this.distOutdatedFileName,
-			message: resultLog
-		});
+		if (resultLog) {
+			await fileUtils.appendFile({
+				targetPath: this.distOutdatedFileName,
+				message: resultLog
+			});
+		}
 	}
 
 	logProgress(data) {
-		const { name, currentNumber, totalNumber } = data;
+		const { displayName, currentNumber, totalNumber } = data;
 		logUtils.logProgress({
 			progressData: {
-				'WORKING': `${name} ${textUtils.getNumberOfNumber({ number1: currentNumber, number2: totalNumber })}`
+				[`WORKING (${applicationService.applicationDataModel.status})`]:
+					`${displayName} ${textUtils.getNumberOfNumber({ number1: currentNumber, number2: totalNumber })}`
 			},
 			percentage: textUtils.calculatePercentageDisplay({
 				partialValue: currentNumber,
@@ -90,7 +92,10 @@ class LogService {
 	}
 
 	createConfirmSettingsTemplate(settings) {
-		const parameters = ['DIST_OUTDATED_FILE_NAME', 'DIST_UPDATED_FILE_NAME', 'MAXIMUM_PROJECTS_COUNT', 'PROJECTS_PATH'];
+		const parameters = ['GITHUB_URL', 'DIST_OUTDATED_FILE_NAME', 'DIST_UPDATED_FILE_NAME', 'MAXIMUM_PROJECTS_COUNT',
+			'MAXIMUM_PROJECTS_UPDATE_COUNT', 'MILLISECONDS_TIMEOUT_EXIT_APPLICATION', 'MAXIMUM_URL_VALIDATION_COUNT',
+			'MILLISECONDS_TIMEOUT_URL_VALIDATION', 'MAXIMUM_RETRIES_COUNT', 'MILLISECONDS_TIMEOUT_UPDATE_PROJECT',
+			'MILLISECONDS_TIMEOUT_GIT_COMMANDS_EXECUTION', 'IS_LOG_ONLY_UPDATES', 'TEMPORARY_DIRECTORY_PATH'];
 		let settingsText = Object.keys(settings).filter(s => parameters.indexOf(s) > -1)
 			.map(k => this.createLineTemplate(k, settings[k])).join('');
 		settingsText = textUtils.removeLastCharacters({

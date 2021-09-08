@@ -42,7 +42,7 @@
   ],
   "scripts": {
     "backup": "node src/scripts/backup.script.js",
-    "start": "node src/scripts/outdated.script.js",
+    "start": "node src/scripts/packages.script.js",
     "sand": "node src/tests/sandBox.test.js",
     "stop": "taskkill -f -im node.exe"
   },
@@ -58,8 +58,8 @@
     "npm-check-updates": "^11.8.5"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
+    "@babel/eslint-parser": "^7.15.4",
     "eslint": "^7.32.0",
-    "@types/node": "^16.7.10"
+    "@types/node": "^16.7.13"
   }
 }

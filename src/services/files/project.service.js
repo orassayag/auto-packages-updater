@@ -1,11 +1,14 @@
 const { ProjectDataModel, ProjectsDataModel } = require('../../core/models');
-const { ProjectStatusEnum, UpdateTypeEnum } = require('../../core/enums');
+const { CommandEnum, ProjectStatusEnum, UpdateTypeEnum } = require('../../core/enums');
 const countLimitService = require('./countLimit.service');
 const fileService = require('./file.service');
 const logService = require('./log.service');
+const commandService = require('./command.service');
 const packageService = require('./package.service');
 const pathService = require('./path.service');
-const { fileUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
+const globalUtils = require('../../utils/files/global.utils');
+const { logUtils, fileUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
+const applicationService = require('./application.service');
 
 class ProjectService {
 
@@ -15,6 +18,7 @@ class ProjectService {
 
     initiate() {
         this.projectsDataModel = new ProjectsDataModel();
+        this.updatedProjectsCount = null;
     }
 
     async findOutdatedPackages() {
@@ -41,6 +45,9 @@ class ProjectService {
         this.validateProjects();
         // Check for updates in all the projects.
         await this.getProjectsOutdatedPackages();
+    }
+
+    async findUpdatePackages() {
         // Auto-update projects.
         await this.updateProjectsOutdatedPackages();
         // Handle all the project's results.
@@ -85,7 +92,7 @@ class ProjectService {
             if (projectDataModel.id === currentProjectDataModel.id || currentProjectDataModel.status !== ProjectStatusEnum.CREATE) {
                 continue;
             }
-            if (projectDataModel.packagesPath === currentProjectDataModel.packagesPath) {
+            if (projectDataModel.projectPath === currentProjectDataModel.projectPath) {
                 this.projectsDataModel.projectsList[i] = this.updateProjectStatus({
                     projectDataModel: currentProjectDataModel,
                     status: ProjectStatusEnum.DUPLICATE,
@@ -107,6 +114,13 @@ class ProjectService {
         if (projectDataModel.resultMessage) {
             return projectDataModel;
         }
+        // Validate the 'display-name' field.
+        projectDataModel = this.validateDisplayName(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
+        }
+        projectDataModel.displayName = `${projectDataModel.name}${projectDataModel.displayName ? `: ${projectDataModel.displayName}` : ''}`;
+
         // Validate the 'update-type' field.
         projectDataModel = this.validateUpdateType(projectDataModel, data);
         if (projectDataModel.resultMessage) {
@@ -117,8 +131,13 @@ class ProjectService {
         if (projectDataModel.resultMessage) {
             return projectDataModel;
         }
-        // Validate the 'packages-path' field.
-        projectDataModel = await this.validatePackagesPath(projectDataModel, data);
+        // Validate the 'project-path' field.
+        projectDataModel = await this.validateProjectPath(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
+        }
+        // Validate the 'git-root-path' field.
+        projectDataModel = this.validateGitRootPath(projectDataModel, data);
         if (projectDataModel.resultMessage) {
             return projectDataModel;
         }
@@ -129,6 +148,16 @@ class ProjectService {
         }
         // Validate the 'exclude-packages-list' field.
         projectDataModel = await this.validateExcludePackagesList(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
+        }
+        // Validate the 'is-packages-update' field.
+        projectDataModel = await this.validateIsPackagesUpdate(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
+        }
+        // Validate the 'is-git-update' field.
+        projectDataModel = await this.validateIsGitUpdate(projectDataModel, data);
         if (projectDataModel.resultMessage) {
             return projectDataModel;
         }
@@ -149,6 +178,19 @@ class ProjectService {
             missingStatus: ProjectStatusEnum.MISSING_NAME,
             invalidStatus: ProjectStatusEnum.INVALID_NAME,
             emptyStatus: ProjectStatusEnum.EMPTY_NAME
+        }, data);
+    }
+
+    // This method validates the 'display-name' field.
+    validateDisplayName(projectDataModel, data) {
+        return this.validateJSONString({
+            projectDataModel: projectDataModel,
+            jsonFieldName: 'display-name',
+            projectFieldName: 'displayName',
+            isRequired: false,
+            missingStatus: ProjectStatusEnum.MISSING_DISPLAY_NAME,
+            invalidStatus: ProjectStatusEnum.INVALID_DISPLAY_NAME,
+            emptyStatus: ProjectStatusEnum.EMPTY_DISPLAY_NAME
         }, data);
     }
 
@@ -180,7 +222,7 @@ class ProjectService {
     }
 
     // This method validates the 'project-path' field.
-    async validatePackagesPath(projectDataModel, data) {
+    async validateProjectPath(projectDataModel, data) {
         projectDataModel = this.validateJSONString({
             projectDataModel: projectDataModel,
             jsonFieldName: 'project-path',
@@ -236,6 +278,19 @@ class ProjectService {
             }
         }
         return projectDataModel;
+    }
+
+    // This method validates the 'git-root-path' field.
+    validateGitRootPath(projectDataModel, data) {
+        return this.validateJSONString({
+            projectDataModel: projectDataModel,
+            jsonFieldName: 'git-root-path',
+            projectFieldName: 'gitRootPath',
+            isRequired: true,
+            missingStatus: ProjectStatusEnum.MISSING_GIT_ROOT_PATH,
+            invalidStatus: ProjectStatusEnum.INVALID_GIT_ROOT_PATH,
+            emptyStatus: ProjectStatusEnum.EMPTY_GIT_ROOT_PATH
+        }, data);
     }
 
     // This method validates the 'custom-packages-path' field.
@@ -333,7 +388,7 @@ class ProjectService {
     // This method validates a string field from the project.json file.
     validateJSONString(data, jsonData) {
         const { projectDataModel, jsonFieldName, projectFieldName, isRequired, missingStatus, invalidStatus, emptyStatus } = data;
-        if (!validationUtils.isPropertyExists(jsonData, jsonFieldName)) {
+        if (isRequired && !validationUtils.isPropertyExists(jsonData, jsonFieldName)) {
             return this.updateProjectStatus({
                 projectDataModel: projectDataModel,
                 status: missingStatus,
@@ -457,7 +512,9 @@ class ProjectService {
         // Validate all expected fields.
         const scanFieldsResult = this.scanFields({
             projectDataModel: projectDataModel,
-            keysList: ['id', 'createDateTime', 'name', 'updateType', 'packagesPath', 'isIncludeDevDependencies', 'dependencies', 'status', 'retriesCount']
+            keysList: ['id', 'createDateTime', 'name', 'displayName', 'updateType', 'projectPath',
+                'isIncludeDevDependencies', 'dependencies', 'isPackagesUpdate', 'isGitUpdate',
+                'status', 'retriesCount']
         });
         if (scanFieldsResult) {
             return this.updateProjectStatus({
@@ -542,7 +599,7 @@ class ProjectService {
             return projectDataModel;
         }
         const { outdatedPackages, errorMessage } = await packageService.getOutdatedPackages({
-            name: projectDataModel.name,
+            displayName: projectDataModel.displayName,
             packagesTemplate: projectDataModel.packagesTemplate,
             projectsCount: this.projectsDataModel.projectsList.length,
             index: data.index
@@ -564,6 +621,19 @@ class ProjectService {
             resultMessage: resultMessage
         });
         projectDataModel.outdatedPackages = outdatedPackages;
+        projectDataModel.packagesList = [];
+        if (status === ProjectStatusEnum.SUCCESS && validationUtils.isExists(projectDataModel.outdatedPackagesKeys)) {
+            for (let i = 0; i < projectDataModel.outdatedPackagesKeys.length; i++) {
+                const packageName = projectDataModel.outdatedPackagesKeys[i];
+                const currentVersion = projectDataModel.packagesTemplate[packageName];
+                const newerVersion = outdatedPackages[packageName];
+                projectDataModel.packagesList.push({
+                    outdatedPackage: `"${packageName}": "${currentVersion}"`,
+                    updatePackage: `"${packageName}": "${newerVersion}"`,
+                    logDisplay: `${packageName}: ${currentVersion} => ${newerVersion}`
+                });
+            }
+        }
         return projectDataModel;
     }
 
@@ -578,66 +648,154 @@ class ProjectService {
     }
 
     initiateUpdateProjectStep() {
-        fileUtils.createDirectory(pathService.temporaryDirectoryPath);
+        fileUtils.createDirectory(pathService.pathDataModel.temporaryDirectoryPath);
     }
 
     getProjectsUpdateAvailableCount() {
-        return this.projectsDataModel.projectsList.filter(p => p.isPackagesUpdate).length;
+        return this.projectsDataModel.projectsList.filter(p => p.isPackagesUpdate && validationUtils.isExists(p.packagesList)).length;
     }
 
     // This method updates the outdated packages of the project.
     async updateProjectOutdatedPackages(data) {
-        const { projectDataModel, index } = data;
-        const { id, createDateTime, name, updateType, projectPath, customPackagesPath, customPackagesList,
-            excludePackagesList, isIncludeDevDependencies, isPackagesUpdate, isGitUpdate, dependencies,
-            devDependencies, packagesTemplate, packagesTemplateKeys, outdatedPackages,
-            outdatedPackagesKeys, status, resultDateTime, resultMessage, retriesCount } = projectDataModel;
-        // Validate that the project is package update flaged.
-        // Log the progress.
-        logService.logProgress({
-            name: packagesTemplate,
-            currentNumber: index + 1,
-            totalNumber: this.getProjectsUpdateAvailableCount()
-        });
-        if (!await fileUtils.isPathExists(projectDataModel.projectPath))
-        {
-
+        const { projectDataModel, index, totalProjects } = data;
+        const { name, displayName, projectPath, gitRootPath, isPackagesUpdate, isGitUpdate, status, packagesList } = projectDataModel;
+        try {
+            // Validate that the project is package update flaged and successfully has outdated packages.
+            if (!isPackagesUpdate || status !== ProjectStatusEnum.SUCCESS || !validationUtils.isExists(packagesList)) {
+                return projectDataModel;
+            }
+            // Log the progress.
+            logService.logProgress({
+                displayName: displayName,
+                currentNumber: index + 1,
+                totalNumber: totalProjects
+            });
+            // Clean the temporary directory.
+            await fileUtils.cleanDirectory(pathService.pathDataModel.temporaryDirectoryPath);
+            // Download the repository from GitHub to the temporary directory.
+            await commandService.runCommand({
+                command: CommandEnum.CLONE,
+                path: pathService.pathDataModel.temporaryDirectoryPath,
+                extraData: `${applicationService.applicationDataModel.githubURL}/${name}`
+            });
+            // If the package-lock.json exists, delete it.
+            const repositoryProjectBasePath = `${pathService.pathDataModel.temporaryDirectoryPath}\\${gitRootPath}`;
+            const repositoryPackageJsonFilePath = `${repositoryProjectBasePath}\\package.json`;
+            const repositoryPackageJsonLockFilePath = `${repositoryProjectBasePath}\\package-lock.json`;
+            await fileUtils.removeFile(repositoryPackageJsonLockFilePath);
+            // Update the package.json file with the updated packages versions.
+            await packageService.updatePackageJsonPackages(repositoryPackageJsonFilePath, packagesList);
+            // Run 'npm i', wait for the results.
+            await commandService.runCommand({
+                command: CommandEnum.INSTALL,
+                path: repositoryProjectBasePath
+            });
+            // Remove the last empty line in the package.json and package-lock.json files.
+            await fileService.removeLastEmptyLine(repositoryPackageJsonFilePath);
+            await fileService.removeLastEmptyLine(repositoryPackageJsonLockFilePath);
+            // After the NPM update packages, will verify the update by checking the package.json file again.
+            projectDataModel.packagesList = await packageService.validatePackageJsonUpdates(repositoryPackageJsonFilePath, packagesList);
+            // Check if the project is-git-update = true in order to continue with the flow.
+            if (isGitUpdate) {
+                // If successful, run 'git add .', run 'git commit -m 'update packages'', and run 'git push' and wait for a successful message.
+                const addError = await commandService.runCommand({
+                    command: CommandEnum.ADD,
+                    path: repositoryProjectBasePath,
+                    isDelay: true
+                });
+                let commitError = null;
+                if (!addError) {
+                    commitError = await commandService.runCommand({
+                        command: CommandEnum.COMMIT,
+                        path: repositoryProjectBasePath,
+                        isDelay: true
+                    });
+                }
+                let pushError = null;
+                if (!commitError) {
+                    pushError = await commandService.runCommand({
+                        command: CommandEnum.PUSH,
+                        path: repositoryProjectBasePath,
+                        isDelay: true
+                    });
+                }
+                // Update all packages statuses.
+                projectDataModel.packagesList = await packageService.updatePackagesStatus(addError || commitError || pushError, packagesList);
+            }
+            // After verification complete, delete the package.json and package-lock.json files from the original project.
+            const originalProjectPackageJsonFilePath = `${projectPath}\\package.json`;
+            const originalProjectPackageJsonLockFilePath = `${projectPath}\\package-lock.json`;
+            await fileUtils.removeFile(originalProjectPackageJsonFilePath);
+            await fileUtils.removeFile(originalProjectPackageJsonLockFilePath);
+            // After deletion completes, copy the updated package.json and package-lock.json files to the original project's path.
+            await fileUtils.copyFile(repositoryPackageJsonFilePath, originalProjectPackageJsonFilePath);
+            await fileUtils.copyFile(repositoryPackageJsonLockFilePath, originalProjectPackageJsonLockFilePath);
+        } catch (error) {
+            logUtils.log(error);
+            // If failed, add 1 to the retries, and go to the retry process.
+            projectDataModel.retriesCount++;
+            // If retries exceeded the limit, mark an error to the project and continue to the next project.
+            if (projectDataModel.retriesCount <= countLimitService.countLimitDataModel.maximumRetriesCount) {
+                // await this.updateProjectOutdatedPackages({ projectDataModel, index, totalProjects });
+            }
         }
-        // 02. Download the repository from GitHub to the temporary directory.
-        // 03. If the package-lock.json exists, delete it.
-        // 04. Update the package.json file with the updated packages versions.
-        // 05. Run 'npm i', wait for the results.
-        // 06. If successful, check if 'is-git-update' === true. If so, run 'git add .', run 'git commit -m 'update packages'',
-        // and run 'git push' and wait for a successful message.
-        // 07. Remove the last empty line (mark it as flag in settings.js) in the package.json and package-lock.json files.
-        // 08. If failed, add 1 to the retries, and go to the retry process: Delete the 'node_modules' directory and run 'npm i' again.
-        // 09. If retries exceeded the limit, mark an error to the project and continue to the next project.
-        // 10. After the NPM update packages, will verify the update by checking the package.json file again.
-        // 11. After verification complete, delete the package.json and package-lock.json files from the original project.
-        // 12. After deletion completes, copy the updated package.json and package-lock.json files to the original project's path.
+        return projectDataModel;
+    }
+
+    selectUpdateProjects(totalUpdatableProjectsCount) {
+        // Check if exceed the maximum update projects count.
+        if (totalUpdatableProjectsCount < countLimitService.countLimitDataModel.maximumProjectsUpdateCount) {
+            return;
+        }
+        // Get all project's indexes and reset all projects.
+        let projectIndexesList = this.projectsDataModel.projectsList.reduce((a, e, i) => {
+            if (e.isPackagesUpdate) {
+                a.push(i);
+                this.projectsDataModel.projectsList[i].isPackagesUpdate = false;
+            }
+            return a;
+        }, []);
+        // Random the projects to update and update the projects.
+        projectIndexesList = textUtils.getListRandomElements(projectIndexesList,
+            countLimitService.countLimitDataModel.maximumProjectsUpdateCount);
+        for (let i = 0; i < projectIndexesList.length; i++) {
+            this.projectsDataModel.projectsList[projectIndexesList[i]].isPackagesUpdate = true;
+        }
     }
 
     // This method loops all the projects and auto updates the outdated packages.
     async updateProjectsOutdatedPackages() {
         // Check if any projects need to be updated.
-        if (!this.getProjectsUpdateAvailableCount()) {
+        const totalUpdatableProjectsCount = this.getProjectsUpdateAvailableCount();
+        if (!totalUpdatableProjectsCount) {
             return;
         }
+        this.updatedProjectsCount = 0;
+        // Select update projects.
+        this.selectUpdateProjects();
         // Initiate the update step.
         this.initiateUpdateProjectStep();
         // Loop on all the potential update projects.
         for (let i = 0; i < this.projectsDataModel.projectsList.length; i++) {
             this.projectsDataModel.projectsList[i] = await this.updateProjectOutdatedPackages({
                 projectDataModel: this.projectsDataModel.projectsList[i],
-                index: i
+                index: i,
+                totalProjects: totalUpdatableProjectsCount
             });
+            this.updatedProjectsCount++;
+            if (this.updatedProjectsCount >= countLimitService.countLimitDataModel.maximumProjectsUpdateCount) {
+                return;
+            }
+            // Delay the application and move to the next project to update.
+            await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutUpdateProject);
         }
+        // Delete the temporary direcotry.
+        await fileUtils.removeDirectoryIfExists(pathService.pathDataModel.temporaryDirectoryPath);
     }
 
     // This method handles the outdated and updated packages result check.
     async handleResult() {
         // Log the result.
-        // ToDo: Add to the final log which packages were updated.
         await logService.logProjects(this.projectsDataModel);
     }
 

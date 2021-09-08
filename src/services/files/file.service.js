@@ -31,6 +31,16 @@ class FileService {
         }
         return fileDataResultModel;
     }
+
+    async removeLastEmptyLine(targetPath) {
+        let file = await fileUtils.read(targetPath);
+        file = file.replace(/\n*$/, '');
+        await fileUtils.removeFile(targetPath);
+        await fileUtils.appendFile({
+            targetPath: targetPath,
+            message: file
+        });
+    }
 }
 
 module.exports = new FileService();

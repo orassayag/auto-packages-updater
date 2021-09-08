@@ -101,6 +101,19 @@ class TextUtils {
         }
         return text.replace(regexUtils.clearLastBreakLines, '');
     }
+
+    replaceBreakLines(string, value, replace) {
+        string = string.replace(value, replace);
+        string = string.replace(`${value}\r\n`, `${replace}\r\n`);
+        return string.replace(`${value},\r\n`, `${replace},\r\n`);
+    }
+
+    getListRandomElements(list, count) {
+        // Shuffle array.
+        const shuffled = list.sort(() => 0.5 - Math.random());
+        // Get sub-array of first n elements after shuffled.
+        return shuffled.slice(0, count);
+    }
 }
 
 module.exports = new TextUtils();

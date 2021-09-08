@@ -1,5 +1,61 @@
 Complete / canceled tasks:
 ==========================
+-Add to the source file "isUpdate". If true = update. If false = Don't update. *
+-Second step - Different scripts, same logic with a flag of true (each project will be with flag): *
+ 01. Adjust new validations on settings.js file. *
+ 02. Create the temporary directory. *
+ 03. Run the script as today. *
+ 04. Get all the outdated packages. *
+ 05. Get all the projects with 'isUpdate' = true and loop on them. *
+ 06. Of course, if no updates are available, it won't be included in the array of 'isUpdate' projects. *
+ 07. Validate all fields in sources.json file. *
+ 08. For each project: *
+     01. Validate that the project is-packages-update and with status of succes. *
+     02. Log the progress. *
+     03. Clean the temporary directory. *
+     04. Download the repository from GitHub to the temporary directory. *
+     05. If the package-lock.json exists, delete it. *
+     06. Update the package.json file with the updated packages versions. *
+     07. Run 'npm i', wait for the results. *
+     08. Remove the last empty line in the package.json and package-lock.json files. *
+     09. After the NPM update packages, will verify the update by checking the package.json file again. *
+     10. Check if the project is-git-update = true in order to continue with the flow. *
+     11. If successful, run 'git add .', run 'git commit -m 'update packages'', and run 'git push' and wait for a successful message.
+     12. Update all packages statuses. *
+     13. If failed, add 1 to the retries, and go to the retry process. *
+     14. If retries exceeded the limit, mark an error to the project and continue to the next project. *
+     15. After verification complete, delete the package.json and package-lock.json files from the original project. *
+     16. After deletion completes, copy the updated package.json and package-lock.json files to the original project's path. *
+     17. Delay the application and move to the next project to update. *
+ 09. Delete the temporary direcotry. *
+ 10. If there are more updates than the maximum project's update count - Do random. *
+ 11. Do the logic for starter-kits. *
+ 12. Return the original source.json. *
+ 13. Adjust source.json to new structure. *
+ 14. Merge of name and display name - Display name will by dynamiclly calculated. *
+     If equal assign display name to be name. If Different - displayName will be name + displayName. *
+ 15. Add counter for maximum updated projects. *
+ 16. Test full run.
+-Support for multi package.json project (Each directory that contains in the rooy a package.json file it's a project). *
+-Add limit count for updates. The default is 5. *
+-Need to find a way to make all this process automatically, as the project name suggests. All git fetch and git *
+ add and git commit and git push and delete delete .git directory need to be automatically. *
+-Add option to scan each package.json file, and the title will be auto synced with the root directory name - canceled. *
+-Add all the projects to the source file, add a new type of "project" / "maintenance" - canceled. *
+-For other text files, just print the updates available for the "past" types - canceled. *
+-In the second step, it will auto-update the package.json with the new version of the outdated NPM packages *
+ and recreate the package-lock.json file, remove the last empty line of the files, remove the node_modules directory, *
+ and log all the updated projects. *
+-Check if the node_moudles directory exists, if not, create and delete it. If it is, re-create it without deleting it - canceled. *
+-Add the number of maximum retries on each project on settings.js. Log all the retries results - canceled. *
+-The output of the TXT file of the second step will look like: *
+===sender (2/13)=== *
+jsdom: ^16.5.2 => ^16.5.3 | V Updated *
+jsdom: ^16.5.2 => ^16.5.3 | V Updated *
+===udemy-courses (0/22)=== *
+-success | All packages up to date. *
+===youtube-comments (0/12)=== *
+-success | All packages up to date. *
 -Add flag to log only the projects who have updates. The default is true. *
 -Fix bug with trailing spaces in the dist output TXT file. *
 -Update packages + Recreate package-lock.json. *

@@ -5,7 +5,7 @@ const { applicationService, confirmationService, countLimitService, logService,
 const globalUtils = require('../utils/files/global.utils');
 const { logUtils, systemUtils, timeUtils } = require('../utils');
 
-class OutdatedLogic {
+class PackagesLogic {
 
     constructor() { }
 
@@ -40,10 +40,15 @@ class OutdatedLogic {
 
     async startSession() {
         // Initiate.
-        this.updateStatus('OUTDATED PACKAGES', StatusEnum.OUTDATED);
+        this.updateStatus('OUTDATED PACKAGES', StatusEnum.OUTDATED, false);
         applicationService.applicationDataModel.startDateTime = timeUtils.getCurrentDate();
         // Run the process - Check for outdated packages.
         await projectService.findOutdatedPackages();
+        if (projectService.getProjectsUpdateAvailableCount()) {
+            // Run the process - Update outdated packages.
+            this.updateStatus('UPDATE PACKAGES', StatusEnum.UPDATE, true);
+            await projectService.findUpdatePackages();
+        }
         await this.exit(StatusEnum.FINISH);
     }
 
@@ -58,7 +63,10 @@ class OutdatedLogic {
         }
     }
 
-    updateStatus(text, status) {
+    updateStatus(text, status, isBeforeBreakLine) {
+        if (isBeforeBreakLine) {
+            logUtils.logSpace();
+        }
         logUtils.logStatus(text);
         if (applicationService.applicationDataModel) {
             applicationService.applicationDataModel.status = status;
@@ -75,4 +83,4 @@ class OutdatedLogic {
     }
 }
 
-module.exports = OutdatedLogic;
+module.exports = PackagesLogic;

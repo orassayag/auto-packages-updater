@@ -5,8 +5,10 @@ class ProjectDataModel {
         this.id = id;
         this.createDateTime = createDateTime;
         this.name = null;
+        this.displayName = null;
         this.updateType = null;
         this.projectPath = null;
+        this.gitRootPath = null;
         this.customPackagesPath = null;
         this.customPackagesList = null;
         this.excludePackagesList = null;
@@ -19,6 +21,7 @@ class ProjectDataModel {
         this.packagesTemplateKeys = null;
         this.outdatedPackages = null;
         this.outdatedPackagesKeys = null;
+        this.packagesList = null;
         this.status = status;
         this.resultDateTime = null;
         this.resultMessage = null;

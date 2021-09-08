@@ -28,6 +28,8 @@ const settings = {
     MAXIMUM_RETRIES_COUNT: 5,
     // Determine the milliseconds count timeout to wait between update projects.
     MILLISECONDS_TIMEOUT_UPDATE_PROJECT: 10000,
+    // Determine the milliseconds count timeout to wait between git commands executions.
+    MILLISECONDS_TIMEOUT_GIT_COMMANDS_EXECUTION: 2000,
 
     // ===FLAG=== //
     // Determine if to log all the projects results regardless of whether there are updates or not (=false),
