@@ -50,8 +50,6 @@ class ProjectService {
     async findUpdatePackages() {
         // Auto-update projects.
         await this.updateProjectsOutdatedPackages();
-        // Handle all the project's results.
-        await this.handleResult();
     }
 
     // This method creates the projects.

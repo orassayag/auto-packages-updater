@@ -44,11 +44,13 @@ class PackagesLogic {
         applicationService.applicationDataModel.startDateTime = timeUtils.getCurrentDate();
         // Run the process - Check for outdated packages.
         await projectService.findOutdatedPackages();
-        if (projectService.getProjectsUpdateAvailableCount()) {
+/*         if (projectService.getProjectsUpdateAvailableCount()) {
             // Run the process - Update outdated packages.
             this.updateStatus('UPDATE PACKAGES', StatusEnum.UPDATE, true);
             await projectService.findUpdatePackages();
-        }
+        } */
+        // Handle all the project's results.
+        await projectService.handleResult();
         await this.exit(StatusEnum.FINISH);
     }
 
