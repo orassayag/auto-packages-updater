@@ -17,7 +17,8 @@ class CommandService {
     if (extraData) {
       cmd += ` ${extraData}`;
     }
-    const { error /* , stdout, stderr */ } = await exec(cmd, { cwd: path });
+    const { error, stdout, stderr } = await exec(cmd, { cwd: path });
+    if (stdout || stderr) { }
     if (isDelay) {
       await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutGitCommandsExecution);
     }

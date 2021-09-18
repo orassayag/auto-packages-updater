@@ -9,8 +9,10 @@ const PackageDataModel = require('./files/PackageData.model');
 const PathDataModel = require('./files/PathData.model');
 const ProjectDataModel = require('./files/ProjectData.model');
 const ProjectsDataModel = require('./files/ProjectsData.model');
+const UpdateProjectOutdatedPackagesResultModel = require('./files/UpdateProjectOutdatedPackagesResult.model');
 
 module.exports = {
     ApplicationDataModel, BackupDataModel, BackupDirectoryModel, CountLimitDataModel, FileDataResultModel, LogDataModel,
-    OutdatedResultModel, PackageDataModel, PathDataModel, ProjectDataModel, ProjectsDataModel
+    OutdatedResultModel, PackageDataModel, PathDataModel, ProjectDataModel, ProjectsDataModel,
+    UpdateProjectOutdatedPackagesResultModel
 };

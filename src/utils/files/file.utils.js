@@ -84,6 +84,10 @@ class FileUtils {
         return stats.isDirectory();
     }
 
+    isDirectoryEmpty(path) {
+        return fs.readdirSync(path).length === 0;
+    }
+
     isFilePath(path) {
         const stats = fs.statSync(path);
         return stats.isFile();

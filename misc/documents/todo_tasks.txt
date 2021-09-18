@@ -11,9 +11,7 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
--Add flag to do auto-updates (if true create temporary directory and all the rest of the logic).
--Fix bug - Currently not working.
--Add auto git update in case starter-kits has been updated (add new field - parent git name. Only filled in starter-kits).
+-Update all examples in the 'examples' directory.
 -Update packages + Recreate package-lock.json.
 -Remove code comments to a backup TXT file.
 -Convert " to ' in the relevant places.

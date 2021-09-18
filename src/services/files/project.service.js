@@ -1,14 +1,15 @@
-const { ProjectDataModel, ProjectsDataModel } = require('../../core/models');
+const { ProjectDataModel, ProjectsDataModel, UpdateProjectOutdatedPackagesResultModel } = require('../../core/models');
 const { CommandEnum, ProjectStatusEnum, UpdateTypeEnum } = require('../../core/enums');
+const applicationService = require('./application.service');
 const countLimitService = require('./countLimit.service');
 const fileService = require('./file.service');
+const gitService = require('./git.service');
 const logService = require('./log.service');
 const commandService = require('./command.service');
 const packageService = require('./package.service');
 const pathService = require('./path.service');
 const globalUtils = require('../../utils/files/global.utils');
 const { logUtils, fileUtils, textUtils, timeUtils, validationUtils } = require('../../utils');
-const applicationService = require('./application.service');
 
 class ProjectService {
 
@@ -22,6 +23,8 @@ class ProjectService {
     }
 
     async findOutdatedPackages() {
+        // Remove the temporary direcotry.
+        await this.removeTemporaryDirecotry();
         // Get the projects data from the projects.json file.
         const fileDataResultModel = await fileService.getFileData({
             filePath: pathService.pathDataModel.projectsPath,
@@ -47,6 +50,11 @@ class ProjectService {
         await this.getProjectsOutdatedPackages();
     }
 
+    async removeTemporaryDirecotry() {
+        // Remove the temporary direcotry.
+        await fileUtils.removeDirectoryIfExists(pathService.pathDataModel.temporaryDirectoryPath);
+    }
+
     async findUpdatePackages() {
         // Auto-update projects.
         await this.updateProjectsOutdatedPackages();
@@ -63,6 +71,13 @@ class ProjectService {
             lastProjectId++;
             this.projectsDataModel.projectsList.push(projectDataModel);
         }
+        // Re-order project by parent directory to be first in the list, in order to clone the parent project only once.
+        this.projectsDataModel.projectsList = this.projectsDataModel.projectsList.reduce((acc, item) => {
+            if (item.parentProjectPath) {
+                return [item, ...acc];
+            }
+            return [...acc, item];
+        }, []);
     }
 
     // This method validates the projects.
@@ -131,6 +146,11 @@ class ProjectService {
         }
         // Validate the 'project-path' field.
         projectDataModel = await this.validateProjectPath(projectDataModel, data);
+        if (projectDataModel.resultMessage) {
+            return projectDataModel;
+        }
+        // Validate the 'parent-project-path' field.
+        projectDataModel = await this.validateParentProjectPath(projectDataModel, data);
         if (projectDataModel.resultMessage) {
             return projectDataModel;
         }
@@ -276,6 +296,19 @@ class ProjectService {
             }
         }
         return projectDataModel;
+    }
+
+    // This method validates the 'parent-project-path' field.
+    validateParentProjectPath(projectDataModel, data) {
+        return this.validateJSONString({
+            projectDataModel: projectDataModel,
+            jsonFieldName: 'parent-project-path',
+            projectFieldName: 'parentProjectPath',
+            isRequired: false,
+            missingStatus: null,
+            invalidStatus: null,
+            emptyStatus: null
+        }, data);
     }
 
     // This method validates the 'git-root-path' field.
@@ -645,22 +678,67 @@ class ProjectService {
         }
     }
 
-    initiateUpdateProjectStep() {
+    async initiateUpdateProjectStep() {
         fileUtils.createDirectory(pathService.pathDataModel.temporaryDirectoryPath);
+        await this.cleanTemporaryDirectory();
     }
 
     getProjectsUpdateAvailableCount() {
         return this.projectsDataModel.projectsList.filter(p => p.isPackagesUpdate && validationUtils.isExists(p.packagesList)).length;
     }
 
+    async cleanTemporaryDirectory() {
+        let isCleaned = true;
+        for (let i = 0; i < countLimitService.countLimitDataModel.maximumDeleteTemporaryDirectoryRetriesCount; i++) {
+            try {
+                // Clean the temporary directory.
+                await fileUtils.cleanDirectory(pathService.pathDataModel.temporaryDirectoryPath);
+            } catch (error) {
+                isCleaned = false;
+            }
+            if (isCleaned) {
+                break;
+            }
+            else {
+                await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutDeleteTemporaryDirectory);
+            }
+        }
+        if (!isCleaned) {
+            throw new Error('Temporary directory is not cleanable (1000035)');
+        }
+    }
+
+    async removeTemporaryDirectory(path) {
+        let isCleared = true;
+        for (let i = 0; i < countLimitService.countLimitDataModel.maximumDeleteTemporaryDirectoryRetriesCount; i++) {
+            try {
+                // Remove temporary directory if exists.
+                await fileUtils.removeDirectoryIfExists(path);
+            } catch (error) {
+                isCleared = false;
+            }
+            if (isCleared) {
+                break;
+            }
+            else {
+                await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutDeleteTemporaryDirectory);
+            }
+        }
+        if (!isCleared) {
+            throw new Error(`${path} directory is not clearable (1000035)`);
+        }
+    }
+
     // This method updates the outdated packages of the project.
     async updateProjectOutdatedPackages(data) {
-        const { projectDataModel, index, totalProjects } = data;
-        const { name, displayName, projectPath, gitRootPath, isPackagesUpdate, isGitUpdate, status, packagesList } = projectDataModel;
+        const { index, totalProjects } = data;
+        let { projectDataModel } = data;
+        const { name, displayName, projectPath, parentProjectPath, gitRootPath,
+            isPackagesUpdate, isGitUpdate, status, packagesList } = projectDataModel;
         try {
             // Validate that the project is package update flaged and successfully has outdated packages.
             if (!isPackagesUpdate || status !== ProjectStatusEnum.SUCCESS || !validationUtils.isExists(packagesList)) {
-                return projectDataModel;
+                return new UpdateProjectOutdatedPackagesResultModel(false, projectDataModel);
             }
             // Log the progress.
             logService.logProgress({
@@ -668,14 +746,10 @@ class ProjectService {
                 currentNumber: index + 1,
                 totalNumber: totalProjects
             });
-            // Clean the temporary directory.
-            await fileUtils.cleanDirectory(pathService.pathDataModel.temporaryDirectoryPath);
-            // Download the repository from GitHub to the temporary directory.
-            await commandService.runCommand({
-                command: CommandEnum.CLONE,
-                path: pathService.pathDataModel.temporaryDirectoryPath,
-                extraData: `${applicationService.applicationDataModel.githubURL}/${name}`
-            });
+            // If it's a parent project or the temporary directory is empty, only then clone the project.
+            if (!parentProjectPath || fileUtils.isDirectoryEmpty(pathService.pathDataModel.temporaryDirectoryPath)) {
+                await gitService.getProject(name, this.cleanTemporaryDirectory);
+            }
             // If the package-lock.json exists, delete it.
             const repositoryProjectBasePath = `${pathService.pathDataModel.temporaryDirectoryPath}\\${gitRootPath}`;
             const repositoryPackageJsonFilePath = `${repositoryProjectBasePath}\\package.json`;
@@ -693,32 +767,17 @@ class ProjectService {
             await fileService.removeLastEmptyLine(repositoryPackageJsonLockFilePath);
             // After the NPM update packages, will verify the update by checking the package.json file again.
             projectDataModel.packagesList = await packageService.validatePackageJsonUpdates(repositoryPackageJsonFilePath, packagesList);
+            // If it's a simulate mode return true.
+            if (applicationService.applicationDataModel.isSimulateUpdateMode) {
+                return new UpdateProjectOutdatedPackagesResultModel(true, projectDataModel);
+            }
             // Check if the project is-git-update = true in order to continue with the flow.
             if (isGitUpdate) {
-                // If successful, run 'git add .', run 'git commit -m 'update packages'', and run 'git push' and wait for a successful message.
-                const addError = await commandService.runCommand({
-                    command: CommandEnum.ADD,
-                    path: repositoryProjectBasePath,
-                    isDelay: true
+                // Update GitHub.
+                projectDataModel = await gitService.updateProjectChanges({
+                    projectDataModel: projectDataModel,
+                    path: repositoryProjectBasePath
                 });
-                let commitError = null;
-                if (!addError) {
-                    commitError = await commandService.runCommand({
-                        command: CommandEnum.COMMIT,
-                        path: repositoryProjectBasePath,
-                        isDelay: true
-                    });
-                }
-                let pushError = null;
-                if (!commitError) {
-                    pushError = await commandService.runCommand({
-                        command: CommandEnum.PUSH,
-                        path: repositoryProjectBasePath,
-                        isDelay: true
-                    });
-                }
-                // Update all packages statuses.
-                projectDataModel.packagesList = await packageService.updatePackagesStatus(addError || commitError || pushError, packagesList);
             }
             // After verification complete, delete the package.json and package-lock.json files from the original project.
             const originalProjectPackageJsonFilePath = `${projectPath}\\package.json`;
@@ -734,10 +793,10 @@ class ProjectService {
             projectDataModel.retriesCount++;
             // If retries exceeded the limit, mark an error to the project and continue to the next project.
             if (projectDataModel.retriesCount <= countLimitService.countLimitDataModel.maximumRetriesCount) {
-                // await this.updateProjectOutdatedPackages({ projectDataModel, index, totalProjects });
+                await this.updateProjectOutdatedPackages({ projectDataModel, index, totalProjects });
             }
         }
-        return projectDataModel;
+        return new UpdateProjectOutdatedPackagesResultModel(true, projectDataModel);
     }
 
     selectUpdateProjects(totalUpdatableProjectsCount) {
@@ -770,25 +829,63 @@ class ProjectService {
         }
         this.updatedProjectsCount = 0;
         // Select update projects.
-        this.selectUpdateProjects();
+        this.selectUpdateProjects(totalUpdatableProjectsCount);
         // Initiate the update step.
-        this.initiateUpdateProjectStep();
+        await this.initiateUpdateProjectStep();
         // Loop on all the potential update projects.
         for (let i = 0; i < this.projectsDataModel.projectsList.length; i++) {
-            this.projectsDataModel.projectsList[i] = await this.updateProjectOutdatedPackages({
+            const { isUpdated, projectDataModel } = await this.updateProjectOutdatedPackages({
                 projectDataModel: this.projectsDataModel.projectsList[i],
-                index: i,
+                index: this.updatedProjectsCount,
                 totalProjects: totalUpdatableProjectsCount
             });
-            this.updatedProjectsCount++;
-            if (this.updatedProjectsCount >= countLimitService.countLimitDataModel.maximumProjectsUpdateCount) {
-                return;
+            if (isUpdated) {
+                this.projectsDataModel.projectsList[i] = projectDataModel;
+                this.updatedProjectsCount++;
+                if (this.updatedProjectsCount >= countLimitService.countLimitDataModel.maximumProjectsUpdateCount) {
+                    break;
+                }
+                // Delay the application and move to the next project to update.
+                await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutUpdateProject);
             }
-            // Delay the application and move to the next project to update.
-            await globalUtils.sleep(countLimitService.countLimitDataModel.millisecondsTimeoutUpdateProject);
         }
-        // Delete the temporary direcotry.
-        await fileUtils.removeDirectoryIfExists(pathService.pathDataModel.temporaryDirectoryPath);
+    }
+
+    async updateParentGitRepository() {
+        /* Check if there is any projects with parent path that has
+           been updated successfully. */
+        const parentGitProjectNames = [];
+        for (let i = 0; i < this.projectsDataModel.projectsList.length; i++) {
+            const projectDataModel = this.projectsDataModel.projectsList[i];
+            const { name, status, packagesList, parentProjectPath } = projectDataModel;
+            if (validationUtils.isExists(packagesList) && status === ProjectStatusEnum.SUCCESS && parentProjectPath &&
+                !parentGitProjectNames.includes(name)) {
+                // Update the parent Git repository.
+                this.projectsDataModel.projectsList[i] = await this.updateParentProject(projectDataModel);
+                parentGitProjectNames.push(projectDataModel.name);
+            }
+        }
+    }
+
+    async updateParentProject(projectDataModel) {
+        await gitService.getProject(projectDataModel.name, this.cleanTemporaryDirectory);
+        const baseParentProjectPath = `${pathService.pathDataModel.temporaryDirectoryPath}\\${projectDataModel.name}`;
+        const childOriginalProjectPath = `${projectDataModel.parentProjectPath}${projectDataModel.name}`;
+        const childTemporaryProjectPath = `${pathService.pathDataModel.temporaryDirectoryPath}\\${projectDataModel.name}\\${projectDataModel.name}`;
+        // Remove outdated code.
+        await this.removeDirectoryIfExists(childTemporaryProjectPath);
+        // Copy the updated code into the temporary directory.
+        await fileUtils.copyDirectory(childOriginalProjectPath, childTemporaryProjectPath);
+        // Update GitHub.
+        projectDataModel = await gitService.updateProjectChanges({
+            projectDataModel: projectDataModel,
+            path: baseParentProjectPath
+        });
+        // Remove original outdated code.
+        await this.removeDirectoryIfExists(childOriginalProjectPath);
+        // Replace the original outdated code with the updated code.
+        await fileUtils.copyDirectory(childTemporaryProjectPath, childOriginalProjectPath);
+        return projectDataModel;
     }
 
     // This method handles the outdated and updated packages result check.

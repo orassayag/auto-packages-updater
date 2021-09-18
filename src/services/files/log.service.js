@@ -1,5 +1,5 @@
 const { LogDataModel } = require('../../core/models');
-const { ProjectStatusEnum } = require('../../core/enums');
+const { PackageStatusEnum, ProjectStatusEnum } = require('../../core/enums');
 const applicationService = require('./application.service');
 const pathService = require('./path.service');
 const { fileUtils, logUtils, textUtils, validationUtils } = require('../../utils');
@@ -37,7 +37,7 @@ class LogService {
 		if (status === ProjectStatusEnum.SUCCESS && validationUtils.isExists(outdatedPackagesKeys)) {
 			for (let i = 0; i < packagesList.length; i++) {
 				const { logDisplay, status: packageStatus } = packagesList[i];
-				lines.push(`${logDisplay} | ${packageStatus}`);
+				lines.push(`${logDisplay} | ${packageStatus || PackageStatusEnum.SCANNED}`);
 			}
 		}
 		else {
@@ -77,7 +77,7 @@ class LogService {
 		const { displayName, currentNumber, totalNumber } = data;
 		logUtils.logProgress({
 			progressData: {
-				[`WORKING (${applicationService.applicationDataModel.status})`]:
+				[`WORKING (${applicationService.applicationDataModel.displayStatus})`]:
 					`${displayName} ${textUtils.getNumberOfNumber({ number1: currentNumber, number2: totalNumber })}`
 			},
 			percentage: textUtils.calculatePercentageDisplay({
@@ -95,7 +95,8 @@ class LogService {
 		const parameters = ['GITHUB_URL', 'DIST_OUTDATED_FILE_NAME', 'DIST_UPDATED_FILE_NAME', 'MAXIMUM_PROJECTS_COUNT',
 			'MAXIMUM_PROJECTS_UPDATE_COUNT', 'MILLISECONDS_TIMEOUT_EXIT_APPLICATION', 'MAXIMUM_URL_VALIDATION_COUNT',
 			'MILLISECONDS_TIMEOUT_URL_VALIDATION', 'MAXIMUM_RETRIES_COUNT', 'MILLISECONDS_TIMEOUT_UPDATE_PROJECT',
-			'MILLISECONDS_TIMEOUT_GIT_COMMANDS_EXECUTION', 'IS_LOG_ONLY_UPDATES', 'TEMPORARY_DIRECTORY_PATH'];
+			'MILLISECONDS_TIMEOUT_GIT_COMMANDS_EXECUTION', 'IS_AUTO_UPDATE', 'IS_LOG_ONLY_UPDATES',
+			'IS_SIMULATE_UPDATE_MODE', 'TEMPORARY_DIRECTORY_PATH'];
 		let settingsText = Object.keys(settings).filter(s => parameters.indexOf(s) > -1)
 			.map(k => this.createLineTemplate(k, settings[k])).join('');
 		settingsText = textUtils.removeLastCharacters({

@@ -17,7 +17,7 @@ const settings = {
     MAXIMUM_PROJECTS_COUNT: 100,
     // Determine the maximum number of projects to auto update their outdated packages.
     // If the limit exceeded, will take the first projects in the JSON file by the original order.
-    MAXIMUM_PROJECTS_UPDATE_COUNT: 5,
+    MAXIMUM_PROJECTS_UPDATE_COUNT: 100,
     // Determine the milliseconds count timeout to wait before exiting the application.
     MILLISECONDS_TIMEOUT_EXIT_APPLICATION: 1000,
     // Determine the number of retries to validate the URLs.
@@ -30,11 +30,19 @@ const settings = {
     MILLISECONDS_TIMEOUT_UPDATE_PROJECT: 10000,
     // Determine the milliseconds count timeout to wait between git commands executions.
     MILLISECONDS_TIMEOUT_GIT_COMMANDS_EXECUTION: 2000,
+    // Determine the number of retries to delete the temporary directory.
+    MAXIMUM_DELETE_TEMPORARY_DIRECTORY_RETRIES_COUNT: 5,
+    // Determine the milliseconds count timeout to wait before delete the temporary directory.
+    MILLISECONDS_TIMEOUT_DELETE_TEMPORARY_DIRECTORY: 1000,
 
     // ===FLAG=== //
+    // Determine if to enable auto-update step.
+    IS_AUTO_UPDATE: true,
     // Determine if to log all the projects results regardless of whether there are updates or not (=false),
     // or to log only the projects that have updates available (=true).
     IS_LOG_ONLY_UPDATES: true,
+    // Determine if to simulate update in original projects and in the Git repository (=true) or not (=false).
+    IS_SIMULATE_UPDATE_MODE: false,
 
     // ===SOURCE=== //
     // Determine the path of the projects.json file, the file which contains all the projects

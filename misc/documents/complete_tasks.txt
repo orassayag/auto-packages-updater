@@ -1,5 +1,19 @@
 Complete / canceled tasks:
 ==========================
+-Refactor all git commands into one service. *
+-Add retry (with sleep and maximum retries count) on the temporary delete direcotry. *
+-Add logic to: *
+1. Reorder all parent git repository to be last. *
+2. Clone the project only one time. *
+-Add auto git update in case starter-kits has been updated (add new field - parent git name. Only filled in starter-kits). *
+-Add title and status while handling the parent git repository. *
+-Change back to MAXIMUM_PROJECTS_UPDATE_COUNT: 5 - canceled. *
+-Add clear temporary directory on load. *
+-Fix bug - Currently not working. *
+-Add flag for isSimulateUpdateMode (Not really update the project and update the Git repository). *
+-Create temporary directory only if exists updated=true projects. *
+-Add flag to do auto-updates (if true create temporary directory and all the rest of the logic). *
+-Simulate error to verify all works + exceeded errors count. *
 -Add to the source file "isUpdate". If true = update. If false = Don't update. *
 -Second step - Different scripts, same logic with a flag of true (each project will be with flag): *
  01. Adjust new validations on settings.js file. *

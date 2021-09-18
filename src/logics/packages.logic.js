@@ -1,5 +1,5 @@
 const settings = require('../settings/settings');
-const { StatusEnum } = require('../core/enums');
+const { DisplayStatusEnum, StatusEnum } = require('../core/enums');
 const { applicationService, confirmationService, countLimitService, logService,
     pathService, projectService, validationService } = require('../services');
 const globalUtils = require('../utils/files/global.utils');
@@ -40,15 +40,21 @@ class PackagesLogic {
 
     async startSession() {
         // Initiate.
-        this.updateStatus('OUTDATED PACKAGES', StatusEnum.OUTDATED, false);
+        this.updateStatus('OUTDATED PACKAGES', StatusEnum.OUTDATED, DisplayStatusEnum.SCAN, false);
         applicationService.applicationDataModel.startDateTime = timeUtils.getCurrentDate();
         // Run the process - Check for outdated packages.
         await projectService.findOutdatedPackages();
-/*         if (projectService.getProjectsUpdateAvailableCount()) {
+        if (applicationService.applicationDataModel.isAutoUpdate && projectService.getProjectsUpdateAvailableCount()) {
             // Run the process - Update outdated packages.
-            this.updateStatus('UPDATE PACKAGES', StatusEnum.UPDATE, true);
+            this.updateStatus('UPDATE PACKAGES', StatusEnum.UPDATE, DisplayStatusEnum.UPDATE, true);
             await projectService.findUpdatePackages();
-        } */
+            // Update projects with parent repository.
+            this.updateStatus('UPDATE PARENT PACKAGES', StatusEnum.UPDATE_PARENT, DisplayStatusEnum.UPDATE_PARENT, false);
+            await projectService.updateParentGitRepository();
+            // Remove the temporary direcotry.
+            this.updateStatus('FINALIZE', StatusEnum.FINALIZE, DisplayStatusEnum.FINALIZE, false);
+            await projectService.removeTemporaryDirecotry();
+        }
         // Handle all the project's results.
         await projectService.handleResult();
         await this.exit(StatusEnum.FINISH);
@@ -65,22 +71,28 @@ class PackagesLogic {
         }
     }
 
-    updateStatus(text, status, isBeforeBreakLine) {
+    updateStatus(text, status, displayStatus, isBeforeBreakLine) {
         if (isBeforeBreakLine) {
             logUtils.logSpace();
         }
         logUtils.logStatus(text);
         if (applicationService.applicationDataModel) {
-            applicationService.applicationDataModel.status = status;
+            if (status) {
+                applicationService.applicationDataModel.status = status;
+            }
+            if (displayStatus) {
+                applicationService.applicationDataModel.displayStatus = displayStatus;
+            }
         }
     }
 
     async exit(status) {
         if (applicationService.applicationDataModel) {
-            applicationService.applicationDataModel.status = status;
+            if (status) {
+                applicationService.applicationDataModel.status = status;
+            }
             await this.sleep();
         }
-        logUtils.logSpace();
         systemUtils.exit(status);
     }
 }
