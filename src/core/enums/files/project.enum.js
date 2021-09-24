@@ -40,8 +40,7 @@ const ProjectStatusEnum = enumUtils.createEnum([
     ['DUPLICATE', 'duplicate'],
     ['NO_TEMPLATE_PACKAGES', 'no template packages'],
     ['FAIL', 'fail'],
-    ['SUCCESS', 'success'],
-    ['UPDATED', 'updated']
+    ['SUCCESS', 'success']
 ]);
 
 const UpdateTypeEnum = enumUtils.createEnum([

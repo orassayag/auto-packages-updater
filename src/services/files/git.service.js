@@ -8,7 +8,8 @@ class GitService {
 
   constructor() { }
 
-  async getProject(name, cleanDirectory) {
+  async getProject(data) {
+    const { name, cleanDirectory } = data;
     // Clean the temporary directory.
     await cleanDirectory(pathService.pathDataModel.temporaryDirectoryPath);
     // Download the repository from GitHub to the temporary directory.
@@ -44,7 +45,10 @@ class GitService {
       });
     }
     // Update all packages statuses.
-    projectDataModel.packagesList = packageService.updatePackagesStatus(addError || commitError || pushError, projectDataModel.packagesList);
+    projectDataModel.packagesList = packageService.updatePackagesStatus({
+      isErrorExists: addError || commitError || pushError,
+      packagesList: projectDataModel.packagesList
+    });
     return projectDataModel;
   }
 }

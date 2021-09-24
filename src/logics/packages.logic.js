@@ -49,11 +49,11 @@ class PackagesLogic {
             this.updateStatus('UPDATE PACKAGES', StatusEnum.UPDATE, DisplayStatusEnum.UPDATE, true);
             await projectService.findUpdatePackages();
             // Update projects with parent repository.
-            this.updateStatus('UPDATE PARENT PACKAGES', StatusEnum.UPDATE_PARENT, DisplayStatusEnum.UPDATE_PARENT, false);
+            this.updateStatus('UPDATE PARENT PACKAGES', StatusEnum.UPDATE_PARENT, DisplayStatusEnum.UPDATE_PARENT, true);
             await projectService.updateParentGitRepository();
-            // Remove the temporary direcotry.
+            // Remove the temporary directory.
             this.updateStatus('FINALIZE', StatusEnum.FINALIZE, DisplayStatusEnum.FINALIZE, false);
-            await projectService.removeTemporaryDirecotry();
+            await projectService.removeTemporaryDirectory();
         }
         // Handle all the project's results.
         await projectService.handleResult();

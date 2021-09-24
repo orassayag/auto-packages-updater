@@ -59,7 +59,7 @@ class TextUtils {
         return text.toLowerCase().trim();
     }
 
-    // This method converts a given number to display comma number.
+    // This method converts a given number to display a comma number.
     getNumberWithCommas(number) {
         if (number <= -1 || !validationUtils.isValidNumber(number)) {
             return '';
@@ -102,13 +102,16 @@ class TextUtils {
         return text.replace(regexUtils.clearLastBreakLines, '');
     }
 
-    replaceBreakLines(string, value, replace) {
+    replaceBreakLines(data) {
+        const { value, replace } = data;
+        let { string } = data;
         string = string.replace(value, replace);
         string = string.replace(`${value}\r\n`, `${replace}\r\n`);
         return string.replace(`${value},\r\n`, `${replace},\r\n`);
     }
 
-    getListRandomElements(list, count) {
+    getListRandomElements(data) {
+        const { list, count } = data;
         // Shuffle array.
         const shuffled = list.sort(() => 0.5 - Math.random());
         // Get sub-array of first n elements after shuffled.

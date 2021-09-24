@@ -1,18 +1,28 @@
 [
     {
-        "name": "project1",
+        "name": "project-name",
         "update-type": "full",
-        "packages-path": "C:\\project1\\package.json",
+        "project-path": "C:\\path\\to\\project\\root",
+        "git-root-path": "mbox-crawler",
         "custom-packages-path": null,
         "exclude-packages-list": null,
-        "include-dev-dependencies": true
+        "include-dev-dependencies": true,
+        "is-packages-update": true,
+        "is-git-update": true
     },
     {
-        "name": "project2",
+        "name": "parent-project-name",
+        "display-name": "inner-project-name",
         "update-type": "custom",
-        "packages-path": "C:\\project1\\package.json",
-        "custom-packages-path": "C:\\project1\\custom_packages.txt",
-        "exclude-packages-list": ["eslint"],
-        "include-dev-dependencies": true
+        "project-path": "C:\\path\\to\\prject\\root\\",
+        "parent-project-path": "C:\\path\\to\\parent-project-root\\",
+        "git-root-path": "git\\path\\project-root",
+        "custom-packages-path": "C:\\path\\to\\custom\\packages\\file\\path\\external_packages.txt",
+        "exclude-packages-list": [
+            "node-sass"
+        ],
+        "include-dev-dependencies": true,
+        "is-packages-update": true,
+        "is-git-update": false
     }
 ]

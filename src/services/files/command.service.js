@@ -11,7 +11,7 @@ class CommandService {
   async runCommand(data) {
     const { command, path, extraData, isDelay } = data;
     if (!command) {
-      throw new Error(`Invalid or no command parameter was found: Expected a number but received: ${command} (1000009)`);
+      throw new Error(`Invalid or no command parameter was found: Expected a number but received: ${command} (1000003)`);
     }
     let cmd = command;
     if (extraData) {

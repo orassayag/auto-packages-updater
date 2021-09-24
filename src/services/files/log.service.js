@@ -50,7 +50,7 @@ class LogService {
 	// This method gets the project and prepares and logs the result.
 	async logProjects(projectsDataModel) {
 		if (!projectsDataModel) {
-			throw new Error('Invalid or no projectsDataModel object was found (1000015)');
+			throw new Error('Invalid or no projectsDataModel object was found (1000017)');
 		}
 		// Check if to log only the project with updates.
 		if (this.logDataModel.isLogOnlyUpdates) {

@@ -27,7 +27,7 @@ class ValidationUtils {
 
     // This method validates that a given string exists in an array list of specific types.
     isValidEnum(data) {
-        // Validate the existence and validity of the data parameters. If not exists, return false.
+        // Validate the existence and validity of the data parameters. If it does not exist, return false.
         if (!data || !data.enum || !data.value) {
             return false;
         }
@@ -48,7 +48,8 @@ class ValidationUtils {
         return typeof boolean == typeof true;
     }
 
-    isPropertyExists(obj, fieldName) {
+    isPropertyExists(data) {
+        const { obj, fieldName } = data;
         return Object.prototype.hasOwnProperty.call(obj, fieldName);
     }
 

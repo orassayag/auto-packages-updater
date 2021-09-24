@@ -64,7 +64,11 @@ class BackupLogic {
         await fileUtils.removeDirectoryIfExists(this.backupData.targetFullPath);
         await fileUtils.createDirectoryIfNotExists(this.backupData.targetFullPath);
         // Create the standard backup.
-        await fileUtils.copyDirectory(this.backupData.sourceFullPath, this.backupData.targetFullPath, this.filterDirectories.bind(this));
+        await fileUtils.copyDirectory({
+            sourcePath: this.backupData.sourceFullPath,
+            targetPath: this.backupData.targetFullPath,
+            filterFunction: this.filterDirectories.bind(this)
+        });
         // Verify the backup directory existence.
         await this.verifyBackup();
     }

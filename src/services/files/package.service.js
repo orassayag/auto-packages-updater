@@ -13,7 +13,7 @@ class PackageService {
         const { displayName, index, projectsCount } = data;
         let { packagesTemplate } = data;
         if (!packagesTemplate) {
-            throw new Error('Invalid or no packagesTemplate object was found (1000016)');
+            throw new Error('Invalid or no packagesTemplate object was found (1000018)');
         }
         packagesTemplate = { dependencies: packagesTemplate };
         const outdatedResultModel = new OutdatedResultModel();
@@ -24,7 +24,7 @@ class PackageService {
                 currentNumber: index + 1,
                 totalNumber: projectsCount
             });
-            // Check for packages updates.
+            // Check for all the package updates.
             outdatedResultModel.outdatedPackages = await ncu.run({
                 // Pass any CLI option.
                 packageData: JSON.stringify(packagesTemplate),
@@ -40,12 +40,18 @@ class PackageService {
         return outdatedResultModel;
     }
 
-    async updatePackageJsonPackages(packageJsonPath, packagesList) {
+    async updatePackageJsonPackages(data) {
+        const { packageJsonPath, packagesList } = data;
         const packageJson = await fileUtils.read(packageJsonPath);
         await fileUtils.removeFile(packageJsonPath);
         let result = packageJson;
         for (let i = 0; i < packagesList.length; i++) {
-            result = textUtils.replaceBreakLines(result, packagesList[i].outdatedPackage, packagesList[i].updatePackage);
+            const { outdatedPackage, updatePackage } = packagesList[i];
+            result = textUtils.replaceBreakLines({
+                string: result,
+                value: outdatedPackage,
+                replace: updatePackage
+            });
         }
         await fileUtils.appendFile({
             targetPath: packageJsonPath,
@@ -53,7 +59,8 @@ class PackageService {
         });
     }
 
-    async validatePackageJsonUpdates(packageJsonPath, packagesList) {
+    async validatePackageJsonUpdates(data) {
+        const { packageJsonPath, packagesList } = data;
         const packageJson = await fileUtils.read(packageJsonPath);
         for (let i = 0; i < packagesList.length; i++) {
             packagesList[i].status = packageJson.indexOf(packagesList[i].outdatedPackage) === -1 &&
@@ -62,7 +69,8 @@ class PackageService {
         return packagesList;
     }
 
-    updatePackagesStatus(isErrorExists, packagesList) {
+    updatePackagesStatus(data) {
+        const { isErrorExists, packagesList } = data;
         for (let i = 0; i < packagesList.length; i++) {
             packagesList[i].status = isErrorExists ? PackageStatusEnum.FAILED : PackageStatusEnum.GIT_PUSHED;
         }

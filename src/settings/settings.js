@@ -6,9 +6,9 @@ const settings = {
     GITHUB_URL: 'https://github.com/orassayag',
 
     // ===LOG=== //
-    // Determine the name of the resulting of the outdated packages comments in the new TXT file in the 'dist' directory.
+    // Determine the name of the results of the outdated packages comments in the new TXT file in the 'dist' directory.
     DIST_OUTDATED_FILE_NAME: 'outdated',
-    // Determine the name of the resulting of the updated packages comments in the new TXT file in the 'dist' directory.
+    // Determine the name of the results of the updated packages comments in the new TXT file in the 'dist' directory.
     DIST_UPDATED_FILE_NAME: 'updated',
 
     // ===COUNT & LIMIT=== //
@@ -24,7 +24,7 @@ const settings = {
     MAXIMUM_URL_VALIDATION_COUNT: 5,
     // Determine the milliseconds count timeout to wait between URL validation retry.
     MILLISECONDS_TIMEOUT_URL_VALIDATION: 1000,
-    // Determine the number of retires to for each repository to update the packages.
+    // Determine the number of retries for each repository to update the packages.
     MAXIMUM_RETRIES_COUNT: 5,
     // Determine the milliseconds count timeout to wait between update projects.
     MILLISECONDS_TIMEOUT_UPDATE_PROJECT: 10000,
@@ -36,12 +36,12 @@ const settings = {
     MILLISECONDS_TIMEOUT_DELETE_TEMPORARY_DIRECTORY: 1000,
 
     // ===FLAG=== //
-    // Determine if to enable auto-update step.
+    // Determine if to enable the 'auto-update' step.
     IS_AUTO_UPDATE: true,
-    // Determine if to log all the projects results regardless of whether there are updates or not (=false),
+    // Determine if to log all the project results regardless of whether there are updates or not (=false),
     // or to log only the projects that have updates available (=true).
     IS_LOG_ONLY_UPDATES: true,
-    // Determine if to simulate update in original projects and in the Git repository (=true) or not (=false).
+    // Determine if to simulate updates in original projects and in the Git repository (=true) or not (=false).
     IS_SIMULATE_UPDATE_MODE: false,
 
     // ===SOURCE=== //
@@ -55,7 +55,7 @@ const settings = {
     // ===ROOT PATH=== //
     // Determine the application name used for some of the calculated paths.
     APPLICATION_NAME: 'auto-packages-updater',
-    // Determine the path for the outer application, where other directories located, such as backups, sources, etc...
+    // Determine the path for the outer application, where other directories are located, such as backups, sources, etc...
     // (Working example: 'C:\\Or\\Web\\auto-packages-updater\\').
     OUTER_APPLICATION_PATH: pathUtils.getJoinPath({
         targetPath: __dirname,
@@ -74,7 +74,7 @@ const settings = {
     // Determine the application path where all the source of the application is located.
     // (Working example: 'C:\\Or\\Web\\auto-packages-updater\\auto-packages-updater').
     APPLICATION_PATH: 'auto-packages-updater',
-    // Determine the backups directory which all the local backup will be created to.
+    // Determine the backups directory which all the local backups will be created to.
     // (Working example: 'C:\\Or\\Web\\auto-packages-updater\\backups').
     BACKUPS_PATH: 'backups',
     // Determine the dist directory path which there, all the outcome of the logs will be created.
