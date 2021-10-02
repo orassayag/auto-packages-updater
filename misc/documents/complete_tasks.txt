@@ -1,5 +1,10 @@
 Complete / canceled tasks:
 ==========================
+-Fix bug: *
+Error: undefined directory is not removable (1000037) *
+    at ProjectService.removeTemporaryDirectory (C:\Or\Web\auto-packages-updater\auto-packages-updater\src\services\files\project.service.js:795:19) *
+    at async PackagesLogic.startSession (C:\Or\Web\auto-packages-updater\auto-packages-updater\src\logics\packages.logic.js:56:13) *
+    at async PackagesLogic.run (C:\Or\Web\auto-packages-updater\auto-packages-updater\src\logics\packages.logic.js:20:9) *
 -Fix bugs in the projects - Failed to update all the projects. *
 -Update all examples in the 'examples' directory. *
 -Update packages + Recreate package-lock.json. *

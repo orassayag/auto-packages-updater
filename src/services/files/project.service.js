@@ -775,12 +775,12 @@ class ProjectService {
         }
     }
 
-    async removeTemporaryDirectory(path) {
+    async removeTemporaryDirectory() {
         let isRemoved = true;
         for (let i = 0; i < countLimitService.countLimitDataModel.maximumDeleteTemporaryDirectoryRetriesCount; i++) {
             try {
                 // Remove the temporary directory if it exists.
-                await fileUtils.removeDirectoryIfExists(path);
+                await fileUtils.removeDirectoryIfExists(pathService.pathDataModel.temporaryDirectoryPath);
             } catch (error) {
                 isRemoved = false;
             }
@@ -792,7 +792,7 @@ class ProjectService {
             }
         }
         if (!isRemoved) {
-            throw new Error(`${path} directory is not removable (1000037)`);
+            throw new Error(`${pathService.pathDataModel.temporaryDirectoryPath} directory is not removable (1000037)`);
         }
     }
 
