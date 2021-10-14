@@ -11,6 +11,7 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
+-Add the retry number on the ===WORKING=== line.
 -Add on the console log the number of outdated packages.
 -If no updates fix console log: ===WORKING (SCAN): youtube-comments 50/50 | 100.00%======EXIT: FINISH===
 
