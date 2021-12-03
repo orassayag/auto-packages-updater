@@ -25,7 +25,7 @@ const settings = {
     // Determine the milliseconds count timeout to wait between URL validation retry.
     MILLISECONDS_TIMEOUT_URL_VALIDATION: 1000,
     // Determine the number of retries for each repository to update the packages.
-    MAXIMUM_RETRIES_COUNT: 5,
+    MAXIMUM_RETRIES_COUNT: 1,
     // Determine the milliseconds count timeout to wait between update projects.
     MILLISECONDS_TIMEOUT_UPDATE_PROJECT: 10000,
     // Determine the milliseconds count timeout to wait between git commands executions.
