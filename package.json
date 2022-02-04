@@ -58,8 +58,8 @@
     "npm-check-updates": "^12.2.1"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.16.5",
-    "@types/node": "^17.0.12",
-    "eslint": "^8.7.0"
+    "@babel/eslint-parser": "^7.17.0",
+    "@types/node": "^17.0.14",
+    "eslint": "^8.8.0"
   }
 }
