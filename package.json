@@ -55,11 +55,11 @@
   "dependencies": {
     "fs-extra": "^10.0.0",
     "is-reachable": "^5.1.1",
-    "npm-check-updates": "^12.2.1"
+    "npm-check-updates": "^12.3.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
-    "@types/node": "^17.0.14",
+    "@types/node": "^17.0.17",
     "eslint": "^8.8.0"
   }
 }
