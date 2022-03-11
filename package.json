@@ -55,7 +55,7 @@
   "dependencies": {
     "fs-extra": "^10.0.1",
     "is-reachable": "^5.1.1",
-    "npm-check-updates": "^12.5.2"
+    "npm-check-updates": "^12.5.3"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
