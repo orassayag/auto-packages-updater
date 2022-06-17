@@ -54,12 +54,12 @@
   ],
   "dependencies": {
     "fs-extra": "^10.1.0",
-    "is-reachable": "^5.2.0",
-    "npm-check-updates": "^13.1.2"
+    "is-reachable": "^5.2.1",
+    "npm-check-updates": "^14.0.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.2",
-    "@types/node": "^17.0.41",
+    "@types/node": "^18.0.0",
     "eslint": "^8.17.0"
   }
 }
