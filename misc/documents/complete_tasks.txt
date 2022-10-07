@@ -1,5 +1,7 @@
 Complete / canceled tasks:
 ==========================
+-Add packages to ignore for each project. - Already exists. *
+-Fix all bugs, remove all create-react-app from the file. *
 -Fix bug: *
 Error: undefined directory is not removable (1000037) *
     at ProjectService.removeTemporaryDirectory (C:\Or\Web\auto-packages-updater\auto-packages-updater\src\services\files\project.service.js:795:19) *
