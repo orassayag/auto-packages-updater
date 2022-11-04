@@ -15,6 +15,12 @@ ToDo tasks:
 -Add the retry number on the ===WORKING=== line.
 -Add on the console log the number of outdated packages.
 -If no updates fix console log: ===WORKING (SCAN): youtube-comments 50/50 | 100.00%======EXIT: FINISH===
+===
+-Add new logic of refresh projects on github ("npm run update"):
+1. List all the projects inside the projects.json file.
+2. Add new property: refresh: true + Make sure new packages not checked (Keep projects acutal check as today - 12 projects updated daily).
+3. Compare the size of the project between the project in github and the project locally.
+4. If it's not equal - Update the github.
 
 Complete / canceled tasks:
 ==========================
