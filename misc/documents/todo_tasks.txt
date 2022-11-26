@@ -15,6 +15,7 @@ ToDo tasks:
 -Add the retry number on the ===WORKING=== line.
 -Add on the console log the number of outdated packages.
 -If no updates fix console log: ===WORKING (SCAN): youtube-comments 50/50 | 100.00%======EXIT: FINISH===
+-Add new project for 100 top projects + Add all node projects to projects.json.
 ===
 -Add new logic of refresh projects on github ("npm run update"):
 1. List all the projects inside the projects.json file.
