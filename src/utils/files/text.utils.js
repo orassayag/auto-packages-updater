@@ -112,6 +112,9 @@ class TextUtils {
 
     getListRandomElements(data) {
         const { list, count } = data;
+        if (!list?.length) {
+            return list;
+        }
         // Shuffle array.
         const shuffled = list.sort(() => 0.5 - Math.random());
         // Get sub-array of first n elements after shuffled.

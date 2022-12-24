@@ -74,10 +74,10 @@ class LogService {
 	}
 
 	logProgress(data) {
-		const { displayName, currentNumber, totalNumber } = data;
+		const { displayName, currentNumber, totalNumber, retriesCount } = data;
 		logUtils.logProgress({
 			progressData: {
-				[`WORKING (${applicationService.applicationDataModel.displayStatus})`]:
+				[`WORKING (${applicationService.applicationDataModel.displayStatus}${retriesCount ? ` | RETRIES: ${retriesCount}` : ''})`]:
 					`${displayName} ${textUtils.getNumberOfNumber({ number1: currentNumber, number2: totalNumber })}`
 			},
 			percentage: textUtils.calculatePercentageDisplay({

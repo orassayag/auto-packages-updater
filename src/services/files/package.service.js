@@ -22,7 +22,8 @@ class PackageService {
             logService.logProgress({
                 displayName: displayName,
                 currentNumber: index + 1,
-                totalNumber: projectsCount
+                totalNumber: projectsCount,
+                retriesCount: 0
             });
             // Check for all the package updates.
             outdatedResultModel.outdatedPackages = await ncu.run({

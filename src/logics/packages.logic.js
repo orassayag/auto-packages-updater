@@ -44,7 +44,8 @@ class PackagesLogic {
         applicationService.applicationDataModel.startDateTime = timeUtils.getCurrentDate();
         // Run the process - Check for outdated packages.
         await projectService.findOutdatedPackages();
-        if (applicationService.applicationDataModel.isAutoUpdate && projectService.getProjectsUpdateAvailableCount()) {
+        const isUpdatedPackages = applicationService.applicationDataModel.isAutoUpdate && projectService.getProjectsUpdateAvailableCount();
+        if (isUpdatedPackages) {
             // Run the process - Update outdated packages.
             this.updateStatus('UPDATE PACKAGES', StatusEnum.UPDATE, DisplayStatusEnum.UPDATE, true);
             await projectService.findUpdatePackages();
@@ -54,6 +55,8 @@ class PackagesLogic {
             // Remove the temporary directory.
             this.updateStatus('FINALIZE', StatusEnum.FINALIZE, DisplayStatusEnum.FINALIZE, false);
             await projectService.removeTemporaryDirectory();
+        } else {
+            logUtils.log('');
         }
         // Handle all the project's results.
         await projectService.handleResult();

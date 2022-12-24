@@ -1,5 +1,10 @@
 Complete / canceled tasks:
 ==========================
+-Fix ERR_CHILD_PROCESS_STDIO_MAXBUFFER: https://stackoverflow.com/questions/61540352/rangeerror-err-child-process-stdio-maxbufferstdout-maxbuffer-length-exceeded *
+-Add the retry number on the ===WORKING=== line. *
+-Fix error of 'TypeError: Cannot read properties of undefined (reading 'sort')' when putting limit of 2 in MAXIMUM_PROJECTS_UPDATE_COUNT: 2, *
+-If no updates fix console log: ===WORKING (SCAN): youtube-comments 50/50 | 100.00%======EXIT: FINISH=== *
+-Add new project for 100 top projects + Add all node projects to projects.json. *
 -Add packages to ignore for each project. - Already exists. *
 -Fix all bugs, remove all create-react-app from the file. *
 -Fix bug: *

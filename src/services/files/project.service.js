@@ -811,7 +811,8 @@ class ProjectService {
             logService.logProgress({
                 displayName: displayName,
                 currentNumber: index + 1,
-                totalNumber: totalProjects
+                totalNumber: totalProjects,
+                retriesCount: projectDataModel.retriesCount
             });
             // If it's a parent project or the temporary directory is empty, only then clone the project.
             if (!parentProjectPath || fileUtils.isDirectoryEmpty(pathService.pathDataModel.temporaryDirectoryPath)) {

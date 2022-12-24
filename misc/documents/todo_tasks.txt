@@ -11,12 +11,12 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
--Fix error of 'TypeError: Cannot read properties of undefined (reading 'sort')' when putting limit of 2 in MAXIMUM_PROJECTS_UPDATE_COUNT: 2,
--Add the retry number on the ===WORKING=== line.
--Add on the console log the number of outdated packages.
--If no updates fix console log: ===WORKING (SCAN): youtube-comments 50/50 | 100.00%======EXIT: FINISH===
--Add new project for 100 top projects + Add all node projects to projects.json.
+-Fix when have a bug need to break line:
+-===WORKING (UPDATE): top-packages 2/2 | 100.00%===RangeError [ERR_CHILD_PROCESS_STDIO_MAXBUFFER]: stdout maxBuffer length exceeded
+-Add on the console log the number of outdated packages: ===UPDATE PACKAGES (13)===
+-===WORKING (UPDATE): top-packages (4) 2/2
 ===
+-This is another project:
 -Add new logic of refresh projects on github ("npm run update"):
 1. List all the projects inside the projects.json file.
 2. Add new property: refresh: true + Make sure new packages not checked (Keep projects acutal check as today - 12 projects updated daily).

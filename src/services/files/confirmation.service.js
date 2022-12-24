@@ -20,7 +20,7 @@ class ConfirmationService {
             try {
                 process.stdin.on('keypress', (chunk, key) => {
                     if (chunk) { }
-                    resolve(key && key.name === 'y');
+                    resolve(key && key.name === 'y' || key.sequence === 'ט');
                     this.setRawMode(false);
                 });
             }
