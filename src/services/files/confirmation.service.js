@@ -13,6 +13,10 @@ class ConfirmationService {
     }
 
     confirm(settings) {
+        debugger;
+        if (process.argv.length && process.argv[2] === 'AUTO') {
+            return true;
+        }
         logUtils.log(logService.createConfirmSettingsTemplate(settings));
         readline.emitKeypressEvents(process.stdin);
         this.setRawMode(true);
