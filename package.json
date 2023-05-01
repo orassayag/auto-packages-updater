@@ -18,7 +18,7 @@
     "update",
     "npm"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "author": "Or Assayag <orassayag@gmail.com>",
   "contributors": [
     {
@@ -55,11 +55,11 @@
   "dependencies": {
     "fs-extra": "^11.1.1",
     "is-reachable": "^5.2.1",
-    "npm-check-updates": "^16.10.8"
+    "npm-check-updates": "^16.10.9"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",
-    "@types/node": "^18.15.11",
-    "eslint": "^8.38.0"
+    "@types/node": "^18.16.3",
+    "eslint": "^8.39.0"
   }
 }

@@ -11,6 +11,7 @@ Each time you change the logic / update NPM package version, do the following st
 
 ToDo tasks:
 ===========
+-Add an option to use a base path instead of each path for all the projects.
 -Fix when have a bug need to break line:
 -===WORKING (UPDATE): top-packages 2/2 | 100.00%===RangeError [ERR_CHILD_PROCESS_STDIO_MAXBUFFER]: stdout maxBuffer length exceeded
 -Add on the console log the number of outdated packages: ===UPDATE PACKAGES (13)===
