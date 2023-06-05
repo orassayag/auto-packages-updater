@@ -24,7 +24,7 @@ class ProjectService {
 
     async findOutdatedPackages() {
         // Remove the temporary directory.
-        await this.removeTemporaryDirecotry();
+        await this.removeTemporaryDirectory();
         // Get the project's data from the projects.json file.
         const fileDataResultModel = await fileService.getFileData({
             filePath: pathService.pathDataModel.projectsPath,
@@ -48,11 +48,6 @@ class ProjectService {
         this.validateProjects();
         // Check for updates in all the projects.
         await this.getProjectsOutdatedPackages();
-    }
-
-    async removeTemporaryDirecotry() {
-        // Remove the temporary directory.
-        await fileUtils.removeDirectoryIfExists(pathService.pathDataModel.temporaryDirectoryPath);
     }
 
     async findUpdatePackages() {
