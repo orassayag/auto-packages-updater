@@ -12,7 +12,16 @@ const ProjectsDataModel = require('./files/ProjectsData.model');
 const UpdateProjectOutdatedPackagesResultModel = require('./files/UpdateProjectOutdatedPackagesResult.model');
 
 module.exports = {
-    ApplicationDataModel, BackupDataModel, BackupDirectoryModel, CountLimitDataModel, FileDataResultModel, LogDataModel,
-    OutdatedResultModel, PackageDataModel, PathDataModel, ProjectDataModel, ProjectsDataModel,
-    UpdateProjectOutdatedPackagesResultModel
+  ApplicationDataModel,
+  BackupDataModel,
+  BackupDirectoryModel,
+  CountLimitDataModel,
+  FileDataResultModel,
+  LogDataModel,
+  OutdatedResultModel,
+  PackageDataModel,
+  PathDataModel,
+  ProjectDataModel,
+  ProjectsDataModel,
+  UpdateProjectOutdatedPackagesResultModel,
 };

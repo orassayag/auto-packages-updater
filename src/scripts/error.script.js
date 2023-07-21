@@ -1,12 +1,11 @@
 class ErrorScript {
+  constructor() {}
 
-    constructor() { }
-
-    handleScriptError(error, code) {
-        process.stdout.write('\n');
-        console.log(error);
-        process.exit(code);
-    }
+  handleScriptError(error, code) {
+    process.stdout.write('\n');
+    console.log(error);
+    process.exit(code);
+  }
 }
 
 module.exports = new ErrorScript();

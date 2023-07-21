@@ -1,8 +1,7 @@
 class ProjectsDataModel {
-
-    constructor() {
-        this.projectsList = [];
-    }
+  constructor() {
+    this.projectsList = [];
+  }
 }
 
 module.exports = ProjectsDataModel;

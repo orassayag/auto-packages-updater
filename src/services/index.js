@@ -11,6 +11,15 @@ const projectService = require('./files/project.service');
 const validationService = require('./files/validation.service');
 
 module.exports = {
-    applicationService, commandService, confirmationService, countLimitService, fileService,
-    gitService, logService, packageService, pathService, projectService, validationService
+  applicationService,
+  commandService,
+  confirmationService,
+  countLimitService,
+  fileService,
+  gitService,
+  logService,
+  packageService,
+  pathService,
+  projectService,
+  validationService,
 };

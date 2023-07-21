@@ -5,8 +5,7 @@ const packageService = require('./package.service');
 const pathService = require('./path.service');
 
 class GitService {
-
-  constructor() { }
+  constructor() {}
 
   async getProject(data) {
     const { name, cleanDirectory } = data;
@@ -16,7 +15,7 @@ class GitService {
     await commandService.runCommand({
       command: CommandEnum.CLONE,
       path: pathService.pathDataModel.temporaryDirectoryPath,
-      extraData: `${applicationService.applicationDataModel.githubURL}/${name}`
+      extraData: `${applicationService.applicationDataModel.githubURL}/${name}`,
     });
   }
 
@@ -26,14 +25,14 @@ class GitService {
     const addError = await commandService.runCommand({
       command: CommandEnum.ADD,
       path: path,
-      isDelay: true
+      isDelay: true,
     });
     let commitError = null;
     if (!addError) {
       commitError = await commandService.runCommand({
         command: CommandEnum.COMMIT,
         path: path,
-        isDelay: true
+        isDelay: true,
       });
     }
     let pushError = null;
@@ -41,13 +40,13 @@ class GitService {
       pushError = await commandService.runCommand({
         command: CommandEnum.PUSH,
         path: path,
-        isDelay: true
+        isDelay: true,
       });
     }
     // Update all packages statuses.
     projectDataModel.packagesList = packageService.updatePackagesStatus({
       isErrorExists: addError || commitError || pushError,
-      packagesList: projectDataModel.packagesList
+      packagesList: projectDataModel.packagesList,
     });
     return projectDataModel;
   }
