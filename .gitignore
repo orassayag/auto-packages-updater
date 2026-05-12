@@ -53,3 +53,16 @@ coverage
 .eslintignore
 .eslintrc*
 .stylelintrc
+# Others:
+out
+*.log*
+logs
+*.env*
+!.env.example
+.env.production
+.env.test
+token.json
+client_secret*.json
+api-stats.json
+.DS_Store
+.pnpm-store

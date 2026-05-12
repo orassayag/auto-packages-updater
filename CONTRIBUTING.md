@@ -9,6 +9,7 @@ Everyone is welcome to contribute to this project. Contributing doesn't just mea
 ### Reporting Issues
 
 If you find a bug or have a feature request:
+
 1. Check if the issue already exists in the [GitHub Issues](https://github.com/orassayag/auto-packages-updater/issues)
 2. If not, create a new issue with:
    - Clear title and description
@@ -32,11 +33,13 @@ If you find a bug or have a feature request:
 ### Code Style Guidelines
 
 This project uses:
+
 - **JavaScript (ES6+)** with Node.js
 - **ESLint** for code quality
 - **Modular architecture** with services, models, and utilities
 
 Before submitting:
+
 ```bash
 # Check for linting errors
 npm run lint
@@ -59,6 +62,7 @@ npm run backup
 ### Project Structure
 
 When contributing, understand the structure:
+
 ```
 src/
 ├── core/
@@ -74,6 +78,7 @@ src/
 ### Adding New Features
 
 When adding new features:
+
 1. Create appropriate models in `src/core/models/`
 2. Add service logic in `src/services/`
 3. Update enums if needed in `src/core/enums/`
@@ -85,6 +90,7 @@ When adding new features:
 ### Configuration Changes
 
 When modifying settings:
+
 1. Update `src/settings/settings.js`
 2. Document new settings in INSTRUCTIONS.md
 3. Ensure backward compatibility where possible
@@ -93,6 +99,7 @@ When modifying settings:
 ### Testing Guidelines
 
 Test your changes with:
+
 1. Single project configurations
 2. Multiple project configurations
 3. Projects with and without devDependencies
@@ -106,9 +113,9 @@ Test your changes with:
 
 Please feel free to contact me with any question, comment, pull-request, issue, or any other thing you have in mind.
 
-* Or Assayag <orassayag@gmail.com>
-* GitHub: https://github.com/orassayag
-* StackOverflow: https://stackoverflow.com/users/4442606/or-assayag?tab=profile
-* LinkedIn: https://linkedin.com/in/orassayag
+- Or Assayag <orassayag@gmail.com>
+- GitHub: https://github.com/orassayag
+- StackOverflow: https://stackoverflow.com/users/4442606/or-assayag?tab=profile
+- LinkedIn: https://linkedin.com/in/orassayag
 
 Thank you for contributing! 🙏

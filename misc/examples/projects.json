@@ -1,28 +1,26 @@
 [
-    {
-        "name": "project-name",
-        "update-type": "full",
-        "project-path": "C:\\path\\to\\project\\root",
-        "git-root-path": "mbox-crawler",
-        "custom-packages-path": null,
-        "exclude-packages-list": null,
-        "include-dev-dependencies": true,
-        "is-packages-update": true,
-        "is-git-update": true
-    },
-    {
-        "name": "parent-project-name",
-        "display-name": "inner-project-name",
-        "update-type": "custom",
-        "project-path": "C:\\path\\to\\prject\\root\\",
-        "parent-project-path": "C:\\path\\to\\parent-project-root\\",
-        "git-root-path": "git\\path\\project-root",
-        "custom-packages-path": "C:\\path\\to\\custom\\packages\\file\\path\\external_packages.txt",
-        "exclude-packages-list": [
-            "node-sass"
-        ],
-        "include-dev-dependencies": true,
-        "is-packages-update": true,
-        "is-git-update": false
-    }
+  {
+    "name": "project-name",
+    "update-type": "full",
+    "project-path": "C:\\path\\to\\project\\root",
+    "git-root-path": "mbox-crawler",
+    "custom-packages-path": null,
+    "exclude-packages-list": null,
+    "include-dev-dependencies": true,
+    "is-packages-update": true,
+    "is-git-update": true
+  },
+  {
+    "name": "parent-project-name",
+    "display-name": "inner-project-name",
+    "update-type": "custom",
+    "project-path": "C:\\path\\to\\prject\\root\\",
+    "parent-project-path": "C:\\path\\to\\parent-project-root\\",
+    "git-root-path": "git\\path\\project-root",
+    "custom-packages-path": "C:\\path\\to\\custom\\packages\\file\\path\\external_packages.txt",
+    "exclude-packages-list": ["node-sass"],
+    "include-dev-dependencies": true,
+    "is-packages-update": true,
+    "is-git-update": false
+  }
 ]

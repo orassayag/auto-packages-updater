@@ -1,0 +1,5 @@
+{
+  "entry": ["src/**/*.js"],
+  "project": ["src/**/*.js"],
+  "ignoreBinaries": ["taskkill"]
+}

@@ -2,11 +2,7 @@
   "name": "auto-packages-updater",
   "version": "1.0.0",
   "private": false,
-  "description": "A Node.js automation tool to scan multiple projects for outdated NPM packages and automatically update them with Git integration.",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/orassayag/auto-packages-updater.git"
-  },
+  "description": "A Node.js automation tool for scanning multiple projects for outdated npm packages and updating them with Git integration. Reads project configurations from external JSON files, checks dependencies across projects, generates reports, and optionally updates packages in local and Git repositories",
   "keywords": [
     "node",
     "nodejs",
@@ -25,8 +21,24 @@
     "devops",
     "automation-tool"
   ],
+  "homepage": "https://github.com/orassayag/auto-packages-updater#readme",
+  "bugs": {
+    "url": "https://github.com/orassayag/auto-packages-updater/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/orassayag/auto-packages-updater.git"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/orassayag"
+  },
   "license": "MIT",
-  "author": "Or Assayag <orassayag@gmail.com>",
+  "author": {
+    "name": "Or Assayag",
+    "email": "orassayag@gmail.com",
+    "url": "https://github.com/orassayag"
+  },
   "contributors": [
     {
       "name": "Or Assayag",
@@ -34,23 +46,38 @@
       "url": "https://github.com/orassayag"
     }
   ],
-  "main": "src/scripts/outdated.script.js",
+  "type": "module",
+  "main": "src/scripts/packages.script.js",
   "files": [
+    ".github",
+    ".vscode",
+    "dist",
+    "misc",
+    "sources",
     "src",
     ".eslintignore",
     ".eslintrc",
     ".gitignore",
     ".jsbeautifyrc",
     ".npmignore",
+    ".prettierrc",
+    "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "eslint.config.mjs",
     "INSTRUCTIONS.md",
+    "knip.json",
+    "LICENSE",
     "package-lock.json",
     "package.json",
-    "README.md"
+    "pnpm-lock.yaml",
+    "README.md",
+    "SECURITY.md"
   ],
   "scripts": {
     "backup": "node src/scripts/backup.script.js",
-    "start": "node src/scripts/packages.script.js",
     "sand": "node src/tests/sandBox.test.js",
+    "start": "node src/scripts/packages.script.js",
     "stop": "taskkill -f -im node.exe"
   },
   "browserslist": [
@@ -60,11 +87,16 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "fs-extra": "^11.2.0",
-    "is-reachable": "^5.2.1",
-    "npm-check-updates": "^16.14.18"
+    "fs-extra": "^11.3.5",
+    "is-reachable": "^6.1.0",
+    "npm-check-updates": "^22.2.0"
   },
   "devDependencies": {
-    "eslint": "^9.1.0"
+    "@babel/eslint-parser": "^7.28.6",
+    "eslint": "^10.3.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
   }
 }
